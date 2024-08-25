@@ -1,5 +1,5 @@
 <template>
-  <view class="container">
+  <view class="container" v-if="model!='base'">
     <button v-if="model=='float'" class="btnDialog" :type="type" @click="click"><img style="width:100%"
                                                                                      src="../static/options.png" alt="">
     </button>
@@ -10,7 +10,7 @@
                                                                                     src="../static/options.png" alt="">
     </button>
   </view>
-  <button v-if="model=='base'" :type="type" @click="click">{{ title }}</button>
+  <button class="base-buttom"  v-if="model=='base'" :type="type" @click="click">{{ title }}</button>
 </template>
 
 <script setup>
@@ -40,6 +40,16 @@ const click = () => {
 </script>
 
 <style scoped lang="scss">
+.base-buttom {
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 使文字水平居中 */
+  //height: 60px; /* 设置固定的高度，例如 40px */
+  padding: 3 20px; /* 上下不再需要 padding，左右可以根据需要调整 */
+  box-sizing: border-box;
+}
+
 .container {
   background-color: rgb(113, 116, 248);
   position: fixed;

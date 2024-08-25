@@ -1,18 +1,22 @@
 <template>
-  <view v-if="description!=null && description!={}" class="margin-top" :column="4">
-    <view class="all">
-      全部信息：
-    </view>
-    <slot name="description-items" :description="description">
+  <view>
+    <view v-if="description!=null && description!={}" class="margin-top" :column="4">
+      <view class="all">
+        全部信息：
+      </view>
+      <slot name="description-items" :description="description">
 
-    </slot>
-  </view>
-  <view v-else class="list_box">
-    <view class="nodata">
-      <img src="../static/noData.png" alt="">
-      <view class="noText">暂无数据～</view>
+      </slot>
+    </view>
+
+    <view v-else class="list_box">
+      <view class="nodata">
+        <img src="../static/noData.png" alt="">
+        <view class="noText">暂无数据～</view>
+      </view>
     </view>
   </view>
+
 </template>
 
 <script setup>
@@ -55,8 +59,8 @@ defineExpose({
 <style scoped lang="scss">
 .margin-top {
   width: 100%;
-  height: 100%;
-  height: 92.3vh;
+  //height: 100%;
+  //height: 92.3vh;
   padding: 30px 25px;
   box-sizing: border-box;
 
@@ -76,44 +80,74 @@ defineExpose({
   ::v-deep .uni-section:last-child {
     border-radius: 0 0 10px 10px;
   }
-  .list_box {
-    width: 100%;
-    height: 100%;
-    background: rgb(245, 247, 250);
-    box-sizing: border-box;
+
+
+}
+//.list_box {
+//  width: 80%;
+//  margin: 20px auto;
+//  display: flex;
+//  justify-content: center; /* 水平居中 */
+//  align-items: center; /* 垂直居中 */
+//  //height: 100vh; /* 高度设置为视口高度，确保内容在整个页面居中 */
+//  flex-direction: column; /* 垂直排列图片和文字 */
+//  //margin-top: 20px;
+//}
+//
+//.nodata {
+//  width: 100%;
+//  display: flex;
+//  flex-direction: column;
+//  align-items: center;
+//  justify-content: center;
+//}
+//.nodata img{
+//  width: 80%;
+//}
+//
+//.noText {
+//  margin-top: 10px;
+//  font-size: 16px;
+//  color: #666;
+//}
+
+.list_box {
+  width: 100%;
+  height: 100%;
+  //background: rgb(245, 247, 250);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  position: static;
+  z-index: 8;
+
+  .nodata{
     display: flex;
     flex-direction: column;
-    position: static;
-    z-index: 8;
-
-    .nodata{
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 25%;
-      font-size: 24px;
-      .noText{
-        margin-top: 45px;
-      }
+    align-items: center;
+    margin-top: 25%;
+    font-size: 24px;
+    .noText{
+      margin-top: 45px;
     }
+  }
 
-    .list {
-      // flex: 1;
-      margin: 30rpx 0;
-      box-sizing: border-box;
-      border-radius: 15rpx;
-      background: white;
-      color: #fff !important;
+  .list {
+    // flex: 1;
+    margin: 30rpx 0;
+    box-sizing: border-box;
+    border-radius: 15rpx;
+    background: white;
+    color: #fff !important;
 
-      ::v-deep .uni-list-item {
-        position: static;
-        background: white !important;
-      }
+    ::v-deep .uni-list-item {
+      position: static;
+      background: white !important;
     }
+  }
 
-    .flex-end-center {
-      width: 100%;
-    }
+  .flex-end-center {
+    width: 100%;
   }
 }
 </style>

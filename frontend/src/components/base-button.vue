@@ -10,7 +10,7 @@
                                                                                     src="../static/options.png" alt="">
     </button>
   </view>
-  <button class="base-buttom"  v-if="model=='base'" :type="type" @click="click">{{ title }}</button>
+  <button class="base-buttom" v-if="model=='base'" :type="type" @click="click">{{ title }}</button>
 </template>
 
 <script setup>
@@ -45,9 +45,11 @@ const click = () => {
   display: flex;
   align-items: center;
   justify-content: center; /* 使文字水平居中 */
-  //height: 60px; /* 设置固定的高度，例如 40px */
-  padding: 3 20px; /* 上下不再需要 padding，左右可以根据需要调整 */
+  //height: auto;
+  //height: 50px; /* 设置固定的高度，例如 40px */
+  padding: 0 20px; /* 上下不再需要 padding，左右可以根据需要调整 */
   box-sizing: border-box;
+  flex: none;
 }
 
 .container {
@@ -59,7 +61,7 @@ const click = () => {
   display: flex;
   width: 44px;
   bottom: 15%;
-  height: 44px;
+  //height: 44px;
 
   .btnDialog {
     width: 44px;

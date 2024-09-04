@@ -1,13 +1,15 @@
 <template>
-  <uni-forms ref="formRef" :modelValue="form" :rules="rules" label-width="auto" style="max-width: 600px;
+  <view class="all">
+    <uni-forms ref="formRef" :modelValue="form" :rules="rules" label-width="auto" style="max-width: 600px;
   background-color: white;padding: 20px"
-             @submit.prevent="onSubmit">
-    <slot name="form-items"></slot>
-    <uni-forms-item>
-      <button type="primary" @click="onSubmit">提交</button>
-      <button @click="onResetForm">重置</button>
-    </uni-forms-item>
-  </uni-forms>
+               @submit.prevent="onSubmit">
+      <slot name="form-items"></slot>
+      <uni-forms-item>
+        <button type="primary" @click="onSubmit">提交</button>
+        <button @click="onResetForm">重置</button>
+      </uni-forms-item>
+    </uni-forms>
+  </view>
 </template>
 
 <script setup>
@@ -138,6 +140,11 @@ const onSubmit = () => {
 </script>
 
 <style scoped lang="scss">
+.all {
+  height: 100%;
+  //overflow: auto;
+}
+
 /* Add any custom styles for your form here */
 ::v-deep .uni-forms-item {
   width: 100%;

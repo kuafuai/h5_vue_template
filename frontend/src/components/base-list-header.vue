@@ -4,10 +4,10 @@
       <view class="toolbar">工具栏</view>
       <view class="nickname">{{ nickname ? nickname : "啊啥的就看哈说" }}</view>
       <view class="description">{{
-        description
-          ? description
-          : "啊谁来打卡是克林顿将阿拉山口家的辣椒大连锁酒店"
-      }}</view>
+          description
+              ? description
+              : "啊谁来打卡是克林顿将阿拉山口家的辣椒大连锁酒店"
+        }}</view>
     </view>
     <view class="right">
       <view class="background-image"></view>
@@ -38,7 +38,10 @@ const props = defineProps({
   width: 100%;
   height: 20vh; /* 调整为适合的高度 */
   background-color: rgb(93, 95, 239); /* 整体背景色 */
-  /* overflow: hidden; */
+  /*position: sticky;*/
+  /*top: 10px;*/
+  /*z-index: 999;*/
+   /*overflow: hidden;*/
 }
 
 .left {
@@ -77,6 +80,7 @@ const props = defineProps({
 .right {
   width: 50%;
   position: relative;
+  overflow: hidden;
   height: 100%; /* 确保 right 盒子高度为 100% */
 }
 

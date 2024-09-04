@@ -83,6 +83,7 @@ defineExpose({
 
 
 }
+
 //.list_box {
 //  width: 80%;
 //  margin: 20px auto;
@@ -121,22 +122,23 @@ defineExpose({
   position: static;
   z-index: 8;
 
-  .nodata{
+  .nodata {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 25%;
     font-size: 24px;
-    .noText{
+
+    .noText {
       margin-top: 45px;
     }
   }
 
   .list {
     // flex: 1;
-    margin: 30rpx 0;
+    margin: 30 rpx 0;
     box-sizing: border-box;
-    border-radius: 15rpx;
+    border-radius: 15 rpx;
     background: white;
     color: #fff !important;
 

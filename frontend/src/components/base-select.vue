@@ -1,28 +1,30 @@
 <template>
-    <uni-data-select v-bind="$attrs" :localdata="selectData">
-        
-    </uni-data-select>
+  <uni-data-select :disabled="disabled" clear v-bind="$attrs" :localdata="selectData" :filter="true">
+
+  </uni-data-select>
 </template>
 
 <script setup>
-import { onLoad } from "@dcloudio/uni-app";
-const { proxy } = getCurrentInstance();
+import {onLoad} from "@dcloudio/uni-app";
+
+const {proxy} = getCurrentInstance();
 const props = defineProps({
-  api: { type: String, default: '' }
+  api: {type: String, default: ''},
+  disabled: {type: Boolean,default: false}
 });
-const selectData  = ref([]);
+const selectData = ref([]);
 
 onLoad(() => {
   refresh();
 });
 
 function refresh() {
-    getApiData();
+  getApiData();
 }
 
 async function getApiData() {
-    let response = await apiMethod();
-    selectData.value = response.data;
+  let response = await apiMethod();
+  selectData.value = response.data;
 }
 
 function apiMethod() {

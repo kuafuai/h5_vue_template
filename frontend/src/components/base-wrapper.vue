@@ -90,6 +90,7 @@ getWrapperClass();
 .box{
   display: flex;
   flex-direction: column;
+  /*overflow: hidden;*/
 }
 
 /* .padding-10 {

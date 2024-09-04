@@ -8,7 +8,12 @@ import java.util.stream.Collectors;
 
 public enum LoginReverence {
 
-    None("none", "None"),
+            userInfo("用户信息管理","userInfo"),
+        bugInfo("BUG信息管理","bugInfo"),
+        projectInfo("项目管理","projectInfo"),
+        bugHandleStatus("BUG状态管理","bugHandleStatus"),
+        bugPriorityStatus("BUG优先级管理","bugPriorityStatus"),
+        technicalDirectionStatus("技术方向枚举","technicalDirectionStatus"),
     ;
 
 
@@ -31,7 +36,7 @@ public enum LoginReverence {
     public static List<SelectVo> all() {
         final LoginReverence[] values = LoginReverence.values();
         return Arrays.stream(values).map(r -> {
-            return new SelectVo(r.getValue(), r.getLabel(), r.getLabel());
+            return new SelectVo(r.getValue(), r.getLabel(),r.getLabel());
         }).collect(Collectors.toList());
     }
 }

@@ -43,11 +43,15 @@ service.interceptors.response.use(
                 location.href =
                     import.meta.env.VITE_BASE;
             } else {
-                ElMessage({
-                    message: message || '系统出错',
-                    type: 'error',
-                    duration: 5 * 1000,
-                });
+                uni.showToast({
+                    title:message || '系统出错',
+                    icon:"none"
+                })
+                // ElMessage({
+                //     message: message || '系统出错',
+                //     type: 'error',
+                //     duration: 5 * 1000,
+                // });
             }
             return Promise.reject(new Error(message || 'Error'));
         }
@@ -59,11 +63,15 @@ service.interceptors.response.use(
             location.href =
                 import.meta.env.VITE_BASE;
         } else {
-            ElMessage({
-                message: '网络异常，请稍后再试!',
-                type: 'error',
-                duration: 5 * 1000,
-            });
+            uni.showToast({
+                title:'网络异常，请稍后再试!',
+                icon:"none"
+            })
+            // ElMessage({
+            //     message: '网络异常，请稍后再试!',
+            //     type: 'error',
+            //     duration: 5 * 1000,
+            // });
             return Promise.reject(new Error('Error'));
         }
     },

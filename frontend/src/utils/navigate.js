@@ -1,4 +1,4 @@
-const tabBarList =['/pages/customer/index', '/pages/visit_management/index', '/pages/business_opportunity/index']
+const tabBarList =[]
 function isCurrentPageTabBar(currentPage) {
     return tabBarList.includes(currentPage);
 }

@@ -13,7 +13,7 @@ const props = defineProps({
     default: ''
   },
   not_null_field: {
-    type: Array,
+    type: String,
     default: () => []
   },
   id: {

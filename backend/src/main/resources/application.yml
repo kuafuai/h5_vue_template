@@ -46,6 +46,7 @@ mybatis-plus:
 
 
 login:
+    code_timeout: {CODE_TIMEOUT:5}
   enable: ${LOGIN_ENABLE:true}
   table: Login
   select:

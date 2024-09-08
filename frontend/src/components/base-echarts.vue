@@ -1,14 +1,28 @@
 <template>
   <view class="all_echarts">
-  <view v-if="is_echarts">
-    <view class="chart" :id="'mychart-dom-bar'+randomInt" ref="mychart"></view>
-  </view>
-  <view v-else>
-    <view v-for="(option, idx) in option" :key="idx" class="option-item">
-      <text class="option-text" v-if="option.name">{{ option.name }} -</text>
-      <text class="option-value">{{ option.value }}</text>
+    <view v-if="is_echarts">
+      <view class="chart" :id="'mychart-dom-bar'+randomInt" ref="mychart"></view>
     </view>
-  </view>
+    <view v-else>
+
+      <view v-for="item in option">
+        <view v-if="item.children && item.children.length >0" class="option-list">
+          <!--          <view>有chailderen {{ item }}</view>-->
+          <base-echarts :option="item.children"/>
+
+        </view>
+        <view v-else>
+          <!--          <view>没有chailderen {{ // item }}</view>-->
+          <!--          <view v-for="(option_item, idx) in item" :key="idx" class="option-item">-->
+          <view style="display: flex;flex-direction: row;align-items: center;justify-content: flex-start">
+            <view class="option-text" v-if="item.name">{{ item.name }}</view>
+            <view class="option-value">{{ item.value }}</view>
+          </view>
+          <!--          </view>-->
+        </view>
+
+      </view>
+    </view>
   </view>
 </template>
 
@@ -24,17 +38,48 @@ const props = defineProps({
   inx: {
     type: Number,
     default: ""
+  },
+  group_result_show_display: {
+    type: String,
+    default: "text"
   }
+
 });
 console.log(props.option)
 const is_echarts = ref(true)
-for (var i = 0; i < props.option.length; i++) {
-  var t = props.option[i]
-  if (!t.hasOwnProperty("name")) {
+const is_echarts_function = (tmp) => {
+  // for (var i = 0; i < tmp.length; i++) {
+  //   var op = tmp[i];
+  //   if (op.hasOwnProperty("children")) {
+  //     is_echarts_function(op.children)
+  //   } else {
+  //
+  //     var t = Number(op["value"]);
+  //     if (!isNaN(t)) {
+  //       op["value"] = t;
+  //     } else {
+  //       console.log("操作模型", op.value)
+  //       is_echarts.value = false
+  //     }
+  //   }
+  // }
+  if (props.group_result_show_display == 'text') {
     is_echarts.value = false
-    break
+  } else if (props.group_result_show_display == 'chart') {
+    is_echarts.value = true
   }
 }
+is_echarts_function(props.option)
+
+// for () {
+//
+//   // var t = props.option[i]
+//   // if (!t.hasOwnProperty("name") || t["name"] == null || t["name"] == "") {
+//   //   is_echarts.value = false
+//   //   break
+//   // }
+// }
+
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -82,7 +127,7 @@ onMounted(() => {
         name: 'Access From',
         type: 'pie',
         radius: ['40%', '70%'],
-        center: ['50%', '70%'],
+        center: ['52%', '56%'],
         avoidLabelOverlap: true,
         itemStyle: {
           borderRadius: 10,

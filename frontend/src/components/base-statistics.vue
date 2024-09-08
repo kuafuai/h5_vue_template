@@ -12,8 +12,8 @@
       <view v-for="(question, index) in questions" :key="index" class="question-item">
         <text class="question-text">{{ question.name }}</text>
         <view v-if="question.children && question.children.length > 0" class="option-list">
-          <!--        <view>{{// question.children}}</view>-->
-          <base-echarts :option="question.children" :inx="index"/>
+          <base-echarts :option="question.children" :inx="index"
+                        :group_result_show_display="group_result_show_display"/>
           <!--                <view v-for="(option, idx) in question.children" :key="idx" class="option-item">-->
           <!--                  <text class="option-text" v-if="option.name">{{ option.name }} -</text>-->
           <!--                  <text class="option-value">{{ option.value }}</text>-->
@@ -53,6 +53,10 @@ const props = defineProps({
     type: Object, default: () => {
     }
   },
+  group_result_show_display: {
+    type: String,
+    default: "text"
+  }
 });
 
 const number = ref("0")

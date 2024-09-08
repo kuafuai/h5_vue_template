@@ -45,6 +45,9 @@ public class LoginBusinessService {
     @Value("${login.relevance_column_name:relevance_table}")
     private String relevance_table;
 
+    @Value("${login.relevance_id_name:relevance_id}")
+    private String relevance_id_name;
+
     public Object getCurrentUser() {
 //      获取的是关联对象的详细记录
         IService iService = SpringUtils.getBean(LoginRelevanceConfig.getLoginRelevanceTable());
@@ -155,8 +158,9 @@ public class LoginBusinessService {
         IService iService = SpringUtils.getBean(table);
         QueryWrapper<?> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(key, value)
-                .eq(relevance_table, LoginRelevanceConfig.getLoginRelevanceTable());
-
+                .eq(relevance_table, LoginRelevanceConfig.getLoginRelevanceTable())
+                .isNotNull(relevance_id_name)
+                .ne(relevance_id_name,"");
         return iService.getOne(queryWrapper);
     }
 

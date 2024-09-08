@@ -38,10 +38,10 @@ const props = defineProps({
   width: 100%;
   height: 20vh; /* 调整为适合的高度 */
   background-color: rgb(93, 95, 239); /* 整体背景色 */
-  /*position: sticky;*/
-  /*top: 10px;*/
-  /*z-index: 999;*/
-   /*overflow: hidden;*/
+  position: sticky;
+  top: 10px;
+  z-index: 999;
+   /* overflow: hidden; */
 }
 
 .left {

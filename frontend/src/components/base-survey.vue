@@ -121,28 +121,31 @@ const submit = async () => {
         // id: null,
         userId: props.userId,
         surveyInfoId: surveyData.value.sid,
+        questionType:1,
         questionInfoId: qid,
-        optionInfoId: answers.value[qid].selectedOption,
-        answerText: null,
+        userAnswer: answers.value[qid].selectedOption,
+        // answerText: null,
       });
     } else if (question.questionType === "2") {
       answers.value[qid].selectedOptions.forEach(optionId => {
         formattedAnswers.push({
           userId: props.userId,
+          questionType:2,
           surveyInfoId: surveyData.value.sid,
           questionInfoId: qid,
-          optionInfoId: optionId,
-          answerText: null,
+          userAnswer: optionId,
+          // answerText: null,
         });
       });
     } else if (question.questionType === "3") {
       formattedAnswers.push({
         // id: null,
         userId: props.userId,
+        questionType:3,
         surveyInfoId: surveyData.value.sid,
         questionInfoId: qid,
-        optionInfoId: null,
-        answerText: answers.value[qid].answerText
+        userAnswer: answers.value[qid].answerText,
+        // answerText: answers.value[qid].answerText
       });
     }
   }

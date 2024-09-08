@@ -41,6 +41,7 @@ const click = () => {
 
 <style scoped lang="scss">
 .base-buttom {
+  background-color: rgb(113, 116, 248);
   margin: 10px;
   display: flex;
   align-items: center;

@@ -39,7 +39,7 @@ const popupClass = computed(() => {
     'type-other': props.type !== 'bottom' && props.type !== 'top'
   };
 });
-console.log(popupClass.value)
+// console.log(popupClass.value)
 // const dialogVisible = ref(false)
 // const showDialog = () => {
 //   dialogVisible.value = true
@@ -135,6 +135,7 @@ button {
   max-height: 500px;
   overflow: auto;
   width: 100%;
+  border-radius: 20px 20px 0px 0px;
 }
 
 ::v-deep .type-other .uni-popup__wrapper {

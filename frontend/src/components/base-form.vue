@@ -1,53 +1,52 @@
 <template>
   <view class="all">
     <uni-forms ref="formRef" :modelValue="form" :rules="rules" label-width="auto" style="max-width: 600px;
-  background-color: white;padding: 20px"
-               @submit.prevent="onSubmit">
+  background-color: white;padding: 20px ;box-sizing:border-box" @submit.prevent="onSubmit">
       <slot name="form-items"></slot>
       <uni-forms-item>
-        <button type="primary" @click="onSubmit">提交</button>
-        <button @click="onResetForm">重置</button>
+        <button type="primary" @click="onSubmit" class="up">提交</button>
+        <button @click="onResetForm" class="reset">重置</button>
       </uni-forms-item>
     </uni-forms>
   </view>
 </template>
 
 <script setup>
-import {getCurrentInstance, ref} from "vue"
+import { getCurrentInstance, ref } from "vue"
 
-const {proxy} = getCurrentInstance();
+const { proxy } = getCurrentInstance();
 
 // Importing to define props and emit
-import {defineProps, defineEmits, toRefs} from 'vue';
-import {onLoad} from "@dcloudio/uni-app";
+import { defineProps, defineEmits, toRefs } from 'vue';
+import { onLoad } from "@dcloudio/uni-app";
 // import {ElMessage} from 'element-plus';
 // Defining props to receive form and rules from parent
 const props = defineProps({
   form: {
     type: Object,
-    required: false
+    required: true
   },
   rules: {
     type: Object,
-    required: false,
+    required: true,
     default: {}
   },
   table_module: {
     type: String,
-    required: false
+    required: true
   },
   model: {
     type: String,
-    required: false,
+    required: true,
     default: "add"
   },
   id: {
     type: String,
-    required: false
+    required: true
   },
   params: {
     type: Object,
-    required: false
+    required: true
   }
 
 });
@@ -86,7 +85,7 @@ const handleSubmit = async () => {
 }
 onLoad(async () => {
   console.log(1212131313)
-//   根据查询条件搜索
+  //   根据查询条件搜索
   if (props.model != "add") {
     // console.log(121212)
     let form = null
@@ -133,7 +132,7 @@ const onSubmit = () => {
   }).catch(err => {
     console.log('表单错误信息：', err);
   })
-  ;
+    ;
 };
 
 
@@ -150,13 +149,77 @@ const onSubmit = () => {
   width: 100%;
   display: flex;
   flex-direction: column !important;
+  
 }
 
 ::v-deep .uni-forms-item__content {
-  display: flex !important;;
+  display: flex !important;
 }
 
 ::v-deep .uni-popup__wrapper {
   width: 80% !important;
+}
+
+::v-deep .uni-easyinput__content-input {
+  height: 50px;
+  padding-left: 20px !important;
+  border-radius: 20px;
+}
+
+::v-deep .uni-select {
+  height: 50px;
+  padding-left: 20px;
+  border-radius: 10px;
+
+}
+
+::v-deep .uni-select__input-placeholder {
+  color: rgba(166, 166, 166, 1);
+  font-size: 14px;
+}
+
+::v-deep.uni-easyinput__placeholder-class {
+  color: rgba(166, 166, 166, 1);
+  font-size: 14px;
+}
+
+::v-deep uni-text {
+  color: rgba(0, 0, 0, 1);
+  font-size: 14px;
+}
+
+::v-deep .is-input-border {
+  border-radius: 10px;
+}
+
+.up,
+.reset {
+  border-radius: 100px;
+  width: 170px;
+  height: 50px;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.up {
+  background: rgba(93, 95, 239, 1);
+}
+
+.reset {
+  background: rgba(166, 166, 166, 1);
+}
+
+::v-deep .uni-forms-item__error {
+  top: -44%;
+  left: 62%;
+  span {
+    color: rgba(227, 60, 100, 1);
+  }
+}
+::v-deep .is-input-error-border .uni-easyinput__placeholder-class{
+ color: rgb(166, 166, 166) !important;
 }
 </style>

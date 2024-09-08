@@ -4,13 +4,13 @@ import lombok.Data;
 
 
 public class SmsConfig {
-    public static final String accessKeyId="xx";
+    public static final String accessKeyId="xxxxxxx";
 
-    public static final String accessKeySecret="xx";
+    public static final String accessKeySecret="xxxxxxx";
 
-    public static final String endpoint = "xxxxx";
+    public static final String endpoint = "xxxxxxx";
 
-    public static final String signName="xxxxxx";
+    public static final String signName="xxxxxxx";
 
-    public static final String templateCode="xxxxxx";
+    public static final String templateCode="xxxxxxx";
 }

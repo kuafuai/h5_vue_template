@@ -1,12 +1,15 @@
 <template>
   <view>
-    <view v-if="description!=null && description!={}" class="margin-top" :column="4">
+    <view v-if="description != null && description != {}" class="margin-top" :column="4">
       <view class="all">
         全部信息：
       </view>
-      <slot name="description-items" :description="description">
+      <view class="all_content">
+        <slot name="description-items" :description="description">
 
-      </slot>
+        </slot>
+      </view>
+
     </view>
 
     <view v-else class="list_box">
@@ -20,11 +23,11 @@
 </template>
 
 <script setup>
-import {getCurrentInstance} from "vue"
+import { getCurrentInstance } from "vue"
 
-const {proxy} = getCurrentInstance();
-import {defineProps, ref} from 'vue';
-import {onLoad} from "@dcloudio/uni-app";
+const { proxy } = getCurrentInstance();
+import { defineProps, ref } from 'vue';
+import { onLoad } from "@dcloudio/uni-app";
 
 const props = defineProps({
   api: {
@@ -63,26 +66,39 @@ defineExpose({
   //height: 92.3vh;
   padding: 30px 25px;
   box-sizing: border-box;
+  .all_content {
+      ::v-deep .uni-section:first-child {
+        border-radius: 10px 10px 0px 0px !important;
+      }
+  
+      ::v-deep .uni-section:last-child {
+        border-radius: 0 0 10px 10px;
+      }
+  
+      ::v-deep .uni-section__content-title {
+        font-size: 12px !important;
+        color: rgba(56, 56, 56, 1) !important;
+      }
+  
+      ::v-deep .uni-section .uni-section-header__content-sub {
+        display: flex !important;
+        justify-content: flex-start !important;
+        font-size: 10px !important;
+        color: rgba(166, 166, 166, 1) !important;
+      }
+  
+    }
 
   .all {
-    background: white;
     height: 66 rpx;
     line-height: 66 rpx;
-    padding-left: 10px;
-    border-radius: 10px 10px 0 0;
-    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: rgba(128, 128, 128, 1)
   }
-
-  ::v-deep .uni-section:first-child {
-
-  }
-
-  ::v-deep .uni-section:last-child {
-    border-radius: 0 0 10px 10px;
-  }
-
-
 }
+
+
 
 //.list_box {
 //  width: 80%;

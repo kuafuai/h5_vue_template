@@ -4,7 +4,7 @@ function isCurrentPageTabBar(currentPage) {
 }
 
 
-function navigate(path) {
+function navigate(path,is_redirect) {
     let basePath = path;
     let params = null;
 
@@ -33,7 +33,10 @@ function navigate(path) {
         }
         uni.switchTab({ url: basePath });
     } else {
-        uni.navigateTo({ url: path });
-    }
+         if (is_redirect) {
+            uni.redirectTo({url: path});
+        } else {
+            uni.navigateTo({url: path});
+        }    }
 }
 export default  navigate;;

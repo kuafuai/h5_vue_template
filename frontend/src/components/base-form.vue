@@ -132,7 +132,7 @@ const onSubmit = () => {
   }).catch(err => {
     console.log('表单错误信息：', err);
   })
-    ;
+  ;
 };
 
 
@@ -143,13 +143,17 @@ const onSubmit = () => {
   height: 100%;
   //overflow: auto;
 }
-
+::v-deep .uni-forms-item__error {
+  top: -50% !important;
+  width: 100%;
+  left:58% !important;
+}
 /* Add any custom styles for your form here */
 ::v-deep .uni-forms-item {
   width: 100%;
   display: flex;
   flex-direction: column !important;
-  
+
 }
 
 ::v-deep .uni-forms-item__content {
@@ -220,6 +224,5 @@ const onSubmit = () => {
   }
 }
 ::v-deep .is-input-error-border .uni-easyinput__placeholder-class{
- color: rgb(166, 166, 166) !important;
-}
-</style>
+  color: rgb(166, 166, 166) !important;
+}</style>

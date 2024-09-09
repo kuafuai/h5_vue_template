@@ -1,9 +1,8 @@
 <template>
   <view class="uni-padding-wrap uni-common-mt">
     <uni-segmented-control :current="current" :values="items" :style-type="'text'" inActiveColor='#999'
-
-      activeColor='#5D5FEF'
-      @clickItem="onClickItem" />
+                           activeColor='#5D5FEF'
+                           @clickItem="onClickItem" />
   </view>
   <view class="content">
     <view v-for="(item, index) in items" class="cont" :key="index" v-show="current === index">
@@ -34,7 +33,7 @@ const onClickItem = (e) => {
 <style scoped lang="scss">
 ::v-deep .uni-padding-wrap,
 .uni-common-mt {
-  background: rgb(250, 245, 247);
+  background: rgb(245, 247, 250);
   position: relative;
 }
 

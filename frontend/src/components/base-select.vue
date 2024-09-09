@@ -1,5 +1,6 @@
 <template>
-  <uni-data-select :disabled="disabled" clear v-bind="$attrs" :localdata="selectData" :filter="true">
+  <uni-data-select :disabled="disabled" clear v-bind="$attrs" :placeholder="'请选择'+title" :localdata="selectData"
+                   :filter="true">
 
   </uni-data-select>
 </template>
@@ -10,7 +11,8 @@ import {onLoad} from "@dcloudio/uni-app";
 const {proxy} = getCurrentInstance();
 const props = defineProps({
   api: {type: String, default: ''},
-  disabled: {type: Boolean,default: false}
+  disabled: {type: Boolean, default: false},
+  title: {type: String, default: ""}
 });
 const selectData = ref([]);
 

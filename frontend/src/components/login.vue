@@ -9,7 +9,7 @@
     </view>
     <!-- <uni-forms style="max-width: 320px; width: 100%; margin: 0 auto;" :="" :rules="" ref="loginForm_sms" label-width="auto" status-icon> -->
     <uni-forms ref="formRef" style="max-width: 320px; width: 100%; margin: 0 auto;" :modelValue="form" :rules="rules"
-      label-width="auto" status-icon>
+               label-width="auto" status-icon>
 
       <uni-forms-item name="phone">
         <view class="icon-input-container">
@@ -35,8 +35,8 @@
     </uni-forms>
     <!-- <h5>默认账户密码：admin / 123456</h5> -->
     <h5 v-show="is_register" @click="to_page" style="color: rgba(93, 95, 239, 1);font-size: 13px;font-weight:450">
-      <text style="color:rgba(52, 57, 101, 1);font-weight:450">还未有账号?</text>
-      去注册
+      <text style="color:rgba(52, 57, 101, 1);font-weight:450">没有账号? </text>
+      现在去注册
     </h5>
     <view>
 
@@ -47,11 +47,13 @@
       <view class="nihao">嘿！你好</view>
       <view class="code"> 欢迎来到CodeFlying!</view>
     </view>
-    <h2>{{ show_title }}</h2>
+    <view class="title">
+      <h2>{{ show_title }}</h2>
+    </view>
     <uni-forms style="max-width: 320px; width: 100%; margin: 0 auto;" :modelValue="form_sms" :rules="rules_sms"
-      ref="loginForm_sms" label-width="auto" status-icon>
+               ref="loginForm_sms" label-width="auto" status-icon>
       <!-- 手机号输入框 -->
-      <uni-forms-item label="手机号" name="phone">
+      <uni-forms-item name="phone">
         <view class="icon-input-container">
           <uni-easyinput v-model="form_sms.phone" placeholder="请输入手机号" type="number" maxlength="11" />
           <view class="icon">
@@ -62,46 +64,51 @@
 
       <!-- 验证码输入框 -->
 
-        <uni-forms-item label="验证码" name="code">
-          <view class="code-input-container">
-            <uni-easyinput style="width:50px;" v-model="form_sms.code" placeholder="请输入验证码" />
-            <view class="icon">
-              <img src="../static/safe.png" style="width:22px;height:24px; margin-bottom:2px" alt="">
-            </view>
-            <button class="send-code-button" @click="sendcode" :disabled="countdown > 0">
-              {{ countdown > 0 ? `${countdown}s后重发` : '获取验证码' }}
-            </button>
+      <uni-forms-item name="code">
+        <view class="code-input-container">
+          <uni-easyinput style="width:50px;" v-model="form_sms.code" placeholder="请输入验证码" />
+          <view class="icon">
+            <img src="../static/safe.png" style="width:22px;height:24px; margin-bottom:2px" alt="">
           </view>
+          <button class="send-code-button" @click="sendcode" :disabled="countdown > 0">
+            {{ countdown > 0 ? `${countdown}s后重发` : '获取验证码' }}
+          </button>
+        </view>
 
-        </uni-forms-item>
+      </uni-forms-item>
 
-        <!-- 登录按钮 -->
-        <button class="submit-btn" @click="submitForm_sms">
-          登录
-        </button>
+      <!-- 登录按钮 -->
+      <button class="submit-btn" @click="submitForm_sms">
+        登录
+      </button>
     </uni-forms>
 
-    <h5 v-show="is_register" @click="to_page" style="color: rgb(93, 95, 239);">还未有账号?去注册</h5>
+    <h5 v-show="is_register" @click="to_page" style="color: rgba(93, 95, 239, 1);font-size: 13px;font-weight:450">
+      <text style="color:rgba(52, 57, 101, 1);font-weight:450">没有账号? </text>
+      现在去注册
+    </h5>
   </view>
 
   <view v-else>
     <fui-button type="success" round size="large" @click="login_click">点击微信授权登录</fui-button>
   </view>
-
+  <view class="bottom">
+    本应用由AI智能软件开发平台CodeFlying自动开发
+  </view>
 </template>
 
 <script setup>
-import {getCurrentInstance, ref} from "vue";
+import { getCurrentInstance, ref } from "vue";
 
-const {proxy} = getCurrentInstance();
+const { proxy } = getCurrentInstance();
 const emit = defineEmits(["loginSuccess", "loginFail"]);
 
 const props = defineProps({
-  login_type: {type: String, default: null},
-  show_title: {type: String, default: "登陆"},
-  relevanceTable: {type: String, required: true,},
-  is_register: {type: String, required: false,},
-  register_page: {type: String, required: false, default: ""}
+  login_type: { type: String, default: null },
+  show_title: { type: String, default: "登陆" },
+  relevanceTable: { type: String, required: true, },
+  is_register: { type: String, required: false, },
+  register_page: { type: String, required: false, default: "" }
 });
 const to_page = () => {
   proxy.$navigate(props.register_page)
@@ -201,8 +208,8 @@ const rules = ref({
   },
   password: {
     rules: [
-      {required: true, errorMessage: '请输入密码'},
-      {minLength: 3, maxLength: 18, errorMessage: '密码长度3-18位'}
+      { required: true, errorMessage: '请输入密码' },
+      { minLength: 3, maxLength: 18, errorMessage: '密码长度3-18位' }
     ]
   }
 });
@@ -257,7 +264,7 @@ const submitForm_sms = () => {
       login_error(err);
     });
   }).catch(error => {
-    uni.showToast({title: '请填写正确的信息', icon: 'none'});
+    uni.showToast({ title: '请填写正确的信息', icon: 'none' });
 
   });
 };
@@ -320,7 +327,7 @@ function login_click() {
 .hello {
   max-width: 320px;
   width: 100%;
-  height: 150px;
+  height: 120px;
   font-size: 26px;
   letter-spacing: 1px;
   color: rgba(52, 57, 101, 1);
@@ -328,7 +335,6 @@ function login_click() {
 
 ::v-deep .uni-forms-item {
   margin-bottom: 40px !important;
-  align-items: center;
 }
 
 ::v-deep .is-input-border {
@@ -357,7 +363,10 @@ function login_click() {
     margin-bottom: 8px !important;
   }
 }
-
+h5 {
+  color: #888;
+  margin-top: 20px;
+}
 
 
 .login {
@@ -377,11 +386,7 @@ function login_click() {
     margin-bottom: 20px;
   }
 
-  h5 {
-    color: #888;
-    margin-top: 20px;
 
-  }
 
   .demo-form {
     width: 100%;
@@ -458,9 +463,10 @@ function login_click() {
     position: absolute;
     right: 0;
     background: none;
-    color: #ccc;
+    color: rgba(0, 4, 255, 1);
     font-size: 24rpx;
     border: none;
+
   }
 
   button::after {

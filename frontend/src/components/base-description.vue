@@ -70,7 +70,7 @@ defineExpose({
       ::v-deep .uni-section:first-child {
         border-radius: 10px 10px 0px 0px !important;
       }
-  
+
       ::v-deep .uni-section:last-child {
         border-radius: 0 0 10px 10px;
       }

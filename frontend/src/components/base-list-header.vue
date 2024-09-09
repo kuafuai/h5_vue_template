@@ -40,8 +40,8 @@ const props = defineProps({
   background-color: rgb(93, 95, 239); /* 整体背景色 */
   position: sticky;
   top: 10px;
-  z-index: 999;
-   /* overflow: hidden; */
+  z-index: 9;
+  /* overflow: hidden; */
 }
 
 .left {

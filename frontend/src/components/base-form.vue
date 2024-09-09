@@ -141,12 +141,15 @@ const onSubmit = () => {
 <style scoped lang="scss">
 .all {
   height: 100%;
-  //overflow: auto;
+  overflow: auto;
 }
+
 ::v-deep .uni-forms-item__error {
-  top: -50% !important;
   width: 100%;
-  left:58% !important;
+  right: 0 !important;
+  span {
+    color: rgba(227, 60, 100, 1);
+  }
 }
 /* Add any custom styles for your form here */
 ::v-deep .uni-forms-item {
@@ -216,13 +219,33 @@ const onSubmit = () => {
   background: rgba(166, 166, 166, 1);
 }
 
-::v-deep .uni-forms-item__error {
-  top: -44%;
-  left: 62%;
-  span {
-    color: rgba(227, 60, 100, 1);
-  }
-}
+
 ::v-deep .is-input-error-border .uni-easyinput__placeholder-class{
   color: rgb(166, 166, 166) !important;
-}</style>
+}
+</style>
+base-upload里面的样式
+<style scoped>
+.example-body {
+  padding: 4px !important;
+  border-radius: 10px;
+  width: 100% !important;
+  /* margin-bottom: 20px; */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+}
+
+.uni-file-picker {
+  /*border: 2px dashed #007aff; !* 添加虚线边框并使用主题颜色 *!*/
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fff; /* 确保背景为白色 */
+  transition: border-color 0.3s ease; /* 鼠标悬停时边框颜色渐变 */
+}
+
+.uni-file-picker:hover {
+  border-color: #005bb5; /* 鼠标悬停时边框颜色变为深蓝 */
+}
+::v-deep .uni-file-picker__files{
+  align-items: center !important;
+}
+</style>

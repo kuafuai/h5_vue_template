@@ -188,6 +188,9 @@ function click_ok(item) {
 ::v-deep .uni-list-item__extra-text {
   color: rgba(0, 0, 0, 1);
 }
+::v-deep .uni-list {
+  width: 70%;
+}
 .list_box {
   width: 100%;
   height: 100%;

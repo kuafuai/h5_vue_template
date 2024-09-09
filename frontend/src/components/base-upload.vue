@@ -121,9 +121,10 @@ const uploadFile = (file) => {
 
 <style scoped>
 .example-body {
-  padding: 20px;
+  padding: 4px !important;
   border-radius: 10px;
-  margin-bottom: 20px;
+  width: 100% !important;
+  /* margin-bottom: 20px; */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
 }
 
@@ -137,5 +138,8 @@ const uploadFile = (file) => {
 
 .uni-file-picker:hover {
   border-color: #005bb5; /* 鼠标悬停时边框颜色变为深蓝 */
+}
+::v-deep .uni-file-picker__files{
+  align-items: center !important;
 }
 </style>

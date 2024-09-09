@@ -12,13 +12,13 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, ref } from "vue"
+import {getCurrentInstance, ref} from "vue"
 
-const { proxy } = getCurrentInstance();
+const {proxy} = getCurrentInstance();
 
 // Importing to define props and emit
-import { defineProps, defineEmits, toRefs } from 'vue';
-import { onLoad } from "@dcloudio/uni-app";
+import {defineProps, defineEmits, toRefs} from 'vue';
+import {onLoad} from "@dcloudio/uni-app";
 // import {ElMessage} from 'element-plus';
 // Defining props to receive form and rules from parent
 const props = defineProps({
@@ -74,8 +74,19 @@ const handleSubmit = async () => {
     console.log(res.data)
     let form_message = await proxy.$api[props.table_module]["get"](res.data);
     console.log(form_message)
+
+
     if (props.model == "add") {
       onResetForm()
+    } else {
+      if (form_message.data != null) {
+        for (let key in form_message.data) {
+          if (form_message.data.hasOwnProperty(key)) {
+            props.form[key] = form_message.data[key]
+            // console.log(`${key}: ${person[key]}`);
+          }
+        }
+      }
     }
     emit("success", form_message.data)
   } catch (e) {
@@ -129,6 +140,7 @@ const onSubmit = () => {
   proxy.$refs.formRef.validate().then(res => {
     console.log("121212")
     handleSubmit()
+
   }).catch(err => {
     console.log('表单错误信息：', err);
   })
@@ -147,10 +159,12 @@ const onSubmit = () => {
 ::v-deep .uni-forms-item__error {
   width: 100%;
   right: 0 !important;
+
   span {
     color: rgba(227, 60, 100, 1);
   }
 }
+
 /* Add any custom styles for your form here */
 ::v-deep .uni-forms-item {
   width: 100%;
@@ -220,7 +234,7 @@ const onSubmit = () => {
 }
 
 
-::v-deep .is-input-error-border .uni-easyinput__placeholder-class{
+::v-deep .is-input-error-border .uni-easyinput__placeholder-class {
   color: rgb(166, 166, 166) !important;
 }
 </style>
@@ -245,7 +259,8 @@ base-upload里面的样式
 .uni-file-picker:hover {
   border-color: #005bb5; /* 鼠标悬停时边框颜色变为深蓝 */
 }
-::v-deep .uni-file-picker__files{
+
+::v-deep .uni-file-picker__files {
   align-items: center !important;
 }
 </style>

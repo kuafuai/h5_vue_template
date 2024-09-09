@@ -39,7 +39,7 @@ const props = defineProps({
   height: 20vh; /* 调整为适合的高度 */
   background-color: rgb(93, 95, 239); /* 整体背景色 */
   position: sticky;
-  top: 10px;
+  top: 0px;
   z-index: 9;
   /* overflow: hidden; */
 }

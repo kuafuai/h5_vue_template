@@ -10,7 +10,7 @@
             <uni-list-item :title="item.title"> old {{ item }} </uni-list-item>
           </slot>
         </uni-list>
-        <view class="imgs">
+        <view v-show="is_click" class="imgs">
           <image src="../static/toRight.png" mode="scaleToFill" />
         </view>
       </view>
@@ -75,6 +75,10 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  is_click:{
+    type: Boolean,
+    default: () => false,
+  }
 });
 
 // let route_query = proxy.$route.query
@@ -97,7 +101,6 @@ let pageRes = ref({ current: 1, pages: 1, size: 10, total: 0, records: [] });
 let pageParams = ref({ current: 1, pageSize: 10 });
 
 const emits = defineEmits(["click"]);
-
 // 暴露方法
 defineExpose({
   refresh,
@@ -174,7 +177,7 @@ function handleSizeChange(val) {
 }
 
 function click_ok(item) {
-  emits("click", item);
+ emits("click", item);
 }
 </script>
 
@@ -193,12 +196,14 @@ function click_ok(item) {
 }
 .list_box {
   width: 100%;
-  height: 100%;
+  //height: 100%;
   background: rgb(245, 247, 250);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   position: static;
+  //overflow: auto;
+  overflow-x: hidden;
   z-index: 8;
 
   .box {

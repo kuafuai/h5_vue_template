@@ -1,9 +1,12 @@
 <template>
   <view class="container" v-if="model!='base'">
-    <button v-if="model=='float'" class="btnDialog" :type="type" @click="click"><img style="width:100%"
-                                                                                     src="../static/options.png" alt="">
+    <button v-if="model=='float'" class="btnDialog" :type="type" @click="click">
+      +
+<!--      <img style="width:100%"-->
+<!--                                                                                     src="../static/options.png" alt="">-->
     </button>
-    <button v-if="model=='flex'" class="btnDialog" :type="type" @click="click"><img style="width:100%"
+    <button v-if="model=='flex'" class="btnDialog" :type="type" @click="click">
+      <img style="width:100%"
                                                                                     src="../static/options.png" alt="">
     </button>
     <button v-if="model=='slot'" class="btnDialog" :type="type" @click="click"><img style="width:100%"

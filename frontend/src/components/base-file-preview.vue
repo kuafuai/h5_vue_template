@@ -86,7 +86,7 @@ const openFile = () => {
   padding: 5px;
   /*border: 2px solid #e0e0e0;*/
   border-radius: 10px;
-  margin: 10px 0;
+  margin: 10px 0 0 0 ;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* 添加轻微阴影效果 */
 }
 

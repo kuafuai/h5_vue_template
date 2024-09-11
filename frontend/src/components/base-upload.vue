@@ -94,10 +94,14 @@ const uploadFiles = async () => {
 
 const uploadFile = (file) => {
   return new Promise((resolve, reject) => {
+    console.log(import.meta.env.VITE_APP_SERVICE_API)
     uni.uploadFile({
       url: props.uploadUrl,
       filePath: file.path,
       name: 'file',
+      header: {
+        "BackendAddress": import.meta.env.VITE_APP_SERVICE_API
+      },
       success: (res) => {
         if (res.statusCode === 200) {
           const response = JSON.parse(res.data);

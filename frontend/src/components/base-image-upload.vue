@@ -17,7 +17,7 @@ import {ref, watch} from 'vue';
 const fileurl = defineModel();
 // const pre_url = import.meta.env.VITE_APP_SERVICE_API;
 const pre_url = import.meta.env.VITE_APP_BASE_API;
-console.log("pre",pre_url)
+console.log("pre", pre_url)
 const props = defineProps({
   limit: {
     type: Number,
@@ -95,6 +95,9 @@ const uploadFile = (file) => {
       url: props.uploadUrl,
       filePath: file.path,
       name: 'file',
+      header: {
+        "BackendAddress": import.meta.env.VITE_APP_SERVICE_API
+      },
       success: (res) => {
         if (res.statusCode === 200) {
           const response = JSON.parse(res.data);

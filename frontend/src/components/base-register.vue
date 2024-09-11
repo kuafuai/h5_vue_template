@@ -189,7 +189,7 @@ onLoad(async () => {
       console.log('获取用户名失败');
     }
   })
-  var res = await proxy.$api.register.get_not_null_field(proxy.relevanceTable)
+  var res = await proxy.$api.register.get_not_null_field(proxy.relevanceTable,proxy.register_type)
   if (res.code == 0) {
     if (prop.register_type == 'sms' && (res.code == null || res.data.length == 0)) {
       emits("success")

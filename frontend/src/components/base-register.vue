@@ -261,7 +261,7 @@ const oninput12 = (value, fieldName) => {
   flex-direction: column;
 }
 ::v-deep .is-input-border{
-  border-radius: 20px;
+  border-radius: 30px;
   height: 50px;
   background: rgba(236, 242, 255, 1) !important;
 }
@@ -276,15 +276,15 @@ const oninput12 = (value, fieldName) => {
   color:rgba(166,166,166,1)
 }
 .submit-btn{
-    height: 50px;
-    border-radius: 20px;
-    background: rgba(93, 95, 239, 1);
-    box-shadow: 0px 7px 40px rgba(0, 29, 176, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 15px;
-    color: rgba(250, 251, 255, 1);
+  height: 50px;
+  border-radius: 20px;
+  background: rgba(93, 95, 239, 1);
+  box-shadow: 0px 7px 40px rgba(0, 29, 176, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  color: rgba(250, 251, 255, 1);
 }
 .title {
   width: 100%;

@@ -64,30 +64,30 @@ defineExpose({
   width: 100%;
   //height: 100%;
   //height: 92.3vh;
-  padding: 30px 25px;
+  padding: 30px 15px;
   box-sizing: border-box;
   .all_content {
-      ::v-deep .uni-section:first-child {
-        border-radius: 10px 10px 0px 0px !important;
-      }
-
-      ::v-deep .uni-section:last-child {
-        border-radius: 0 0 10px 10px;
-      }
-  
-      ::v-deep .uni-section__content-title {
-        font-size: 12px !important;
-        color: rgba(56, 56, 56, 1) !important;
-      }
-  
-      ::v-deep .uni-section .uni-section-header__content-sub {
-        display: flex !important;
-        justify-content: flex-start !important;
-        font-size: 10px !important;
-        color: rgba(166, 166, 166, 1) !important;
-      }
-  
+    ::v-deep .uni-section:first-child {
+      border-radius: 10px 10px 0px 0px !important;
     }
+
+    ::v-deep .uni-section:last-child {
+      border-radius: 0 0 10px 10px;
+    }
+
+    ::v-deep .uni-section__content-title {
+      font-size: 12px !important;
+      color: rgba(56, 56, 56, 1) !important;
+    }
+
+    ::v-deep .uni-section .uni-section-header__content-sub {
+      display: flex !important;
+      justify-content: flex-start !important;
+      font-size: 12px !important;
+      color: rgba(166, 166, 166, 1) !important;
+    }
+
+  }
 
   .all {
     height: 66 rpx;

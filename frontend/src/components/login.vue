@@ -327,14 +327,14 @@ function login_click() {
 .hello {
   max-width: 320px;
   width: 100%;
-  height: 120px;
+  height: 140px;
   font-size: 26px;
   letter-spacing: 1px;
   color: rgba(52, 57, 101, 1);
 }
 
 ::v-deep .uni-forms-item {
-  margin-bottom: 40px !important;
+  margin-bottom: 20px !important;
 }
 
 ::v-deep .is-input-border {
@@ -406,7 +406,7 @@ h5 {
   .submit-btn {
     width: 100%;
     height: 55px;
-    margin-top: 50px;
+    margin-top: 35px;
     background: rgba(93, 95, 239, 1);
     box-shadow: 0px 7px 40px rgba(0, 29, 176, 0.3);
     color: rgba(250, 251, 255, 1);

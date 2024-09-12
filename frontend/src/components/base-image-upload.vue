@@ -4,7 +4,7 @@
   <uni-file-picker
       :limit="limit"
       :return-type="array"
-      file-extname="bmp,gif,jpg,jpeg,png"
+      file-extname="jpg,jpeg,png"
       v-model="selectedFiles"
       @select="handleFileChange"
   ></uni-file-picker>

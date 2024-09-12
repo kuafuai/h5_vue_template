@@ -19,7 +19,7 @@ const fileurl = defineModel();
 // const pre_url = import.meta.env.VITE_APP_SERVICE_API;
 const pre_url = import.meta.env.VITE_APP_BASE_API;
 console.log("pre", pre_url)
-const file_extname = ref("bmp,gif,jpg,jpeg,png,doc,docx,xls,xlsx,ppt,pptx,html,htm,txt,rar,zip,gz,bz2,mp4,avi,rmvb,pdf")
+const file_extname = ref(["doc", "docx", "xls", "xlsx", "ppt", "txt", "pdf"])
 const props = defineProps({
   limit: {
     type: Number,
@@ -37,9 +37,9 @@ const props = defineProps({
     type: String,
     default: () => import.meta.env.VITE_APP_BASE_API + "/common/upload",
   },
-  size:{
-    type:Number,
-    default:5
+  size: {
+    type: Number,
+    default: 5
   }
 });
 
@@ -74,8 +74,8 @@ const handleFileChange = async (files) => {
         title: `文件大小在${props.size}MB以内,请压缩后上传`,
         icon: "none"
       })
-      files.tempFiles=[]
-      selectedFiles.value=[]
+      files.tempFiles = []
+      selectedFiles.value = []
       return
     }
   }

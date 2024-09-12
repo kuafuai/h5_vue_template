@@ -3,8 +3,8 @@
   <!--  <view class="example-body">-->
   <uni-file-picker
       :limit="limit"
-      :file-mediatype="accept"
       :return-type="array"
+      file-extname="bmp,gif,jpg,jpeg,png"
       v-model="selectedFiles"
       @select="handleFileChange"
   ></uni-file-picker>
@@ -32,6 +32,10 @@ const props = defineProps({
     type: String,
     default: () => import.meta.env.VITE_APP_BASE_API + "/common/upload",
   },
+  size:{
+    type:Number,
+    default:5
+  }
 });
 
 function extractFileNameAndExtension(url) {
@@ -57,6 +61,21 @@ watch(fileurl, (newValue) => {
 });
 
 const handleFileChange = async (files) => {
+
+  for (var i = 0; i < files.tempFiles.length; i++) {
+    var file_item = files.tempFiles[i]
+    console.log(file_item.size);
+    if (file_item.size > props.size * 1024 * 1024) {
+      uni.showToast({
+        title: `文件大小在${props.size}MB以内,请压缩后上传`,
+        icon: "none"
+      })
+      files.tempFiles=[]
+      selectedFiles.value=[]
+      return
+    }
+  }
+
   selectedFiles.value = files.tempFiles;
   console.log(selectedFiles);
 
@@ -82,6 +101,7 @@ const uploadFiles = async () => {
       icon: 'success',
     });
   } catch (error) {
+    console.log(error)
     uni.showToast({
       title: '文件上传失败',
       icon: 'none',

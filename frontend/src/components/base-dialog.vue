@@ -1,13 +1,17 @@
 <template>
+  <view class="all_dialog">
     <uni-popup
+        :showClose="true"
         ref="popup"
         :animation="true"
-        mode="center"
+        :type="type"
+        :class="popupClass"
     >
       <view style="height: 100%;overflow-y: auto;">
-        <slot name="dialog" />
+        <slot name="dialog"/>
       </view>
     </uni-popup>
+  </view>
 </template>
 
 <script setup>
@@ -17,10 +21,25 @@ const props = defineProps({
     type: String,
     required: true
   },
+  type: {
+    type: String,
+    required: false,
+    default: "center"
+  }
 });
 import {defineProps, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 
+
+console.log(props.type)
+// 根据 type 动态设置不同的 class
+const popupClass = computed(() => {
+  return {
+    'type-bottom-top': props.type === 'bottom' || props.type === 'top',
+    'type-other': props.type !== 'bottom' && props.type !== 'top'
+  };
+});
+// console.log(popupClass.value)
 // const dialogVisible = ref(false)
 // const showDialog = () => {
 //   dialogVisible.value = true
@@ -56,6 +75,11 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+.all_dialog {
+  width: 100vm;
+  z-index: 99999;
+}
+
 //.dialog {
 //  background-color: rgb(113, 116, 248);
 //  position: fixed;
@@ -106,7 +130,18 @@ button {
   user-select: none;
 }
 
-::v-deep .uni-popup__wrapper{
-  height: 80%;
+::v-deep .type-bottom-top .uni-popup__wrapper {
+  //height: 80%;       /* 设置高度为80% */
+  max-height: 500px;
+  overflow: auto;
+  width: 100%;
+  border-radius: 20px 20px 0px 0px;
+}
+
+::v-deep .type-other .uni-popup__wrapper {
+  height: 80%; /* 设置高度为80% */
+  //height: 500px;
+  //overflow: auto;
+  //width: 100%;
 }
 </style>

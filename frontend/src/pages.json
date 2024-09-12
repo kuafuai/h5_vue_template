@@ -1,81 +1,105 @@
 {
-  "easycom": {
-    "autoscan": true,
-    "custom": {
-      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
-      "fui-(.*)": "firstui-uni/firstui/fui-$1/fui-$1.vue",
-      "^base-(.*)": "@/components/base-$1.vue"
+    "easycom": {
+        "autoscan": true,
+        "custom": {
+            "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
+"fui-(.*)": "firstui-uni/firstui/fui-$1/fui-$1.vue","^base-(.*)": "@/components/base-$1.vue"        }
+    },
+    "pages": [{
+        "path": "pages/switch/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/business_login/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/user_register/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/business_register/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/buiness_message/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/user_message/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/user_perfect/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/buiness_perfect/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/user_login/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/user_info/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/project/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/user_info_follow_communicate/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/user_info_follow_communicate_detail/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/buiness_person/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/project_all/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/buiness_person_follow_communicate/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/buiness_person_follow_communicate_detail/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/project_all_detail/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }] ,
+    "globalStyle": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "uni-app",
+        "navigationBarBackgroundColor": "#F8F8F8",
+        "backgroundColor": "#F8F8F8"
     }
-  },
-  "pages": [
-    {
-      "path": "pages/login/index",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    },
-    {
-      "path": "pages/customer/index",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    },
-    {
-      "path": "pages/customer_detail/index",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    },
-    {
-      "path": "pages/visit_management/index",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    },
-    {
-      "path": "pages/visit_management_detail/index",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    },
-    {
-      "path": "pages/business_opportunity/index",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    },
-    {
-      "path": "pages/business_opportunity_detail/index",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    }
-  ],
-  "globalStyle": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
-  },
-  "tabBar": {
-    "color": "#999999",
-    "selectedColor": "rgb(93,95,239)",
-    "backgroundColor": "#FFFFFF",
-    "borderStyle": "black",
-    "fontSize": "14px",
-    "list": [
-      {
-        "pagePath": "pages/customer/index",
-        "text": "客户管理"
-      },
-      {
-        "pagePath": "pages/visit_management/index",
-        "text": "销售拜访管理"
-      },
-      {
-        "pagePath": "pages/business_opportunity/index",
-        "text": "商机管理管理"
-      }
-    ]
-  }
 }

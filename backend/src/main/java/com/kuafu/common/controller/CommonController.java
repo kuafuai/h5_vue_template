@@ -80,7 +80,54 @@ public class CommonController {
 
     public String getUrl() {
         HttpServletRequest request = ServletUtils.getRequest();
+        final String backendUrl = request.getHeader("BackendAddress");
+        if (StringUtils.isNotEmpty(backendUrl)) {
+            return backendUrl;
+//            return getDomain(request).replace(ServletUtils.getRequest().getContextPath(),"") + "/" + processBackedUrl(backendUrl);
+        }
         return getDomain(request);
+    }
+
+
+    /**
+     * 截取真实的路径 https://preview.kuafuai.net/backend98788/common/upload
+     *
+     * @param backendUrl
+     * @return
+     */
+    private String processBackedUrl(String backendUrl) {
+        String contextPath = ServletUtils.getRequest().getServletContext().getContextPath();
+        StringBuffer path = new StringBuffer();
+        if (backendUrl.startsWith("http://")) {
+            backendUrl = backendUrl.replace("http://", "");
+        }
+        if (backendUrl.startsWith("https://")) {
+            backendUrl = backendUrl.replace("https://", "");
+        }
+
+
+        if (backendUrl.endsWith("/")) {
+            backendUrl = backendUrl.substring(0, backendUrl.length() - 1);
+        }
+
+//        if (backendUrl.endsWith(contextPath)) {
+//            backendUrl = backendUrl.replace(contextPath, "");
+//        }
+
+        if (backendUrl.contains("/")) {
+            final String[] split = backendUrl.split("/");
+            if (split.length >= 2) {
+                for (int i = 1; i < split.length; i++) {
+                    path.append(split[i]).append("/");
+                }
+            }
+            path.delete(path.length() - 1, path.length());
+        }
+
+
+        return path.toString();
+
+
     }
 
     public static String getDomain(HttpServletRequest request) {

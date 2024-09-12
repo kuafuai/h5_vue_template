@@ -10,7 +10,7 @@ mybatis:
 
 app:
   # 文件路径 示例（ Windows配置D:/kuafu/uploadPath，Linux配置 /home/kuafu/uploadPath）
-  profile: ${UPLOAD_PATH:./uploadPath}
+  profile: ${UPLOAD_PATH:../../uploadPath}
 
 knife4j:
   enable: true
@@ -46,6 +46,8 @@ mybatis-plus:
 
 
 login:
+  sms:
+    code_timeout: {CODE_TIMEOUT:5}
   enable: ${LOGIN_ENABLE:true}
   table: Login
   select:

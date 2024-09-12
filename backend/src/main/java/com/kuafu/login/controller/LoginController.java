@@ -1,7 +1,9 @@
 package com.kuafu.login.controller;
 
+import cn.hutool.core.util.RandomUtil;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.kuafu.common.annotation.Log;
+import com.kuafu.common.cache.Cache;
 import com.kuafu.common.domin.BaseResponse;
 import com.kuafu.common.domin.ErrorCode;
 import com.kuafu.common.domin.ResultUtils;
@@ -10,12 +12,15 @@ import com.kuafu.common.login.LoginUser;
 import com.kuafu.common.login.SecurityUtils;
 import com.kuafu.common.util.StringUtils;
 import com.kuafu.login.config.LoginRelevanceConfig;
+import com.kuafu.login.config.LoginSmsConfig;
 import com.kuafu.login.model.LoginVo;
+import com.kuafu.login.provider.SmsAuthentication;
 import com.kuafu.login.provider.WxAppAuthentication;
 import com.kuafu.login.provider.WxWebAuthentication;
 import com.kuafu.login.service.LoginBusinessService;
 import com.kuafu.login.service.TokenService;
 import com.kuafu.login.service.WxAppService;
+import com.kuafu.login.utils.MessageTemplate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,6 +31,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.TimeUnit;
+
+import static com.kuafu.login.constant.LoginConstant.LOGIN_CACHE_PRE;
 
 @RestController
 @RequestMapping("")
@@ -45,6 +54,15 @@ public class LoginController {
 
     @Autowired
     private LoginBusinessService loginBusinessService;
+
+    @Autowired
+    private Cache cache;
+
+    @Autowired
+    private LoginSmsConfig loginSmsConfig;
+
+    @Autowired
+    private MessageTemplate messageTemplate;
 
     @PostMapping("/login/wxApp")
     @ApiOperation("小程序CODE登陆")
@@ -123,4 +141,34 @@ public class LoginController {
         loginUser.setRelevanceTable(loginUser.getRelevanceTable());
         return ResultUtils.success(loginUser);
     }
+
+
+    @GetMapping("/login/sms/code")
+    @ApiOperation("发送验证码")
+    @Log
+    public BaseResponse sendCode(@RequestParam String phone) throws Exception {
+
+        final String numbers = RandomUtil.randomNumbers(6);
+        log.info("获取的验证码是{}", numbers);
+        messageTemplate.sendMessage(phone,numbers);
+        cache.setCacheObject(LOGIN_CACHE_PRE + phone, numbers, loginSmsConfig.getCode_timeout(), TimeUnit.MINUTES);
+        return ResultUtils.success();
+    }
+
+    @PostMapping("/login/sms")
+    @ApiOperation("手机号+验证码登陆")
+    @ApiOperationSupport(includeParameters = {"loginVo.phone", "loginVo.password"})
+    public BaseResponse loginBySms(@RequestBody LoginVo loginVo) {
+        LoginRelevanceConfig.setLoginRelevanceTable(loginVo.getRelevanceTable());
+        SmsAuthentication authenticationToken =
+                new SmsAuthentication(loginVo);
+        Authentication returnAuth = authenticationManager.authenticate(authenticationToken);
+        LoginUser loginUser = (LoginUser) returnAuth.getPrincipal();
+        String token = tokenService.createToken(loginUser);
+        LoginRelevanceConfig.remove();
+        return ResultUtils.success(token);
+    }
+
+
+
 }

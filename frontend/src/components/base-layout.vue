@@ -78,5 +78,9 @@ get_wrapper_class();
   width: 100%;
   display: flex;
   justify-content: space-around;
+  margin: 10px 0;
+  border-radius: 17px;
+  background-color: rgba(255, 255, 255, 1);
 }
+
 </style>

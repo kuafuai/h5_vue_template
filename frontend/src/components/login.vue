@@ -343,6 +343,7 @@ function login_click() {
   height: 58px;
   background: rgba(236, 242, 255, 1) !important;
   justify-content: flex-start;
+  border: none;
 }
 
 ::v-deep .uni-forms-item__label.no-label {
@@ -373,7 +374,7 @@ h5 {
   width: 100%;
   max-width: 100%;
   height: 100vh;
-  background: #ffffff;
+  // background: #ffffff;
   border-radius: 10px;
   margin: 0 auto;
   display: flex;

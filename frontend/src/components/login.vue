@@ -281,7 +281,7 @@ const login_success = (res) => {
     duration: 2000
   });
 
-  localStorage.setItem("token", res.data);
+  localStorage.setItem("h5_token", res.data);
   proxy.$api.login.getLoginUser().then((res) => {
     const item = res.data;
     uni.setStorageSync("currentUser", JSON.stringify(item));

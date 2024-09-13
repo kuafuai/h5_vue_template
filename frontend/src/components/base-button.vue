@@ -81,7 +81,7 @@ const click = () => {
     font-size: 24px;
     border-radius: 50%;
     border: none !important;
-    background: rgba(0, 0, 0, 0) !important;
+    background: rgba(0, 0, 0, .5) !important;
   }
 }
 </style>

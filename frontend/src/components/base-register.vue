@@ -23,7 +23,7 @@
 
         </uni-forms-item>
         <uni-forms-item v-for="(item, index) in not_filed_list" :key="index" :label="item.description" required
-          :name="item.fieldName">
+                        :name="item.fieldName">
           <uni-easyinput @input="oninput12($event, item.fieldName)" :placeholder="'请输入' + item.description" />
         </uni-forms-item>
 
@@ -49,7 +49,7 @@
         </uni-forms-item>
 
         <uni-forms-item v-for="(item, index) in not_filed_list" :key="index" :label="item.description" required
-          :name="item.fieldName">
+                        :name="item.fieldName">
           <uni-easyinput @input="oninput12($event, item.fieldName)" :placeholder="'请输入' + item.description" />
         </uni-forms-item>
 
@@ -219,7 +219,7 @@ const submitForm = async () => {
     console.log('表单错误信息：', err);
 
   })
-    ;
+  ;
 
 
 }
@@ -260,6 +260,9 @@ const oninput12 = (value, fieldName) => {
 ::v-deep .uni-forms-item.is-direction-left {
   flex-direction: column;
 }
+::v-deep .uni-forms-item{
+  margin-bottom: 10px;
+}
 ::v-deep .is-input-border{
   border-radius: 30px;
   height: 50px;
@@ -267,6 +270,8 @@ const oninput12 = (value, fieldName) => {
 }
 ::v-deep .uni-forms-item__label{
   width: 100% !important;
+  color: rgba(52, 57, 101, 1);
+  font-weight: 300;
 }
 ::v-deep uni-text{
   margin-left: 2px !important;
@@ -288,7 +293,7 @@ const oninput12 = (value, fieldName) => {
 }
 .title {
   width: 100%;
-  font-size: 15px;
+  font-size: 0.9375rem;
   display: flex;
   justify-content: flex-start;
   border-bottom: 1px solid rgba(230, 232, 240, 1);
@@ -304,7 +309,7 @@ const oninput12 = (value, fieldName) => {
   text-align: center;
   padding: 30px;
   height: 100vh;
-  background: #ffffff;
+  // background: #ffffff;
 }
 
 .send-code-button {

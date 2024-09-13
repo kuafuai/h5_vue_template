@@ -5,6 +5,7 @@
         :limit="limit"
         :file-mediatype="accept"
         :return-type="array"
+        :file-extname="file_extname"
         v-model="selectedFiles"
         @select="handleFileChange"
     ></uni-file-picker>
@@ -18,6 +19,7 @@ const fileurl = defineModel();
 // const pre_url = import.meta.env.VITE_APP_SERVICE_API;
 const pre_url = import.meta.env.VITE_APP_BASE_API;
 console.log("pre", pre_url)
+const file_extname = ref(["doc", "docx", "xls", "xlsx", "ppt", "txt", "pdf"])
 const props = defineProps({
   limit: {
     type: Number,
@@ -35,6 +37,10 @@ const props = defineProps({
     type: String,
     default: () => import.meta.env.VITE_APP_BASE_API + "/common/upload",
   },
+  size: {
+    type: Number,
+    default: 5
+  }
 });
 
 function extractFileNameAndExtension(url) {
@@ -60,8 +66,23 @@ watch(fileurl, (newValue) => {
 });
 
 const handleFileChange = async (files) => {
+  for (var i = 0; i < files.tempFiles.length; i++) {
+    var file_item = files.tempFiles[i]
+    console.log(file_item.size);
+    if (file_item.size > props.size * 1024 * 1024) {
+      uni.showToast({
+        title: `文件大小在${props.size}MB以内,请压缩后上传`,
+        icon: "none"
+      })
+      files.tempFiles = []
+      selectedFiles.value = []
+      return
+    }
+  }
+  console.log(files)
   selectedFiles.value = files.tempFiles;
   console.log(selectedFiles);
+
 
   // 自动上传文件
   await uploadFiles();
@@ -143,7 +164,8 @@ const uploadFile = (file) => {
 .uni-file-picker:hover {
   border-color: #005bb5; /* 鼠标悬停时边框颜色变为深蓝 */
 }
-::v-deep .uni-file-picker__files{
+
+::v-deep .uni-file-picker__files {
   align-items: center !important;
 }
 </style>

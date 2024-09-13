@@ -126,7 +126,7 @@ onMounted(() => {
       {
         name: 'Access From',
         type: 'pie',
-        radius: ['40%', '70%'],
+        radius: ['40%', '60%'],
         center: ['52%', '56%'],
         avoidLabelOverlap: true,
         itemStyle: {
@@ -180,13 +180,14 @@ onMounted(() => {
   width: 100%;
   max-width: 90%; /* 确保容器不会超过页面宽度 */
   overflow: hidden;
-  padding: 10px;
+  /* padding: 10px; */
+  font-size: 0.875rem;
 
 }
 .chart {
   width:300px; /* 确保图表容器占满宽度 */
   height: 50vh; /* 使用视口高度的 50% */
-  margin: 20px auto;
+  margin: 0px auto;
 }
 
 .option-item {

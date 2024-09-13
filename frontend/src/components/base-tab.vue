@@ -49,6 +49,16 @@ const onClickItem = (e) => {
   font-size: 16px !important;
   font-weight: 700 !important;
 }
+::v-deep .segmented-control__text {
+ span{
+  color:rgba(166, 166, 166, 1)
+ }
+}
+::v-deep .segmented-control__item--text {
+  span {
+    color: rgba(93,95,239,1)
+  }
+}
 
 ::v-deep .uni-section__content-title {
   display: flex;

@@ -143,7 +143,7 @@ onLoad(async () => {
 }
 
 .question-text {
-  font-weight: bold;
+  font-weight: 400;
 }
 
 .option-list {

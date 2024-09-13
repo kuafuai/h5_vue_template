@@ -7,6 +7,7 @@ import service  from "@/utils/request";
 import '@/styles/index.scss';
 import login from "@/components/login.vue"
 import navigate from "@/utils/navigate";
+import '../src/assets/css/font.css';
 export function createApp() {
     const app = createSSRApp(App);
     

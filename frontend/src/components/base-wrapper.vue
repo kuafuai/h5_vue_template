@@ -91,6 +91,7 @@ getWrapperClass();
   display: flex;
   flex-direction: column;
   height: 100%;
+  background: rgb(245, 247, 250);
   /*overflow: hidden;*/
 }
 

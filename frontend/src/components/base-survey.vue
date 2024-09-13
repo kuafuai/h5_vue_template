@@ -207,7 +207,7 @@ const submit = async () => {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .survey-container {
   padding: 1rem;
   box-sizing: border-box;
@@ -230,6 +230,11 @@ const submit = async () => {
   margin-top: 0.5rem;
 }
 
+::v-deep .checklist-group{
+  flex-direction: column !important;
+  padding: 0 0 0 1.5rem;
+}
+
 .question-section {
   margin-bottom: 1.5rem;
 }
@@ -245,7 +250,7 @@ const submit = async () => {
 .checkbox-label {
   display: flex;
   align-items: center;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
 }
 
 .input-box {

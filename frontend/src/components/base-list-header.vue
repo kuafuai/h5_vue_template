@@ -55,7 +55,6 @@ const props = defineProps({
 }
 
 .toolbar {
-  margin-bottom: 16px;
 }
 
 .info {
@@ -67,14 +66,14 @@ const props = defineProps({
 }
 
 .nickname {
-  font-size: 20px;
+  font-size: 1.125rem;
   font-weight: bold;
-  margin: 0;
+  margin: 1rem 0 0 0;
 }
 
 .description {
-  font-size: 14px;
-  margin: 0;
+  font-size: 0.75rem;
+  margin: 0.4rem 0;
 }
 
 .right {

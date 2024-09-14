@@ -33,7 +33,7 @@ const onClickItem = (e) => {
 <style scoped lang="scss">
 ::v-deep .uni-padding-wrap,
 .uni-common-mt {
-  background: rgb(250, 251, 255);
+  background: rgb(245, 247, 250);
   position: relative;
 }
 
@@ -42,12 +42,22 @@ const onClickItem = (e) => {
 .content-text {
   height: 100%;
   overflow: auto;
-  background: rgb(250, 251, 255);
+  background: rgb(245, 247, 250);
 }
 
 ::v-deep .segmented-control__text {
   font-size: 16px !important;
   font-weight: 700 !important;
+}
+::v-deep .segmented-control__text {
+ span{
+  color:rgba(166, 166, 166, 1)
+ }
+}
+::v-deep .segmented-control__item--text {
+  span {
+    color: rgba(93,95,239,1)
+  }
 }
 
 ::v-deep .uni-section__content-title {

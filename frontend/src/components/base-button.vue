@@ -59,13 +59,14 @@ const click = () => {
 }
 
 .container {
-  background-color: rgba(93, 95, 239, .5);
+  //background-color: rgba(93, 95, 239, .5);
   position: fixed;
   right: 3%;
   z-index: 99999;
   border-radius: 50%;
   display: flex;
-  width: 44px;
+  width: 2.5rem;
+  height: 2.5rem;
   bottom: 15%;
   //height: 44px;
 
@@ -73,9 +74,9 @@ const click = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
+    width: 2.5rem;
     color: white;
-    height: 44px;
+    height: 2.5rem;
     text-align: center;
     line-height: 44px;
     font-size: 24px;

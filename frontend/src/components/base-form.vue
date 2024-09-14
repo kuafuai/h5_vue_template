@@ -216,9 +216,9 @@ const onSubmit = () => {
 .up,
 .reset {
   border-radius: 100px;
-  width: 8rem;
-  height: 2.8rem;
-  font-size: 0.8rem;
+  width: 9.4rem;
+  height: 3rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 1);
   display: flex;
   align-items: center;

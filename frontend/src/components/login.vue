@@ -380,7 +380,9 @@ h5 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 1rem;
   justify-content: center;
+  box-sizing: border-box;
 
   h2 {
     color: rgb(93, 95, 239);

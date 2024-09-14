@@ -1,14 +1,14 @@
 <template>
   <view class="all_echarts">
     <view v-if="is_echarts">
-      <view class="chart" :id="'mychart-dom-bar'+randomInt" ref="mychart"></view>
+      <view class="chart" :id="'mychart-dom-bar' + randomInt" ref="mychart"></view>
     </view>
     <view v-else>
 
       <view v-for="item in option">
-        <view v-if="item.children && item.children.length >0" class="option-list">
+        <view v-if="item.children && item.children.length > 0" class="option-list">
           <!--          <view>有chailderen {{ item }}</view>-->
-          <base-echarts :option="item.children"/>
+          <base-echarts :option="item.children" />
 
         </view>
         <view v-else>
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import {ref, onMounted, defineProps} from 'vue';
+import { ref, onMounted, defineProps } from 'vue';
 // import * as echarts from 'echarts';
 // import ecCanvas from '@dcloudio/uni-ui/lib/ec-canvas/ec-canvas.vue';
 const props = defineProps({
@@ -99,70 +99,85 @@ console.log(randomInt); // 输出在 1 到 10 之间的整数，包括 1 和 10
 //     { deep: true, immediate: true } // 深度监听，立即执行回调
 // );
 import * as echarts from 'echarts';
-import {getCurrentInstance} from "vue"
-import {onReady, onShow} from "@dcloudio/uni-app";
+import { getCurrentInstance } from "vue"
+import { onReady, onShow } from "@dcloudio/uni-app";
 
-const {proxy} = getCurrentInstance();
+const { proxy } = getCurrentInstance();
 // debugger
 onMounted(() => {
   let charBox = '#mychart-dom-bar' + randomInt
-  console.log(charBox, "charBoxcharBox")
   var chartDom = document.querySelector(charBox)
-
-  console.log(chartDom, "akjf;lakdjf;lakdjfl;")
-// debugger
+  // debugger
   var myChart = echarts.init(chartDom);
   var option;
 
   option = {
-    tooltip: {
-      trigger: 'item'
-    },
+    // tooltip: {
+    //   trigger: 'item'
+    // },
     legend: {
-      top: '5%',
-      left: 'center'
+      top: '15%',
+      left: 'center',
+      itemWidth: 20,  // 图例标记的图形宽度
+      itemHeight: 14,  // 图例标记的图形高度
+      formatter: function (name) {
+        return name.length > 10 ? name.slice(0, 10) + "..." : name;  // 控制图例显示的文本长度
+      },
+      orient: 'horizontal',  // 设置图例为水平排列
+      itemGap: 20,  // 控制图例项之间的间距
+      width: '100%',  // 设置图例容器的宽度为100%
+      align: 'auto',  // 自动排列
+      padding: [10, 50],  // 图例与容器边界的间距，防止内容溢出
+      lineHeight: 30,  // 每行的高度
     },
+
+
     series: [
-      {
-        name: 'Access From',
-        type: 'pie',
-        radius: ['40%', '60%'],
-        center: ['52%', '56%'],
-        avoidLabelOverlap: true,
-        itemStyle: {
-          borderRadius: 10,
-          borderColor: '#fff',
-          borderWidth: 2
+  {
+    name: 'Access From',
+    type: 'pie',
+    radius: ['40%', '60%'],
+    center: ['52%', '56%'],
+    avoidLabelOverlap: true,
+    itemStyle: {
+      borderRadius: 10,
+      borderColor: '#fff',
+      borderWidth: 2
+    },
+    label: {
+      show: true,
+      position: 'outside',
+      formatter: '{b|{b}: }{c}',  // 格式化标签，使用 rich 样式自定义
+      rich: {
+        b: {
+          width: 100,  // 增加宽度
+          overflow: 'break',  // 如果文字太长，则换行显示
         },
-        label: {
-          show: true,
-          position: 'outside',
-          formatter: '{b|{b}: }{c}',  // 格式化标签，使用 rich 样式自定义
-          rich: {
-            b: {
-              width: 100,  // 增加宽度
-              overflow: 'break',  // 如果文字太长，则换行显示
-            },
-            c: {
-              width: 50,
-              align: 'right',
-            }
-          }
-        },
-        emphasis: {
-          label: {
-            show: true,
-            fontSize: 20,
-            fontWeight: 'bold',
-            formatter: '{b}: {c} ({d}%)',  // 在强调状态下显示百分比
-          }
-        },
-        labelLine: {
-          show: true  // 显示标签引导线
-        },
-        data: props.option
+        c: {
+          width: 50,
+          align: 'right',
+        }
       }
-    ]
+    },
+    emphasis: {
+      scale: false,  // 禁用鼠标移入时的放大效果
+      label: {
+        show: true,  // 保持强调状态下的标签显示
+        fontSize: 14,  // 你可以自定义字体大小等样式
+        fontWeight: 'normal'
+      },
+      labelLine: {
+        show: true  // 保持标签引导线的显示
+      }
+    },
+    labelLine: {
+      show: true  // 显示标签引导线
+    },
+    data: props.option
+  }
+]
+
+
   };
 
   option && myChart.setOption(option);
@@ -175,18 +190,22 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.all_echarts{
+.all_echarts {
   /*padding: 5%;*/
   width: 100%;
-  max-width: 90%; /* 确保容器不会超过页面宽度 */
+  max-width: 90%;
+  /* 确保容器不会超过页面宽度 */
   overflow: hidden;
   /* padding: 10px; */
   font-size: 0.875rem;
 
 }
+
 .chart {
-  width:300px; /* 确保图表容器占满宽度 */
-  height: 50vh; /* 使用视口高度的 50% */
+  width: 300px;
+  /* 确保图表容器占满宽度 */
+  height: 50vh;
+  /* 使用视口高度的 50% */
   margin: 0px auto;
 }
 

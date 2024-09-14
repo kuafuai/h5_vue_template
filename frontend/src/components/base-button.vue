@@ -1,7 +1,7 @@
 <template>
   <view class="container" v-if="model!='base'">
     <button v-if="model=='float'" class="btnDialog" :type="type" @click="click">
-      <img style="width:100%"
+      <img style="width:100%;height:100%"
            src="../static/add.png" alt="">
       <!--      <view style="display: flex;-->
       <!--  align-items: center;-->
@@ -59,14 +59,13 @@ const click = () => {
 }
 
 .container {
-  //background-color: rgba(93, 95, 239, .5);
+  background-color: rgb(113, 116, 248);
   position: fixed;
   right: 3%;
   z-index: 99999;
   border-radius: 50%;
   display: flex;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 44px;
   bottom: 15%;
   //height: 44px;
 
@@ -74,15 +73,15 @@ const click = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2.5rem;
+    width: 44px;
     color: white;
-    height: 2.5rem;
+    height: 44px;
     text-align: center;
     line-height: 44px;
     font-size: 24px;
     border-radius: 50%;
     border: none !important;
-    background: rgba(93, 95, 239, .5) !important;
+    background: rgba(0, 0, 0, .5) !important;
   }
 }
 </style>

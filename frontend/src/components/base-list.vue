@@ -11,7 +11,7 @@
           </slot>
         </uni-list>
         <view v-show="is_click" class="imgs">
-          <image src="../static/toRight.png" style="width:13px" mode="widthFill" />
+          <image src="../static/toRight.png" style="width:13px;height:15px" mode="widthFill" />
         </view>
       </view>
       <!--      <view class="operate">-->
@@ -185,16 +185,15 @@ function click_ok(item) {
   flex: none;
 }
 ::v-deep .uni-list-item__container {
-  padding:5px 15px !important;
+  padding:3px 15px !important;
 }
 ::v-deep .uni-list-item__content-title {
   color: rgba(113, 142, 191, 1);
-  font-size: 0.9rem !important;
+  font-size: 14px !important;
 }
 ::v-deep .uni-list-item__extra-text {
   color: rgba(0, 0, 0, 1);
-  font-size: 0.9rem !important;
-  font-weight: 300 !important;
+  font-size: 14px !important;
 }
 ::v-deep .uni-list {
   width: 70%;
@@ -202,7 +201,7 @@ function click_ok(item) {
 .list_box {
   width: 100%;
   //height: 100%;
-  background: rgb(245, 247, 250);
+  // background: rgb(245, 247, 250);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -215,12 +214,12 @@ function click_ok(item) {
     font-family: 'DemiLight';
     font-weight: 400;
     background: white;
-    margin-bottom: 40rpx;
+    margin-bottom: 30rpx;
   }
 
   .content {
     display: flex;
-    margin: 30rpx 0 0 0;
+    // margin: 30rpx 0 0 0;
     box-sizing: border-box;
     background: white;
     font-size: 16px;
@@ -228,7 +227,6 @@ function click_ok(item) {
 
     .indexBox {
       width: 20%;
-      font-size: 1rem;
 
       view {
         margin: 0 auto;
@@ -277,7 +275,7 @@ function click_ok(item) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 60%;
+    margin-top: 43%;
     font-size: 20px;
     font-weight: 500;
     color: rgba(144, 150, 178, 1);
@@ -302,7 +300,7 @@ function click_ok(item) {
   .imgs {
     display: flex;
     align-items: center;
-    width: 10%;
+    width: 20%;
     justify-content: center;
     image {
       width: 50rpx;

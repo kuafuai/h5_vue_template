@@ -3,13 +3,13 @@
     <button v-if="model=='float'" class="btnDialog" :type="type" @click="click">
       <img style="width:100%"
            src="../static/add.png" alt="">
-<!--      <view style="display: flex;-->
-<!--  align-items: center;-->
-<!--  justify-content: center;">+</view>-->
+      <!--      <view style="display: flex;-->
+      <!--  align-items: center;-->
+      <!--  justify-content: center;">+</view>-->
     </button>
     <button v-if="model=='flex'" class="btnDialog" :type="type" @click="click">
       <img style="width:100%"
-                                                                                    src="../static/options.png" alt="">
+           src="../static/options.png" alt="">
     </button>
     <button v-if="model=='slot'" class="btnDialog" :type="type" @click="click"><img style="width:100%"
                                                                                     src="../static/options.png" alt="">
@@ -59,7 +59,7 @@ const click = () => {
 }
 
 .container {
-  background-color: rgb(113, 116, 248);
+  background-color: rgba(93, 95, 239, .5);
   position: fixed;
   right: 3%;
   z-index: 99999;
@@ -81,7 +81,7 @@ const click = () => {
     font-size: 24px;
     border-radius: 50%;
     border: none !important;
-    background: rgba(0, 0, 0, .5) !important;
+    background: rgba(93, 95, 239, .5) !important;
   }
 }
 </style>

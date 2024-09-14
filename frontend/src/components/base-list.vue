@@ -7,46 +7,51 @@
         </view>
         <uni-list class="list" :border="false">
           <slot name="default" :item="item">
-            <uni-list-item :title="item.title"> old{{ item }} </uni-list-item>
+            <uni-list-item :title="item.title"> old {{ item }} </uni-list-item>
           </slot>
         </uni-list>
         <view v-show="is_click" class="imgs">
-          <image src="../static/toRight.png" style="width:13px" mode="widthFill" />
+          <image src="../static/toRight.png" mode="scaleToFill" />
         </view>
       </view>
-      <!--      <view class="operate">-->
-      <!--        <view class="detail">-->
-      <!--          <image-->
-      <!--              style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
-      <!--              src="../static/detail.png"-->
-      <!--              mode="scaleToFill"-->
-      <!--          />-->
-      <!--          详情-->
-      <!--        </view>-->
-      <!--        <view class="edit">-->
-      <!--          <image-->
-      <!--              style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
-      <!--              src="../static/edit.png"-->
-      <!--              mode="scaleToFill"-->
-      <!--          />编辑-->
-      <!--        </view>-->
-      <!--        <view class="del">-->
-      <!--          <image-->
-      <!--              style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
-      <!--              src="../static/del.png"-->
-      <!--              mode="scaleToFill"-->
-      <!--          />删除-->
-      <!--        </view>-->
-      <!--      </view>-->
+<!--      <view class="operate">-->
+<!--        <view class="detail">-->
+<!--          <image-->
+<!--              style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
+<!--              src="../static/detail.png"-->
+<!--              mode="scaleToFill"-->
+<!--          />-->
+<!--          详情-->
+<!--        </view>-->
+<!--        <view class="edit">-->
+<!--          <image-->
+<!--              style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
+<!--              src="../static/edit.png"-->
+<!--              mode="scaleToFill"-->
+<!--          />编辑-->
+<!--        </view>-->
+<!--        <view class="del">-->
+<!--          <image-->
+<!--              style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
+<!--              src="../static/del.png"-->
+<!--              mode="scaleToFill"-->
+<!--          />删除-->
+<!--        </view>-->
+<!--      </view>-->
     </view>
     <view v-if="isPage" class="flex-end-center m-t-10 m-r-10">
-      <fui-pagination :total="pageRes.total" :pageSize="pageParams.pageSize" :current="pageParams.current"
-        @change="handleCurrentChange" :pageType="2"></fui-pagination>
+      <fui-pagination
+          :total="pageRes.total"
+          :pageSize="pageParams.pageSize"
+          :current="pageParams.current"
+          @change="handleCurrentChange"
+          :pageType="2"
+      ></fui-pagination>
     </view>
   </view>
   <view v-else class="list_box">
     <view class="nodata">
-      <img src="../static/noData.png" style="width:200px;height:auto" alt="" />
+      <img src="../static/noData.png" alt="" />
       <view class="noText">暂无数据～</view>
     </view>
   </view>
@@ -177,23 +182,14 @@ function click_ok(item) {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .uni-list--border:after{
-  position: none !important;
-  height: 0px;
-}
 ::v-deep .uni-list-item__content {
   flex: none;
 }
-::v-deep .uni-list-item__container {
-  padding:5px 15px !important;
-}
 ::v-deep .uni-list-item__content-title {
   color: rgba(113, 142, 191, 1);
-  font-size: 16px !important;
 }
 ::v-deep .uni-list-item__extra-text {
   color: rgba(0, 0, 0, 1);
-  font-size: 16px !important;
 }
 ::v-deep .uni-list {
   width: 70%;
@@ -201,7 +197,7 @@ function click_ok(item) {
 .list_box {
   width: 100%;
   //height: 100%;
-  background: rgb(245, 247, 250);
+  background: rgb(250, 251, 255);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -211,8 +207,6 @@ function click_ok(item) {
   z-index: 8;
 
   .box {
-  font-family: 'DemiLight';
-  font-weight: 400;
     background: white;
     margin-bottom: 40rpx;
   }
@@ -224,6 +218,9 @@ function click_ok(item) {
     background: white;
     font-size: 16px;
     justify-content: space-between;
+    ::v-deep .uni-list--border::after{
+      height: 0 !important;
+    }
 
     .indexBox {
       width: 20%;
@@ -275,17 +272,16 @@ function click_ok(item) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 60%;
-    font-size: 20px;
-    font-weight: 500;
-    color: rgba(144, 150, 178, 1);
+    margin-top: 25%;
+    font-size: 24px;
+
     .noText {
-      margin-top: 18.8px;
+      margin-top: 45px;
     }
   }
 
   .list {
-    flex: 1;
+    // flex: 1;
     margin: 30rpx 0;
     box-sizing: border-box;
     border-radius: 15rpx;

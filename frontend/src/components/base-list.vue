@@ -11,7 +11,8 @@
           </slot>
         </uni-list>
         <view v-show="is_click" class="imgs">
-          <image src="../static/toRight.png" style="width:13px" mode="widthFill" />
+          <image src="../static/toRight.png" style="
+          width:0.625rem;height:1.25rem;" mode="widthFill" />
         </view>
       </view>
       <!--      <view class="operate">-->
@@ -300,7 +301,7 @@ function click_ok(item) {
   .imgs {
     display: flex;
     align-items: center;
-    width: 10%;
+    width: 18%;
     justify-content: center;
     image {
       width: 50rpx;

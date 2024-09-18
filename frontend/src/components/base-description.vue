@@ -14,7 +14,7 @@
 
     <view v-else class="list_box">
       <view class="nodata">
-        <img src="../static/noData.png" alt="">
+        <img src="../static/noData.png" style="width:200px;height:auto" alt="">
         <view class="noText">暂无数据～</view>
       </view>
     </view>
@@ -66,9 +66,10 @@ defineExpose({
   //height: 92.3vh;
   padding: 30px 15px;
   box-sizing: border-box;
+
   .all_content {
     ::v-deep .uni-section:first-child {
-      border-radius: 10px 10px 0px 0px !important;
+      border-radius: 10px 10px 0px 0px;
     }
 
     ::v-deep .uni-section:last-child {
@@ -76,19 +77,23 @@ defineExpose({
     }
 
     ::v-deep .uni-section__content-title {
-      font-size: 12px !important;
+      font-size: 14px !important;
       color: rgba(56, 56, 56, 1) !important;
     }
 
     ::v-deep .uni-section .uni-section-header__content-sub {
       display: flex !important;
       justify-content: flex-start !important;
-      font-size: 12px !important;
+      font-size: 14px !important;
       color: rgba(166, 166, 166, 1) !important;
     }
 
   }
-
+  .tops{
+    ::v-deep .uni-section:last-child {
+      border-radius: 0 0 0 0 !important;
+    }
+  }
   .all {
     height: 66 rpx;
     line-height: 66 rpx;
@@ -142,11 +147,12 @@ defineExpose({
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 25%;
-    font-size: 24px;
-
+    margin-top: 60%;
+    font-size: 20px;
+    font-weight: 500;
+    color: rgba(144, 150, 178, 1);
     .noText {
-      margin-top: 45px;
+      margin-top: 18.8px;
     }
   }
 

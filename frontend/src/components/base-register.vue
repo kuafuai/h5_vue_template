@@ -23,7 +23,7 @@
 
         </uni-forms-item>
         <uni-forms-item v-for="(item, index) in not_filed_list" :key="index" :label="item.description" required
-          :name="item.fieldName">
+                        :name="item.fieldName">
           <uni-easyinput @input="oninput12($event, item.fieldName)" :placeholder="'请输入' + item.description" />
         </uni-forms-item>
 
@@ -49,7 +49,7 @@
         </uni-forms-item>
 
         <uni-forms-item v-for="(item, index) in not_filed_list" :key="index" :label="item.description" required
-          :name="item.fieldName">
+                        :name="item.fieldName">
           <uni-easyinput @input="oninput12($event, item.fieldName)" :placeholder="'请输入' + item.description" />
         </uni-forms-item>
 
@@ -219,7 +219,7 @@ const submitForm = async () => {
     console.log('表单错误信息：', err);
 
   })
-    ;
+  ;
 
 
 }

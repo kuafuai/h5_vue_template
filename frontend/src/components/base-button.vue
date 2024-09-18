@@ -1,15 +1,15 @@
 <template>
   <view class="container" v-if="model!='base'">
     <button v-if="model=='float'" class="btnDialog" :type="type" @click="click">
-      <img style="width:100%;height:100%"
+      <img style="height:81%"
            src="../static/add.png" alt="">
-      <!--      <view style="display: flex;-->
-      <!--  align-items: center;-->
-      <!--  justify-content: center;">+</view>-->
+<!--      <view style="display: flex;-->
+<!--  align-items: center;-->
+<!--  justify-content: center;">+</view>-->
     </button>
     <button v-if="model=='flex'" class="btnDialog" :type="type" @click="click">
       <img style="width:100%"
-           src="../static/options.png" alt="">
+                                                                                    src="../static/options.png" alt="">
     </button>
     <button v-if="model=='slot'" class="btnDialog" :type="type" @click="click"><img style="width:100%"
                                                                                     src="../static/options.png" alt="">
@@ -59,13 +59,14 @@ const click = () => {
 }
 
 .container {
-  background-color: rgb(113, 116, 248);
+  //background-color: rgba(93, 95, 239, .5);
   position: fixed;
   right: 3%;
-  z-index: 99999;
+  z-index: 99;
   border-radius: 50%;
   display: flex;
-  width: 44px;
+  width: 2.5rem;
+  height: 2.5rem;
   bottom: 15%;
   //height: 44px;
 
@@ -73,15 +74,15 @@ const click = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
+    width: 2.5rem;
     color: white;
-    height: 44px;
+    height: 2.5rem;
     text-align: center;
     line-height: 44px;
     font-size: 24px;
     border-radius: 50%;
     border: none !important;
-    background: rgba(0, 0, 0, .5) !important;
+    background: rgba(93, 95, 239, .5) !important;
   }
 }
 </style>

@@ -68,12 +68,12 @@ const props = defineProps({
 .nickname {
   font-size: 1.125rem;
   font-weight: bold;
-  margin: 1.5rem 0 0 0;
+  margin: 1rem 0 0 0;
 }
 
 .description {
   font-size: 0.75rem;
-  margin: 0.8rem 0;
+  margin: 0.4rem 0;
 }
 
 .right {

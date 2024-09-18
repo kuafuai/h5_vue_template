@@ -1,11 +1,11 @@
 <template>
   <view class="all">
-    <uni-forms ref="formRef" :modelValue="form" :rules="rules" label-width="auto" style="max-width: 100%;
+    <uni-forms ref="formRef" :modelValue="form" :rules="rules" label-width="auto" style="max-width: 600px;
   background-color: white;padding: 20px ;box-sizing:border-box" @submit.prevent="onSubmit">
       <slot name="form-items"></slot>
       <uni-forms-item>
-        <button @click="onResetForm" class="reset">重置</button>
         <button type="primary" @click="onSubmit" class="up">提交</button>
+        <button @click="onResetForm" class="reset">重置</button>
       </uni-forms-item>
     </uni-forms>
   </view>
@@ -216,9 +216,9 @@ const onSubmit = () => {
 .up,
 .reset {
   border-radius: 100px;
-  width: 9.4rem;
-  height: 3rem;
-  font-size: 1rem;
+  width:10rem;
+  height: 3.2rem;
+  font-size: 0.9375rem;
   color: rgba(255, 255, 255, 1);
   display: flex;
   align-items: center;

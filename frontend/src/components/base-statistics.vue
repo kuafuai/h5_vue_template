@@ -10,10 +10,7 @@
     <view v-if="is_group">
       <!--  分组执行的情况 -->
       <view v-for="(question, index) in questions" :key="index" class="question-item">
-        <view class="shu">
-          <img src="../static/shu.png" style="width:5px;height:18px;margin-right:7px" alt="" >
-          <text class="question-text">{{ question.name }}</text>
-        </view>
+        <text class="question-text">{{ question.name }}</text>
         <view v-if="question.children && question.children.length > 0" class="option-list">
           <base-echarts :option="question.children" :inx="index"
                         :group_result_show_display="group_result_show_display"/>
@@ -143,13 +140,6 @@ onLoad(async () => {
 
 .question-item {
   margin-bottom: 20px;
-}
-
-.shu{
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start; 
-  align-items: center;
 }
 
 .question-text {

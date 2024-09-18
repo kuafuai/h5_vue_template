@@ -69,7 +69,7 @@ defineExpose({
 
   .all_content {
     ::v-deep .uni-section:first-child {
-      border-radius: 10px 10px 0px 0px !important;
+      border-radius: 10px 10px 0px 0px;
     }
 
     ::v-deep .uni-section:last-child {
@@ -89,7 +89,11 @@ defineExpose({
     }
 
   }
-
+  .tops{
+    ::v-deep .uni-section:last-child {
+      border-radius: 0 0 0 0 !important;
+    }
+  }
   .all {
     height: 66 rpx;
     line-height: 66 rpx;

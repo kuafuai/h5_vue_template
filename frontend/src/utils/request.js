@@ -19,8 +19,8 @@ service.interceptors.request.use(
         }
 
         // 可选：定义 useLogin 函数或移除相关代码
-        if (localStorage.getItem('token')) {
-            config.headers.Authorization = 'Bearer ' + localStorage.getItem('token');
+        if (localStorage.getItem("h5_token")) {
+            config.headers.Authorization = 'Bearer ' + localStorage.getItem("h5_token");
         }
 
         return config;
@@ -39,7 +39,7 @@ service.interceptors.response.use(
             return res;
         } else {
             if (code === 401 || code === 403) {
-                localStorage.removeItem('token');
+                localStorage.removeItem("h5_token");
                 location.href =
                     import.meta.env.VITE_BASE;
             } else {
@@ -59,7 +59,7 @@ service.interceptors.response.use(
     (error) => {
         console.log('请求异常：', error);
         if (error.response.status === 401) {
-            localStorage.removeItem('token');
+            localStorage.removeItem("h5_token");
             location.href =
                 import.meta.env.VITE_BASE;
         } else {

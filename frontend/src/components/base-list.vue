@@ -189,11 +189,11 @@ function click_ok(item) {
 }
 ::v-deep .uni-list-item__content-title {
   color: rgba(113, 142, 191, 1);
-  font-size: 16px !important;
+  font-size: 1rem !important;
 }
 ::v-deep .uni-list-item__extra-text {
   color: rgba(0, 0, 0, 1);
-  font-size: 16px !important;
+  font-size: 1rem !important;
 }
 ::v-deep .uni-list {
   width: 70%;
@@ -222,7 +222,7 @@ function click_ok(item) {
     margin: 30rpx 0 0 0;
     box-sizing: border-box;
     background: white;
-    font-size: 16px;
+    font-size: 1rem;
     justify-content: space-between;
 
     .indexBox {
@@ -275,7 +275,7 @@ function click_ok(item) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 60%;
+    margin-top: 37%;
     font-size: 20px;
     font-weight: 500;
     color: rgba(144, 150, 178, 1);

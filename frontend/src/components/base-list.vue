@@ -275,7 +275,7 @@ function click_ok(item) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 60%;
+    margin-top: 37%;
     font-size: 20px;
     font-weight: 500;
     color: rgba(144, 150, 178, 1);

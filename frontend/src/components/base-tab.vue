@@ -1,8 +1,7 @@
 <template>
   <view class="uni-padding-wrap uni-common-mt">
     <uni-segmented-control :current="current" :values="items" :style-type="'text'" inActiveColor='#999'
-                           activeColor='#5D5FEF'
-                           @clickItem="onClickItem" />
+      activeColor='#5D5FEF' @clickItem="onClickItem" />
   </view>
   <view class="content">
     <view v-for="(item, index) in items" class="cont" :key="index" v-show="current === index">
@@ -46,18 +45,25 @@ const onClickItem = (e) => {
 }
 
 ::v-deep .segmented-control__text {
-  font-size: 16px !important;
+  font-size: 1rem !important;
   font-weight: 700 !important;
 }
+
 ::v-deep .segmented-control__text {
- span{
-  color:rgba(166, 166, 166, 1)
- }
+  span {
+    color: rgba(166, 166, 166, 1)
+  }
 }
+
 ::v-deep .segmented-control__item--text {
   span {
-    color: rgba(93,95,239,1)
+    color: rgba(93, 95, 239, 1)
   }
+}
+
+::v-deep .segmented-control {
+  height: 2.25rem !important;
+  color: rgba(93, 95, 239, 1)
 }
 
 ::v-deep .uni-section__content-title {

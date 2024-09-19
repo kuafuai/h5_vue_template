@@ -14,7 +14,6 @@
           <img src="../static/shu.png" style="width:5px;height:18px;margin-right:7px" alt="" >
           <text class="question-text">{{ question.name }}</text>
         </view>
-        <text class="question-text">{{ question.name }}</text>
         <view v-if="question.children && question.children.length > 0" class="option-list">
           <base-echarts :option="question.children" :inx="index"
                         :group_result_show_display="group_result_show_display"/>
@@ -154,11 +153,12 @@ onLoad(async () => {
 }
 .question-text {
   font-weight: 400;
+  font-size: 1.3rem;
 }
 
 .option-list {
   /*margin-left: 20px;*/
-  padding: 10px;
+  /* padding: 10px; */
 }
 
 </style>

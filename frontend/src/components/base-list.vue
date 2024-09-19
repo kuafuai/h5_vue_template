@@ -42,12 +42,12 @@
     </view>
     <view v-if="isPage" class="flex-end-center m-t-10 m-r-10">
       <fui-pagination :total="pageRes.total" :pageSize="pageParams.pageSize" :current="pageParams.current"
-                      @change="handleCurrentChange" :pageType="2"></fui-pagination>
+        @change="handleCurrentChange" :pageType="2"></fui-pagination>
     </view>
   </view>
   <view v-else class="list_box">
     <view class="nodata">
-      <img src="../static/noData.png" style="width:200px;height:auto" alt="" />
+      <img src="../static/noData.png" style="width:12.5rem;height:auto" alt="" />
       <view class="noText">暂无数据～</view>
     </view>
   </view>
@@ -158,7 +158,7 @@ function apiMethod(params, headers) {
   console.log("params", props.params);
   console.log("data", data);
   return props.api.split(".").reduce((acc, item) => acc[item], proxy.$api)(
-      data
+    data
   );
 }
 
@@ -294,6 +294,7 @@ function click_ok(item) {
 
     .noText {
       margin-top: 18.8px;
+      font-size: 0.875rem;
     }
   }
 

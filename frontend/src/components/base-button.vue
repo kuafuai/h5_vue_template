@@ -44,15 +44,15 @@ const click = () => {
 
 <style scoped lang="scss">
 .base-buttom {
-  background-color: rgb(113, 116, 248);
-  margin: 10px;
+  background-color: rgba(93, 95, 239, 1);
+  margin: 0.625rem;
   display: flex;
   align-items: center;
   justify-content: center;
   /* 使文字水平居中 */
   //height: auto;
   //height: 50px; /* 设置固定的高度，例如 40px */
-  padding: 0 20px;
+  padding: 0 1.25rem;
   /* 上下不再需要 padding，左右可以根据需要调整 */
   box-sizing: border-box;
   flex: none;
@@ -79,8 +79,8 @@ const click = () => {
     color: white;
     height: 3.5rem;
     text-align: center;
-    line-height: 44px;
-    font-size: 24px;
+    line-height: 2.75rem;
+    font-size: 1.5rem;
     border-radius: 50%;
     border: none !important;
     background: rgba(93, 95, 239, .5) !important;

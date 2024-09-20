@@ -8,13 +8,13 @@
       <uni-forms :modelValue="baseFormData" :rules="rules" ref="formRef" label-width="auto" status-icon>
         <!-- 手机号输入框 -->
         <uni-forms-item label="手机号" name="phone" required>
-          <uni-easyinput v-model="baseFormData.phone" placeholder="请输入手机号" />
+          <uni-easyinput v-model="baseFormData.phone" placeholder="请输入手机号"/>
         </uni-forms-item>
 
         <!-- 验证码输入框 -->
         <uni-forms-item label="验证码" name="code" required>
           <view class="code-input-container">
-            <uni-easyinput v-model="baseFormData.code" placeholder="请输入验证码" />
+            <uni-easyinput v-model="baseFormData.code" placeholder="请输入验证码"/>
             <button class="send-code-button" @click="sendcode" :disabled="countdown > 0">
               {{ countdown > 0 ? `${countdown}s后重发` : '获取验证码' }}
             </button>
@@ -24,7 +24,7 @@
         </uni-forms-item>
         <uni-forms-item v-for="(item, index) in not_filed_list" :key="index" :label="item.description" required
                         :name="item.fieldName">
-          <uni-easyinput @input="oninput12($event, item.fieldName)" :placeholder="'请输入' + item.description" />
+          <uni-easyinput @input="oninput12($event, item.fieldName)" :placeholder="'请输入' + item.description"/>
         </uni-forms-item>
 
         <uni-forms-item>
@@ -39,18 +39,27 @@
     <view v-else-if="register_type === 'passwd'">
       <uni-forms ref="formRef" :rules="rules" :modelValue="baseFormData">
         <uni-forms-item label="用户名" required name="username">
-          <uni-easyinput v-model="baseFormData.username" placeholder="请输入用户名" />
+          <uni-easyinput v-model="baseFormData.username" placeholder="请输入用户名"/>
         </uni-forms-item>
         <uni-forms-item label="密码" required name="passwd">
-          <uni-easyinput v-model="baseFormData.passwd" placeholder="请输入密码" />
+          <uni-easyinput v-model="baseFormData.passwd" placeholder="请输入密码"/>
         </uni-forms-item>
         <uni-forms-item label="再次输入密码" required name="checkPassWd">
-          <uni-easyinput v-model="baseFormData.checkPassWd" placeholder="请输入密码" />
+          <uni-easyinput v-model="baseFormData.checkPassWd" placeholder="请输入密码"/>
         </uni-forms-item>
 
         <uni-forms-item v-for="(item, index) in not_filed_list" :key="index" :label="item.description" required
                         :name="item.fieldName">
-          <uni-easyinput @input="oninput12($event, item.fieldName)" :placeholder="'请输入' + item.description" />
+          <view v-if="selectFiled && selectFiled.hasOwnProperty(item.fieldName)">
+            <base-select :clear="false" class="  is-input-border" @change="oninput12($event, item.fieldName)" :api="selectFiled[item.fieldName]"
+                         :title="item.description"></base-select>
+            <!--            <base-select></base-select>-->
+          </view>
+          <view v-else>
+            <uni-easyinput @input="oninput12($event, item.fieldName)" :placeholder="'请输入' + item.description"/>
+          </view>
+
+
         </uni-forms-item>
 
         <uni-forms-item>
@@ -66,19 +75,39 @@
 </template>
 
 <script setup>
-import { onLoad } from "@dcloudio/uni-app";
-import { ref } from "vue";
+import {onLoad} from "@dcloudio/uni-app";
+import {ref} from "vue";
 
-const { proxy } = getCurrentInstance()
+const {proxy} = getCurrentInstance()
 
 const prop = defineProps({
-  relevanceTable: { type: String, required: true },
+  relevanceTable: {type: String, required: true},
   register_type: {
     type: String,
     required: false,
     default: "passwd"
+  },
+  selectMap: {
+    type: String,
+    required: false,
+    default: {}
+  },
+  tableName: {
+    type: String,
+    required: false,
+    default: ""
   }
 })
+console.log("registermap", prop.selectMap)
+
+const selectFiled = ref({})
+if (prop.selectMap) {
+  var text = prop.selectMap.replaceAll("'", "\"");
+  console.log(text)
+  selectFiled.value = JSON.parse(text)
+}
+
+
 const baseFormData = ref({
   "registerType": prop.register_type
 })
@@ -189,7 +218,7 @@ onLoad(async () => {
       console.log('获取用户名失败');
     }
   })
-  var res = await proxy.$api.register.get_not_null_field(proxy.relevanceTable,proxy.register_type)
+  var res = await proxy.$api.register.get_not_null_field(proxy.relevanceTable, proxy.register_type)
   if (res.code == 0) {
     if (prop.register_type == 'sms' && (res.code == null || res.data.length == 0)) {
       emits("success")
@@ -257,30 +286,37 @@ const oninput12 = (value, fieldName) => {
 ::v-deep.is-input-error-border .uni-easyinput__placeholder-class {
   color: #999;
 }
+
 ::v-deep .uni-forms-item.is-direction-left {
   flex-direction: column;
 }
-::v-deep .uni-forms-item{
+
+::v-deep .uni-forms-item {
   margin-bottom: 10px;
 }
-::v-deep .is-input-border{
+
+::v-deep .is-input-border {
   border-radius: 30px;
   height: 50px;
   background: rgba(236, 242, 255, 1) !important;
 }
-::v-deep .uni-forms-item__label{
+
+::v-deep .uni-forms-item__label {
   width: 100% !important;
   color: rgba(52, 57, 101, 1);
   font-weight: 300;
 }
-::v-deep uni-text{
+
+::v-deep uni-text {
   margin-left: 2px !important;
 }
-::v-deep .uni-easyinput__placeholder-class{
+
+::v-deep .uni-easyinput__placeholder-class {
   font-size: 12px;
-  color:rgba(166,166,166,1)
+  color: rgba(166, 166, 166, 1)
 }
-.submit-btn{
+
+.submit-btn {
   height: 50px;
   border-radius: 20px;
   background: rgba(93, 95, 239, 1);
@@ -291,6 +327,7 @@ const oninput12 = (value, fieldName) => {
   font-size: 15px;
   color: rgba(250, 251, 255, 1);
 }
+
 .title {
   width: 100%;
   font-size: 0.9375rem;
@@ -322,5 +359,16 @@ const oninput12 = (value, fieldName) => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+::v-deep .uni-select{
+  border: none;
+  padding: 0 5px 0 0px;
+}
+::v-deep .uni-select__input-text{
+  width: 89%;
+  text-align: left;
+  padding-left: .8rem;
+  color: rgb(166, 166, 166);
+  font-size: 12px;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
-  <uni-data-select :disabled="disabled" clear v-bind="$attrs" :placeholder="'请选择'+title" :localdata="selectData"
+  <uni-data-select @change="handleInput" :disabled="disabled" :clear="clear" v-bind="$attrs" :placeholder="'请选择'+title"
+                   :localdata="selectData"
                    :filter="true">
 
   </uni-data-select>
@@ -12,10 +13,15 @@ const {proxy} = getCurrentInstance();
 const props = defineProps({
   api: {type: String, default: ''},
   disabled: {type: Boolean, default: false},
-  title: {type: String, default: ""}
+  title: {type: String, default: ""},
+  clear:{type:Boolean,default:true}
 });
 const selectData = ref([]);
-
+const emits = defineEmits(["change"])
+const handleInput = (e) => {
+  console.log(678,e)
+  emits("change",e,)
+}
 onLoad(() => {
   refresh();
 });

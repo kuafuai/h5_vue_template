@@ -11,7 +11,8 @@
           </slot>
         </uni-list>
         <view v-show="is_click" class="imgs">
-          <image src="../static/toRight.png" style="width:13px" mode="widthFill" />
+          <image src="../static/toRight.png" style="
+          width:0.625rem;height:1.25rem;" mode="widthFill" />
         </view>
       </view>
       <!--      <view class="operate">-->
@@ -46,7 +47,7 @@
   </view>
   <view v-else class="list_box">
     <view class="nodata">
-      <img src="../static/noData.png" style="width:200px;height:auto" alt="" />
+      <img src="../static/noData.png" style="width:12.5rem;height:auto" alt="" />
       <view class="noText">暂无数据～</view>
     </view>
   </view>
@@ -59,7 +60,7 @@ const { proxy } = getCurrentInstance();
 const props = defineProps({
   params: {
     type: Object,
-    default: () => {},
+    default: () => { },
   },
   api: { type: String, default: "" },
   //是否分页
@@ -68,9 +69,9 @@ const props = defineProps({
   is_route: { type: Boolean, default: () => false },
   query: {
     type: Object,
-    default: () => {},
+    default: () => { },
   },
-  is_click:{
+  is_click: {
     type: Boolean,
     default: () => false,
   }
@@ -157,7 +158,7 @@ function apiMethod(params, headers) {
   console.log("params", props.params);
   console.log("data", data);
   return props.api.split(".").reduce((acc, item) => acc[item], proxy.$api)(
-      data
+    data
   );
 }
 
@@ -172,32 +173,43 @@ function handleSizeChange(val) {
 }
 
 function click_ok(item) {
- emits("click", item);
+  emits("click", item);
 }
 </script>
 
 <style lang="scss" scoped>
-::v-deep .uni-list--border:after{
+::v-deep .uni-list--border:after {
   position: none !important;
   height: 0px;
 }
+
 ::v-deep .uni-list-item__content {
   flex: none;
 }
+
 ::v-deep .uni-list-item__container {
-  padding:5px 15px !important;
+  padding: 5px 15px !important;
 }
+
 ::v-deep .uni-list-item__content-title {
   color: rgba(113, 142, 191, 1);
   font-size: 1rem !important;
 }
+
 ::v-deep .uni-list-item__extra-text {
   color: rgba(0, 0, 0, 1);
   font-size: 1rem !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; //行数
+  -webkit-box-orient: vertical;
 }
+
 ::v-deep .uni-list {
   width: 70%;
 }
+
 .list_box {
   width: 100%;
   //height: 100%;
@@ -211,8 +223,8 @@ function click_ok(item) {
   z-index: 8;
 
   .box {
-  font-family: 'DemiLight';
-  font-weight: 400;
+    font-family: 'DemiLight';
+    font-weight: 400;
     background: white;
     margin-bottom: 40rpx;
   }
@@ -279,8 +291,10 @@ function click_ok(item) {
     font-size: 20px;
     font-weight: 500;
     color: rgba(144, 150, 178, 1);
+
     .noText {
       margin-top: 18.8px;
+      font-size: 0.875rem;
     }
   }
 
@@ -297,16 +311,19 @@ function click_ok(item) {
       background: white !important;
     }
   }
+
   .imgs {
     display: flex;
     align-items: center;
-    width: 10%;
+    width: 18%;
     justify-content: center;
+
     image {
       width: 50rpx;
       height: 50rpx;
     }
   }
+
   .list:first-child {
     margin: 0rpx 0rpx 30rpx 0px;
     box-sizing: border-box;

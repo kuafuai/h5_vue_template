@@ -1,5 +1,7 @@
 package com.kuafu.login.config;
 
+import com.kuafu.common.util.StringUtils;
+import com.kuafu.login.annotation.IgnoreAuth;
 import com.kuafu.login.handle.AuthenticationEntryPointImpl;
 import com.kuafu.login.handle.JwtAuthenticationTokenFilter;
 import com.kuafu.login.handle.LogoutSuccessHandlerImpl;
@@ -15,10 +17,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.util.Map;
 
@@ -31,6 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private ApplicationContext applicationContext;
+
+    @Autowired
+    private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
     /**
      * 认证失败处理类
@@ -50,7 +59,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http
+        final Map<RequestMappingInfo, HandlerMethod> handlerMethods = requestMappingHandlerMapping.getHandlerMethods();
+
+
+        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http
                 .cors().and()
                 .csrf().disable()
                 // 禁用HTTP响应标头
@@ -58,13 +70,52 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 认证失败处理类
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests()
+                .authorizeRequests();
+        registry
                 .antMatchers("/doc.html").permitAll()
                 .antMatchers("/login/**").permitAll()
                 .antMatchers("/common/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/*.html", "/**/*.html", "/**/*.css", "/**/*.js","/profile/**").permitAll()
-                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers(HttpMethod.GET, "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
+                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll();
+
+
+        handlerMethods.forEach((info, method) -> {
+            // 带IgnoreAuth注解的方法直接放行
+            if (StringUtils.isNotNull(method.getMethodAnnotation(IgnoreAuth.class))) {
+                // 根据请求类型做不同的处理
+                info.getMethodsCondition().getMethods().forEach(requestMethod -> {
+                    switch (requestMethod) {
+                        case GET:
+                            // getPatternsCondition得到请求url数组，遍历处理
+                            info.getPatternsCondition().getPatterns().forEach(pattern -> {
+                                // 放行
+                                registry.antMatchers(HttpMethod.GET, pattern).permitAll();
+                            });
+                            break;
+                        case POST:
+                            info.getPatternsCondition().getPatterns().forEach(pattern -> {
+                                registry.antMatchers(HttpMethod.POST, pattern).permitAll();
+                            });
+                            break;
+                        case DELETE:
+                            info.getPatternsCondition().getPatterns().forEach(pattern -> {
+                                registry.antMatchers(HttpMethod.DELETE, pattern).permitAll();
+                            });
+                            break;
+                        case PUT:
+                            info.getPatternsCondition().getPatterns().forEach(pattern -> {
+                                registry.antMatchers(HttpMethod.PUT, pattern).permitAll();
+                            });
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }
+        });
+
+
+        registry.anyRequest().authenticated()
                 .and()
                 .headers().frameOptions().disable();
 

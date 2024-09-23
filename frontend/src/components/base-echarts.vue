@@ -64,19 +64,19 @@ const initChart = () => {
   const chartOption = {
     // tooltip: { trigger: 'item' },
     legend: {
+      type: 'scroll', // 启用滚动
+      orient: 'horizontal', // 水平排列
       top: '5%',
       left: 'center',
-      itemWidth: 40, // 控制每个 legend 项的宽度
-      itemGap: 20, // 控制每个 legend 项之间的间距
+      itemWidth: 40, // 图例图标的宽度
+      itemGap: 10, // 图例项之间的间距
+      pageIconSize: 15, // 控制分页图标的大小
+      pageButtonItemGap: 5, // 分页图标与图例项之间的间距
       formatter: function (name) {
-        // 假设我们希望文字长度超过10个字符时进行裁剪
         return name.length > 5 ? name.substr(0, 5) + '...' : name;
       },
-      width: '100%', // 设置 legend 的宽度为 100%
-      padding: 10,
-      type: 'plain', // legend的类型
-      align: 'left', // 控制 legend 的对齐方式
     },
+
 
     series: [
       {
@@ -177,7 +177,7 @@ onBeforeUnmount(() => {
 }
 
 .option-text image {
-  margin-right: 0.6rem;
+  margin-right: 0.7rem;
   margin-top: 0.2rem;
 }
 

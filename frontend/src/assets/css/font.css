@@ -1,47 +1,6 @@
 @font-face {
     /*给字体命名*/
-    font-family: 'Black';
-    /*引入字体文件*/
-    src: url('./NotoSansHans-Black.ttf');
-}
-
-@font-face {
-    /*给字体命名*/
-    font-family: 'Bold';
-    /*引入字体文件*/
-    src: url('./NotoSansHans-Bold.ttf');
-}
-
-@font-face {
-    /*给字体命名*/
     font-family: 'DemiLight';
     /*引入字体文件*/
     src: url('./NotoSansHans-DemiLight.ttf');
-}
-
-@font-face {
-    /*给字体命名*/
-    font-family: 'Light';
-    /*引入字体文件*/
-    src: url('./NotoSansHans-Light.ttf');
-}
-
-@font-face {
-    /*给字体命名*/
-    font-family: 'Medium';
-    /*引入字体文件*/
-    src: url('./NotoSansHans-Medium.ttf');
-}
-
-@font-face {
-    /*给字体命名*/
-    font-family: 'Regular';
-    /*引入字体文件*/
-    src: url('./NotoSansHans-Regular.ttf');
-}
-@font-face {
-    /*给字体命名*/
-    font-family: 'Windows';
-    /*引入字体文件*/
-    src: url('./NotoSansHans-Thin-Windows.ttf');
 }

@@ -1,6 +1,6 @@
 <template>
   <view class="all">
-    <uni-forms ref="formRef" :modelValue="form" :rules="rules" label-width="auto" style="max-width: 600px;
+    <uni-forms ref="formRef" :modelValue="form" :rules="rules" label-width="auto" style="
   background-color: white;padding: 20px ;box-sizing:border-box" @submit.prevent="onSubmit">
       <slot name="form-items"></slot>
       <uni-forms-item>
@@ -216,9 +216,9 @@ const onSubmit = () => {
 .up,
 .reset {
   border-radius: 100px;
-  width: 170px;
-  height: 50px;
-  font-size: 15px;
+  width:10rem;
+  height: 3.2rem;
+  font-size: 0.9375rem;
   color: rgba(255, 255, 255, 1);
   display: flex;
   align-items: center;

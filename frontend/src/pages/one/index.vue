@@ -59,3 +59,9 @@ function searchList(){
 }
 
 </script>
+
+<style scoped lang="scss">
+::v-deep .uni-left-window {
+  height: 100% ;
+}
+</style>

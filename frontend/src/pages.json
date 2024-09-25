@@ -1,62 +1,44 @@
 {
-    "easycom": {
-        "autoscan": true,
-        "custom": {
-            "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
-"fui-(.*)": "firstui-uni/firstui/fui-$1/fui-$1.vue","^base-(.*)": "@/components/base-$1.vue"        }
-    },
-    "pages": [{
-        "path": "pages/login/index",
-        "style":  {
-                "navigationBarTitleText": ""
-            }
-    }, {
-        "path": "pages/message/index",
-        "style":  {
-                "navigationBarTitleText": ""
-            }
-    }, {
-        "path": "pages/sales_lead/index",
-        "style":  {
-                "navigationBarTitleText": ""
-            }
-    }, {
-        "path": "pages/sales_lead_detail/index",
-        "style":  {
-                "navigationBarTitleText": ""
-            }
-    }, {
-        "path": "pages/partner/index",
-        "style":  {
-                "navigationBarTitleText": ""
-            }
-    }, {
-        "path": "pages/user_register/index",
-        "style":  {
-                "navigationBarTitleText": ""
-            }
-    }, {
-        "path": "pages/user_center/index",
-        "style":  {
-                "navigationBarTitleText": ""
-            }
-    }] ,
-    "globalStyle": {
-        "navigationBarTextStyle": "black",
-        "navigationBarTitleText": "uni-app",
-        "navigationBarBackgroundColor": "#F8F8F8",
-        "backgroundColor": "#F8F8F8"
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
+      "fui-(.*)": "firstui-uni/firstui/fui-$1/fui-$1.vue",
+      "^base-(.*)": "@/components/base-$1.vue"
     }
-,"tabBar": {
-        "color": "#999999",
-        "selectedColor": "rgb(93,95,239)",
-        "backgroundColor": "#FFFFFF",
-        "borderStyle": "black",
-        "fontSize": "14px",
-        "list":[{
-        "pagePath": "pages/sales_lead/index",
-        "text": "客户线索"
-      }, {
-        "pagePath": "pages/user_center/index",
-        "text": "个人中心"
-      }]}}
+  },
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "leftWindow": true,
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/one/index",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
+      "path": "pages/two/index",
+      "style": {
+        "leftWindow": true
+      }
+    }
+  ],
+  "leftWindow": {
+    "path": "responsive/leftwin.vue",
+    "style": {
+      "width": "300px"
+    }
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8",
+    "navigationStyle": "custom"
+  }
+}

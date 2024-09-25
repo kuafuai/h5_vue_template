@@ -38,7 +38,9 @@
     <!--    </view>-->
     <view v-else-if="register_type === 'passwd'">
       <uni-forms ref="formRef" :rules="rules" :modelValue="baseFormData">
+
         <uni-forms-item label="用户名" required name="username">
+
           <uni-easyinput v-model="baseFormData.username" placeholder="请输入用户名"/>
         </uni-forms-item>
         <uni-forms-item label="密码" required name="passwd">
@@ -51,7 +53,8 @@
         <uni-forms-item v-for="(item, index) in not_filed_list" :key="index" :label="item.description" required
                         :name="item.fieldName">
           <view v-if="selectFiled && selectFiled.hasOwnProperty(item.fieldName)">
-            <base-select :clear="false" class="  is-input-border" @change="oninput12($event, item.fieldName)" :api="selectFiled[item.fieldName]"
+            <base-select :clear="false" class="  is-input-border" @change="oninput12($event, item.fieldName)"
+                         :api="selectFiled[item.fieldName]"
                          :title="item.description"></base-select>
             <!--            <base-select></base-select>-->
           </view>
@@ -90,7 +93,7 @@ const prop = defineProps({
   selectMap: {
     type: String,
     required: false,
-    default: {}
+    default: ""
   },
   tableName: {
     type: String,
@@ -98,19 +101,19 @@ const prop = defineProps({
     default: ""
   }
 })
-console.log("registermap", prop.selectMap)
+let baseFormData = ref({
+  "registerType": prop.register_type
+
+})
 
 const selectFiled = ref({})
-if (prop.selectMap) {
+if (prop.selectMap != null && prop.selectMap != '' && prop.selectMap != undefined) {
   var text = prop.selectMap.replaceAll("'", "\"");
   console.log(text)
   selectFiled.value = JSON.parse(text)
 }
 
 
-const baseFormData = ref({
-  "registerType": prop.register_type
-})
 const not_filed_list = ref([])
 const rules = ref({
   username: {
@@ -360,11 +363,13 @@ const oninput12 = (value, fieldName) => {
   align-items: center;
   justify-content: center;
 }
-::v-deep .uni-select{
+
+::v-deep .uni-select {
   border: none;
   padding: 0 5px 0 0px;
 }
-::v-deep .uni-select__input-text{
+
+::v-deep .uni-select__input-text {
   width: 89%;
   text-align: left;
   padding-left: .8rem;

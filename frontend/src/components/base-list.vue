@@ -7,12 +7,12 @@
         </view>
         <uni-list class="list" :border="false">
           <slot name="default" :item="item">
-            <uni-list-item :title="item.title"> old{{ item }} </uni-list-item>
+            <uni-list-item :title="item.title"> old{{ item }}</uni-list-item>
           </slot>
         </uni-list>
         <view v-show="is_click" class="imgs">
           <image src="../static/toRight.png" style="
-          width:0.625rem;height:1.25rem;" mode="widthFill" />
+          width:0.625rem;height:1.25rem;" mode="widthFill"/>
         </view>
       </view>
       <!--      <view class="operate">-->
@@ -42,34 +42,37 @@
     </view>
     <view v-if="isPage" class="flex-end-center m-t-10 m-r-10">
       <fui-pagination :total="pageRes.total" :pageSize="pageParams.pageSize" :current="pageParams.current"
-        @change="handleCurrentChange" :pageType="2"></fui-pagination>
+                      @change="handleCurrentChange" :pageType="2"></fui-pagination>
     </view>
   </view>
   <view v-else class="list_box">
     <view class="nodata">
-      <img src="../static/noData.png" style="width:12.5rem;height:auto" alt="" />
+      <img src="../static/noData.png" style="width:12.5rem;height:auto" alt=""/>
       <view class="noText">暂无数据～</view>
     </view>
   </view>
 </template>
 <script setup>
-import { getCurrentInstance, ref } from "vue";
-import { onLoad } from "@dcloudio/uni-app";
-const { proxy } = getCurrentInstance();
+import {getCurrentInstance, ref} from "vue";
+import {onLoad} from "@dcloudio/uni-app";
+
+const {proxy} = getCurrentInstance();
 
 const props = defineProps({
   params: {
     type: Object,
-    default: () => { },
+    default: () => {
+    },
   },
-  api: { type: String, default: "" },
+  api: {type: String, default: ""},
   //是否分页
-  isPage: { type: Boolean, default: () => false },
-  path: { type: String },
-  is_route: { type: Boolean, default: () => false },
+  isPage: {type: Boolean, default: () => false},
+  path: {type: String},
+  is_route: {type: Boolean, default: () => false},
   query: {
     type: Object,
-    default: () => { },
+    default: () => {
+    },
   },
   is_click: {
     type: Boolean,
@@ -93,8 +96,8 @@ const props = defineProps({
 
 let isLoading = ref(true);
 // 分页响应数据
-let pageRes = ref({ current: 1, pages: 1, size: 10, total: 0, records: [] });
-let pageParams = ref({ current: 1, pageSize: 10 });
+let pageRes = ref({current: 1, pages: 1, size: 10, total: 0, records: []});
+let pageParams = ref({current: 1, pageSize: 10});
 
 const emits = defineEmits(["click"]);
 // 暴露方法
@@ -107,7 +110,8 @@ onLoad(() => {
 });
 
 // 刷新
-function refresh() {
+function refresh(query_param) {
+  console.log("list refresh",query_param)
   isLoading.value = true;
   // 情况2：走api接口数据
   if (props.isPage) {
@@ -120,6 +124,18 @@ function refresh() {
     };
     pageParams.value.current = 1;
   }
+  // if (query_param == null) {
+  //   query_param = {page: 1, limit: pageParams.value.pageSize}
+  // } else {
+  //   query_param.page = 1;
+  //   query_param.limit = pageParams.value.pageSize
+  // }
+  if (query_param!=null && query_param!=undefined){
+    for (var item in query_param){
+        pageParams.value[item]=query_param[item]
+    }
+  }
+
   getApiData();
 
   isLoading.value = false;
@@ -140,6 +156,7 @@ async function getApiData(pageObj) {
       pageParams.value.pageSize = pageObj.limit;
     }
 
+
     let response = await apiMethod(props.params, pageParams);
     pageRes.value = response.data;
   } else {
@@ -151,25 +168,25 @@ async function getApiData(pageObj) {
 }
 
 function apiMethod(params, headers) {
-  let data = { ...params };
+  let data = {...params};
   if (headers) {
     data = Object.assign(data, headers.value);
   }
   console.log("params", props.params);
   console.log("data", data);
   return props.api.split(".").reduce((acc, item) => acc[item], proxy.$api)(
-    data
+      data
   );
 }
 
 // 分页组件参数变更时触发
 function handleCurrentChange(val) {
   console.log(val);
-  getApiData({ page: val.current, limit: pageParams.value.pageSize });
+  getApiData({page: val.current, limit: pageParams.value.pageSize});
 }
 
 function handleSizeChange(val) {
-  getApiData({ page: pageParams.value.current, limit: val });
+  getApiData({page: pageParams.value.current, limit: val});
 }
 
 function click_ok(item) {
@@ -226,12 +243,12 @@ function click_ok(item) {
     font-family: 'DemiLight';
     font-weight: 400;
     background: white;
-    margin-bottom: 40rpx;
+    margin-bottom: 40 rpx;
   }
 
   .content {
     display: flex;
-    margin: 30rpx 0 0 0;
+    margin: 30 rpx 0 0 0;
     box-sizing: border-box;
     background: white;
     font-size: 1rem;
@@ -242,14 +259,14 @@ function click_ok(item) {
 
       view {
         margin: 0 auto;
-        margin-top: 40rpx;
-        width: 80rpx;
-        height: 80rpx;
+        margin-top: 40 rpx;
+        width: 80 rpx;
+        height: 80 rpx;
         opacity: 1;
         border-radius: 100px;
         background: rgba(93, 95, 239, 1);
         color: white;
-        line-height: 80rpx;
+        line-height: 80 rpx;
         text-align: center;
       }
     }
@@ -259,10 +276,10 @@ function click_ok(item) {
     width: 90%;
     background: white;
     display: flex;
-    border-top: 1rpx solid #ccc;
+    border-top: 1 rpx solid #ccc;
     margin: 0 auto;
     justify-content: space-between;
-    padding: 30rpx 0;
+    padding: 30 rpx 0;
     color: rgba(166, 166, 166, 1);
     font-size: 15px;
 
@@ -300,9 +317,9 @@ function click_ok(item) {
 
   .list {
     flex: 1;
-    margin: 30rpx 0;
+    margin: 30 rpx 0;
     box-sizing: border-box;
-    border-radius: 15rpx;
+    border-radius: 15 rpx;
     background: white;
     color: #fff !important;
 
@@ -319,15 +336,15 @@ function click_ok(item) {
     justify-content: center;
 
     image {
-      width: 50rpx;
-      height: 50rpx;
+      width: 50 rpx;
+      height: 50 rpx;
     }
   }
 
   .list:first-child {
-    margin: 0rpx 0rpx 30rpx 0px;
+    margin: 0 rpx 0 rpx 30 rpx 0px;
     box-sizing: border-box;
-    border-radius: 15rpx;
+    border-radius: 15 rpx;
     background: white;
     color: #fff !important;
 

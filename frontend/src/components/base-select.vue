@@ -14,13 +14,14 @@ const props = defineProps({
   api: {type: String, default: ''},
   disabled: {type: Boolean, default: false},
   title: {type: String, default: ""},
-  clear:{type:Boolean,default:true}
+  clear: {type: Boolean, default: true},
+  data: {type: Array, default: []}
 });
 const selectData = ref([]);
 const emits = defineEmits(["change"])
 const handleInput = (e) => {
-  console.log(678,e)
-  emits("change",e,)
+  console.log(678, e)
+  emits("change", e,)
 }
 onLoad(() => {
   refresh();
@@ -31,6 +32,10 @@ function refresh() {
 }
 
 async function getApiData() {
+  if (props.api == null || props.api == '') {
+    selectData.value = props.data
+    return
+  }
   let response = await apiMethod();
   selectData.value = response.data;
 }

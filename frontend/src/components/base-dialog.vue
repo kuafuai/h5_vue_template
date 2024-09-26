@@ -17,25 +17,11 @@
   </view>
   <view v-if="comp_type === 'popup' ">
     <!-- 提示窗示例 -->
-    <uni-popup ref="alertDialog" type="dialog">
+    <uni-popup ref="popup" type="dialog">
       <uni-popup-dialog :type="toast.msgType" cancelText="取消" confirmText="确定" title="提示" :content="props.content"
                         @confirm="dialogConfirm"
                         @close="dialogClose"></uni-popup-dialog>
     </uni-popup>
-    <view class="example-body box">
-      <button class="button popup-success" @click="dialogToggle('success')">
-        <text
-            class="button-text success-text">确定
-        </text>
-      </button>
-    </view>
-
-    <!--    <view>-->
-    <!--      &lt;!&ndash; 提示信息弹窗 &ndash;&gt;-->
-    <!--      <uni-popup ref="message" type="message">-->
-    <!--        <uni-popup-message :type="toast.msgType" :message="toast.messageText" :duration="2000"></uni-popup-message>-->
-    <!--      </uni-popup>-->
-    <!--    </view>-->
   </view>
 
 
@@ -45,6 +31,7 @@
 import {getCurrentInstance} from "vue"
 
 const {proxy} = getCurrentInstance();
+const emits = defineEmits(['success', 'fail'])
 
 const props = defineProps({
   text: {
@@ -81,16 +68,13 @@ const toast = {
 function dialogConfirm() {
   console.log('点击确认')
   proxy.messageText = `点击确认了 ${toast.msgType} 窗口`
-  proxy.$refs.message.open()
+  emits('success')
 }
 
-function dialogToggle(type) {
-  toast.msgType = type
-  proxy.$refs.alertDialog.open()
-}
 
 function dialogClose() {
   console.log('点击关闭')
+  emits('fail')
 }
 
 console.log(props.type)
@@ -160,82 +144,6 @@ defineExpose({
 
 .box {
   @include flex;
-}
-
-.button {
-  @include flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  height: 35px;
-  margin: 0 5px;
-  border-radius: 5px;
-  width: 1rem;
-}
-
-.example-body {
-  background-color: #fff;
-  padding: 10px 0;
-}
-
-.button-text {
-  color: #fff;
-  font-size: 12px;
-}
-
-.popup-content {
-  @include flex;
-  align-items: center;
-  justify-content: center;
-  padding: 15px;
-  height: 50px;
-  background-color: #fff;
-}
-
-.popup-height {
-  @include height;
-  width: 200px;
-}
-
-.text {
-  font-size: 12px;
-  color: #333;
-}
-
-.popup-success {
-  color: #fff;
-  background-color: #e1f3d8;
-}
-
-.popup-warn {
-  color: #fff;
-  background-color: #faecd8;
-}
-
-.popup-error {
-  color: #fff;
-  background-color: #fde2e2;
-}
-
-.popup-info {
-  color: #fff;
-  background-color: #f2f6fc;
-}
-
-.success-text {
-  color: #09bb07;
-}
-
-.warn-text {
-  color: #e6a23c;
-}
-
-.error-text {
-  color: #f56c6c;
-}
-
-.info-text {
-  color: #909399;
 }
 
 .dialog,

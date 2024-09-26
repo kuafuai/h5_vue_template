@@ -1,4 +1,4 @@
-package com.kuafu.message.controller;
+package com.kuafu.qywx.controller;
 
 
 import com.kuafu.common.aes.AesException;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/msg")
 @Slf4j
-public class WeChatController {
+public class QxWxMessageController {
 
 
     @GetMapping("")

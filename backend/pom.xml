@@ -212,7 +212,7 @@
         <profile>
             <id>mysql</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <dependencies>
                 <!-- Mysql驱动包 -->
@@ -226,7 +226,7 @@
         <profile>
             <id>sqlite</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <dependencies>
                 <!-- sqlite驱动包 -->

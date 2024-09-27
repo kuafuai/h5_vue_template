@@ -84,6 +84,14 @@ public class LoginBusinessService {
         return getId(getUser(table, select_table_column, key));
     }
 
+    public Object getUserByOpenId(Object key) {
+        String table = login_table;
+        if (StringUtils.isNotEmpty(openid_table)) {
+            table = openid_table;
+        }
+        return getUser(table, openid_table_column, key);
+    }
+
     public Long getUserIdByOpenId(Object key) {
         String table = login_table;
         if (StringUtils.isNotEmpty(openid_table)) {
@@ -160,7 +168,7 @@ public class LoginBusinessService {
         queryWrapper.eq(key, value)
                 .eq(relevance_table, LoginRelevanceConfig.getLoginRelevanceTable())
                 .isNotNull(relevance_id_name)
-                .ne(relevance_id_name,"");
+                .ne(relevance_id_name, "");
         return iService.getOne(queryWrapper);
     }
 
@@ -188,7 +196,7 @@ public class LoginBusinessService {
                 Class<?> entityClazz = Class.forName(entityType.getTypeName());
                 return entityClazz.getDeclaredConstructor().newInstance();
             } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
-                    InvocationTargetException e) {
+                     InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
         } else {

@@ -88,7 +88,9 @@
       现在去注册
     </h5>
   </view>
-
+  <view v-else-if="login_type === 'qywx_h5'">
+    <fui-button type="success" round size="large" @click="login_qywx_click">点击企业微信授权登录</fui-button>
+  </view>
   <view v-else>
     <fui-button type="success" round size="large" @click="login_click">点击微信授权登录</fui-button>
   </view>
@@ -216,6 +218,7 @@ const rules = ref({
 
 const appId = import.meta.env.VITE_WX_APP_ID;
 const callback = import.meta.env.VITE_WX_CALL_BACK;
+const agentId = import.meta.env.VITE_WX_APP_AGENT_ID;
 
 const submitForm = async (formEl) => {
   if (!formEl) return;
@@ -291,10 +294,31 @@ const login_success = (res) => {
   });
 }
 
+const query = proxy.$route.query;
+
+if(props.login_type == 'qywx_h5'){
+  console.log(query)
+  if(query.code!=null && query.code!= ''){
+    let qywx_form = {...query};
+    qywx_form.relevanceTable = props.relevanceTable;
+    proxy.$api.login.loginQyWxWeb(qywx_form).then((res)=> {
+      login_success(res);
+    });
+  }else{
+    login_qywx_click();
+  }
+}
+
 function login_click() {
   let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodeURIComponent(callback)}&response_type=code&scope=snsapi_base&state=codeflying#wechat_redirect`;
   window.location.href = url;
 }
+
+function login_qywx_click(){
+  let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodeURIComponent(callback)}&response_type=code&scope=snsapi_base&state=codeflying&agentid=${agentId}#wechat_redirect`;
+  window.location.href = url;
+}
+
 </script>
 
 <style lang="scss" scoped>

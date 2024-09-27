@@ -9,6 +9,13 @@
   },
   "pages": [
     {
+      "path": "pages/login/index",
+      "style": {
+        "leftWindow": false,
+        "navigationBarTitleText": ""
+      }
+    },
+    {
       "path": "pages/index/index",
       "style": {
         "leftWindow": true,

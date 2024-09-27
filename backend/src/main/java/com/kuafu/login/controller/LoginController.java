@@ -14,6 +14,7 @@ import com.kuafu.common.util.StringUtils;
 import com.kuafu.login.config.LoginRelevanceConfig;
 import com.kuafu.login.config.LoginSmsConfig;
 import com.kuafu.login.model.LoginVo;
+import com.kuafu.login.provider.QyWxWebAuthentication;
 import com.kuafu.login.provider.SmsAuthentication;
 import com.kuafu.login.provider.WxAppAuthentication;
 import com.kuafu.login.provider.WxWebAuthentication;
@@ -104,6 +105,22 @@ public class LoginController {
         return ResultUtils.success(token);
     }
 
+    @PostMapping("/login/qyWxWeb")
+    @ApiOperation("H5企业微信登录")
+    @ApiOperationSupport(includeParameters = {"loginVo.code", "loginVo.state"})
+    public BaseResponse loginByQyWxWeb(@RequestBody LoginVo loginVo) {
+        log.info("==={}", loginVo);
+        LoginRelevanceConfig.setLoginRelevanceTable(loginVo.getRelevanceTable());
+
+        QyWxWebAuthentication authentication = new QyWxWebAuthentication(loginVo);
+        Authentication returnAuth = authenticationManager.authenticate(authentication);
+
+        LoginUser loginUser = (LoginUser) returnAuth.getPrincipal();
+        String token = tokenService.createToken(loginUser);
+        LoginRelevanceConfig.remove();
+        return ResultUtils.success(token);
+    }
+
     /**
      * 根据code openid获取手机号
      *
@@ -150,7 +167,7 @@ public class LoginController {
 
         final String numbers = RandomUtil.randomNumbers(6);
         log.info("获取的验证码是{}", numbers);
-        messageTemplate.sendMessage(phone,numbers);
+        messageTemplate.sendMessage(phone, numbers);
         cache.setCacheObject(LOGIN_CACHE_PRE + phone, numbers, loginSmsConfig.getCode_timeout(), TimeUnit.MINUTES);
         return ResultUtils.success();
     }
@@ -168,7 +185,6 @@ public class LoginController {
         LoginRelevanceConfig.remove();
         return ResultUtils.success(token);
     }
-
 
 
 }

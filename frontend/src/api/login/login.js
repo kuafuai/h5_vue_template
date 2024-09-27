@@ -1,6 +1,13 @@
 import service from "@/utils/request";
 
 export default {
+    loginQyWxWeb(data) {
+        return service({
+            url: "/login/qyWxWeb",
+            method: "post",
+            data: data
+        });
+    },
     loginWxWeb(data) {
         return service({
             url: "/login/wxWeb",

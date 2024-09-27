@@ -7,37 +7,43 @@
         <button size="mini" class="m-l-10" @click="toggleAdvanced">
           高级搜索
           <a style="margin-left: 8px">
-            <uni-icons v-if="advanced" type="up"></uni-icons>
-            <uni-icons v-else type="down"></uni-icons>
+            <!--            <uni-icons v-if="advanced" type="up"></uni-icons>-->
+            <!--            <uni-icons v-else type="down"></uni-icons>-->
           </a>
         </button>
       </base-layout>
     </base-layout>
-    <base-dialog ref="diallog_slkdj" type="bottom">
-      <base-layout :w_full="true">
-        <uni-collapse accordion>
-          <uni-collapse-item :open="advanced" titleBorder="none">
-            <uni-forms :inline="true" :modelValue="props.searchData" class="m-20">
-              <slot name="collapse" :item="props.searchData">
-              </slot>
-
-              <uni-forms-item v-for="(item,index) in other_search_condition" :label="item.name" name="">
-                <base-select v-model="props.searchData.other_search_condition[index]" :data="item.value"
-                             :title="item.name"></base-select>
 
 
-              </uni-forms-item>
+    <base-dialog ref="base_search_dailog" type="bottom">
+      <template #dialog>
 
-              <uni-forms-item>
-                <button size="mini" style="float: right;" @click="iconClick">
-                  搜索
-                </button>
-              </uni-forms-item>
-            </uni-forms>
+        <base-layout :w_full="true">
+          <!--          <uni-collapse accordion>-->
+          <!--            <uni-collapse-item :open="advanced" titleBorder="none">-->
+          <uni-forms :inline="true" :modelValue="props.searchData" class="m-20">
+            <slot name="collapse" :item="props.searchData">
+            </slot>
 
-          </uni-collapse-item>
-        </uni-collapse>
-      </base-layout>
+            <uni-forms-item v-for="(item,index) in other_search_condition" :label="item.name" name="">
+              <base-select v-model="props.searchData.other_search_condition[index]" :data="item.value"
+                           :title="item.name"></base-select>
+
+
+            </uni-forms-item>
+
+            <uni-forms-item>
+              <button size="mini" style="float: right;" @click="iconClick">
+                搜索
+              </button>
+            </uni-forms-item>
+          </uni-forms>
+
+          <!--            </uni-collapse-item>-->
+          <!--          </uni-collapse>-->
+        </base-layout>
+      </template>
+
     </base-dialog>
 
   </base-layout>
@@ -45,7 +51,8 @@
 
 <script setup>
 
-import BaseDialog from "./base-dialog";
+const {proxy} = getCurrentInstance()
+
 const props = defineProps({
   searchItems: {type: Array, default: () => []},
   searchData: {
@@ -67,13 +74,22 @@ const advanced = ref(false);
 const emit = defineEmits(["search"]);
 
 function toggleAdvanced() {
-  advanced.value = !advanced.value
+  // advanced.value = !advanced.value
+  // if (advanced.value){
+  proxy.$refs.base_search_dailog.showDialog()
+  // advanced.value=false
+  // }else {
+  //   proxy.$refs.base_search_dailog.closeDialog()
+  // }
 
 }
 
 function iconClick() {
   console.log(props.searchData)
   emit("search", props.searchData);
+  proxy.$refs.base_search_dailog.closeDialog()
+  // toggleAdvanced()
+
   advanced.value = false;
 }
 </script>

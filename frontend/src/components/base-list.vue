@@ -15,30 +15,36 @@
           width:0.625rem;height:1.25rem;" mode="widthFill"/>
         </view>
       </view>
-      <!--      <view class="operate">-->
-      <!--        <view class="detail">-->
-      <!--          <image-->
-      <!--              style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
-      <!--              src="../static/detail.png"-->
-      <!--              mode="scaleToFill"-->
-      <!--          />-->
-      <!--          详情-->
-      <!--        </view>-->
-      <!--        <view class="edit">-->
-      <!--          <image-->
-      <!--              style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
-      <!--              src="../static/edit.png"-->
-      <!--              mode="scaleToFill"-->
-      <!--          />编辑-->
-      <!--        </view>-->
-      <!--        <view class="del">-->
-      <!--          <image-->
-      <!--              style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
-      <!--              src="../static/del.png"-->
-      <!--              mode="scaleToFill"-->
-      <!--          />删除-->
-      <!--        </view>-->
-      <!--      </view>-->
+<!--            <view class="operate">-->
+<!--              <view class="detail">-->
+<!--                <image-->
+<!--                    style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
+<!--                    src="../static/detail.png"-->
+<!--                    mode="scaleToFill"-->
+<!--                />-->
+<!--                详情-->
+<!--              </view>-->
+<!--              <view class="edit">-->
+<!--                <image-->
+<!--                    style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
+<!--                    src="../static/edit.png"-->
+<!--                    mode="scaleToFill"-->
+<!--                />编辑-->
+<!--              </view>-->
+<!--              <view class="del">-->
+<!--                <image-->
+<!--                    style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
+<!--                    src="../static/del.png"-->
+<!--                    mode="scaleToFill"-->
+<!--                />删除-->
+<!--              </view>-->
+<!--            </view>-->
+      <view class="op_button_list">
+        <slot name="op" :item="item">
+
+        </slot>
+      </view>
+
     </view>
     <view v-if="isPage" class="flex-end-center m-t-10 m-r-10">
       <fui-pagination :total="pageRes.total" :pageSize="pageParams.pageSize" :current="pageParams.current"
@@ -55,6 +61,7 @@
 <script setup>
 import {getCurrentInstance, ref} from "vue";
 import {onLoad} from "@dcloudio/uni-app";
+
 
 const {proxy} = getCurrentInstance();
 
@@ -195,6 +202,11 @@ function click_ok(item) {
 </script>
 
 <style lang="scss" scoped>
+.op_button_list{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
 ::v-deep .uni-list--border:after {
   position: none !important;
   height: 0px;

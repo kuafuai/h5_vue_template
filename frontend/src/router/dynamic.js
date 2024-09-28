@@ -1,20 +1,14 @@
 export const dynamicRoutes = [
     {
-        path: '/pages/index/index',
+        path: '/pages/home/index',
         meta: {
-            title: '课程管理管理',
+            title: '首页',
             shownot: false
         }
     }, {
-        path: '/pages/one/index',
+        path: '/pages/user/index',
         meta: {
-            title: '作业管理管理',
-            shownot: false
-        }
-    }, {
-        path: '/pages/two/index',
-        meta: {
-            title: '作业评价管理管理',
+            title: '人员管理',
             shownot: false
         }
     }

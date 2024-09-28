@@ -16,14 +16,14 @@
       }
     },
     {
-      "path": "pages/index/index",
+      "path": "pages/home/index",
       "style": {
         "leftWindow": true,
         "navigationBarTitleText": ""
       }
     },
     {
-      "path": "pages/one/index",
+      "path": "pages/user/index",
       "style": {
         "leftWindow": true
       }

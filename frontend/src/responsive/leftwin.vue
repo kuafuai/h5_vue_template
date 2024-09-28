@@ -4,7 +4,7 @@
       <view class="w-full">
         <view class="flex-start-center m-30 pad_Left">
           <img src="@/assets/logo/logo.png" width="32px" height="34px"/>
-          <span class="m-l-10" style="font-weight: bold; font-size: 24px;">CodeFlying</span>
+          <span class="m-l-10" style="font-weight: bold; font-size: 24px;">常州中电</span>
         </view>
 
         <view class="flex-start-center m-y-30 m-l-22">
@@ -16,11 +16,11 @@
       <view class="h-full w-full text-left m-l-10 noMargin">
         <template v-for="(item, index) in dynamicRoutes" :key="item.path">
           <navigator
-            v-if="!item.meta.shownot"
-            :url="item.path"
-            open-type="navigate"
-            @click="() => { closeDrawer(); setActiveIndex(index); }"
-            :class="activeIndex === index ? 'active-navigator' : ''"
+              v-if="!item.meta.shownot"
+              :url="item.path"
+              open-type="navigate"
+              @click="() => { closeDrawer(); setActiveIndex(index); }"
+              :class="activeIndex === index ? 'active-navigator' : ''"
           >
             <text class="active_text">{{ item.meta.title }}</text>
           </navigator>
@@ -40,13 +40,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { dynamicRoutes } from '@/router/dynamic';
+import {ref} from 'vue';
+import {dynamicRoutes} from '@/router/dynamic';
 
-const { proxy } = getCurrentInstance();
+
+const {proxy} = getCurrentInstance();
 const left_title = import.meta.env.VITE_APP_NAME;
 
-const activeIndex = ref(0); // 默认高亮第一项
+const activeIndex = ref(null); // 默认高亮第一项
 
 const setActiveIndex = (index) => {
   activeIndex.value = index; // 设置当前高亮项
@@ -55,6 +56,18 @@ const setActiveIndex = (index) => {
 const closeDrawer = () => {
   console.log("Drawer closed"); // 示例日志
 };
+
+onMounted(() => {
+  uni.$on('updateRoute', (route) => {
+    dynamicRoutes.forEach((page, index) => {
+      if (page.path.includes(route)) {
+        setActiveIndex(index)
+      }
+    })
+  });
+});
+
+
 </script>
 
 <style scoped>

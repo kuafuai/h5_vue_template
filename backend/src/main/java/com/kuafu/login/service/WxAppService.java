@@ -5,6 +5,7 @@ import com.kuafu.common.domin.ErrorCode;
 import com.kuafu.common.exception.BusinessException;
 import com.kuafu.common.util.StringUtils;
 import com.kuafu.common.wx.*;
+import com.kuafu.web.config.WechatConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -30,8 +31,8 @@ public class WxAppService {
 
     public String getOpenId(String code) {
         WxAppCode2SessionResponse response = wxAppClient.code2Session(WxAppCode2SessionRequest.builder()
-                .appId(appId)
-                .appSecret(appSecret)
+                .appId(WechatConfig.appId)
+                .appSecret(WechatConfig.appSecret)
                 .code(code)
                 .grantType("authorization_code")
                 .build());

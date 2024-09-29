@@ -46,8 +46,9 @@ public class WxAppProvider implements AuthenticationProvider {
                 throw new BusinessException(ErrorCode.NOT_BIND_DATA_ERROR.getCode(), "您的小程序还未绑定");
             } else {
                 userId = loginBusinessService.getUserIdBySelectKey(loginVo.getPhone());
+                long relevanceId = loginBusinessService.getUserIdByRelevanceTable(loginVo.getRelevanceTable(), loginVo.getPhone());
                 if (userId != null && userId > 0) {
-                    loginBusinessService.updateOpenIdById(userId, openid);
+                    loginBusinessService.updateOpenIdByRelevanceId(relevanceId, openid);
                     return new WxAppAuthentication(new LoginUser(userId), authentication.getAuthorities());
                 } else {
                     throw new BusinessException(ErrorCode.NOT_FOUND_ERROR.getCode(), "数据不存在");

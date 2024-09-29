@@ -1,4 +1,5 @@
 <template>
+  <web-view id="foo" v-if="isTrue" :src="previewUrl" style="width:640px; height:480px"></web-view>
   <view v-if="login_type === 'passwd'" class="login">
     <view class="hello">
       <view class="nihao">嘿！你好</view>
@@ -13,7 +14,7 @@
 
       <uni-forms-item name="phone">
         <view class="icon-input-container">
-          <uni-easyinput placeholder="请输入用户名" v-model="form.phone" class="input-field" />
+          <uni-easyinput placeholder="请输入用户名" v-model="form.phone" class="input-field"/>
           <view class="icon">
             <img src="../static/peo.png" style="width:13px;height:13px;" alt="">
           </view>
@@ -21,7 +22,7 @@
       </uni-forms-item>
       <uni-forms-item name="password">
         <view class="icon-input-container">
-          <uni-easyinput placeholder="请输入密码" type="password" v-model="form.password" class="input-field" />
+          <uni-easyinput placeholder="请输入密码" type="password" v-model="form.password" class="input-field"/>
           <view class="icon">
             <img src="../static/pass.png" style="width:13px;height:13px;" alt="">
           </view>
@@ -35,7 +36,7 @@
     </uni-forms>
     <!-- <h5>默认账户密码：admin / 123456</h5> -->
     <h5 v-show="is_register" @click="to_page" style="color: rgba(93, 95, 239, 1);font-size: 13px;font-weight:450">
-      <text style="color:rgba(52, 57, 101, 1);font-weight:450">没有账号? </text>
+      <text style="color:rgba(52, 57, 101, 1);font-weight:450">没有账号?</text>
       现在去注册
     </h5>
     <view>
@@ -55,7 +56,7 @@
       <!-- 手机号输入框 -->
       <uni-forms-item name="phone">
         <view class="icon-input-container">
-          <uni-easyinput v-model="form_sms.phone" placeholder="请输入手机号" type="number" maxlength="11" />
+          <uni-easyinput v-model="form_sms.phone" placeholder="请输入手机号" type="number" maxlength="11"/>
           <view class="icon">
             <img src="../static/phone.png" style="width:11px;height:16px; margin-top:3px" alt="">
           </view>
@@ -66,7 +67,7 @@
 
       <uni-forms-item name="code">
         <view class="code-input-container">
-          <uni-easyinput style="width:50px;" v-model="form_sms.code" placeholder="请输入验证码" />
+          <uni-easyinput style="width:50px;" v-model="form_sms.code" placeholder="请输入验证码"/>
           <view class="icon">
             <img src="../static/safe.png" style="width:22px;height:24px; margin-bottom:2px" alt="">
           </view>
@@ -84,31 +85,41 @@
     </uni-forms>
 
     <h5 v-show="is_register" @click="to_page" style="color: rgba(93, 95, 239, 1);font-size: 13px;font-weight:450">
-      <text style="color:rgba(52, 57, 101, 1);font-weight:450">没有账号? </text>
+      <text style="color:rgba(52, 57, 101, 1);font-weight:450">没有账号?</text>
       现在去注册
     </h5>
   </view>
 
-  <view v-else>
+  <view v-else-if="login_type === 'h5'" class="login">
     <fui-button type="success" round size="large" @click="login_click">点击微信授权登录</fui-button>
   </view>
+  <view v-else class="login">
+
+    <button class="identity" open-type="getPhoneNumber"
+            @getphonenumber="getPhoneNumber">
+      点击微信授权登录
+    </button>
+  </view>
+
   <view class="bottom">
     本应用由AI智能软件开发平台CodeFlying自动开发
   </view>
 </template>
 
 <script setup>
-import { getCurrentInstance, ref } from "vue";
+import {getCurrentInstance, ref} from "vue";
+import service from "@/utils/request";
 
-const { proxy } = getCurrentInstance();
+const isTrue = ref(false)
+const {proxy} = getCurrentInstance();
 const emit = defineEmits(["loginSuccess", "loginFail"]);
 
 const props = defineProps({
-  login_type: { type: String, default: null },
-  show_title: { type: String, default: "登陆" },
-  relevanceTable: { type: String, required: true, },
-  is_register: { type: String, required: false, },
-  register_page: { type: String, required: false, default: "" }
+  login_type: {type: String, default: null},
+  show_title: {type: String, default: "登陆"},
+  relevanceTable: {type: String, required: true,},
+  is_register: {type: String, required: false,},
+  register_page: {type: String, required: false, default: ""}
 });
 const to_page = () => {
   proxy.$navigate(props.register_page)
@@ -208,8 +219,8 @@ const rules = ref({
   },
   password: {
     rules: [
-      { required: true, errorMessage: '请输入密码' },
-      { minLength: 3, maxLength: 18, errorMessage: '密码长度3-18位' }
+      {required: true, errorMessage: '请输入密码'},
+      {minLength: 3, maxLength: 18, errorMessage: '密码长度3-18位'}
     ]
   }
 });
@@ -264,7 +275,7 @@ const submitForm_sms = () => {
       login_error(err);
     });
   }).catch(error => {
-    uni.showToast({ title: '请填写正确的信息', icon: 'none' });
+    uni.showToast({title: '请填写正确的信息', icon: 'none'});
 
   });
 };
@@ -281,6 +292,19 @@ const login_success = (res) => {
     duration: 2000
   });
 
+  // #ifdef MP-WEIXIN
+  console.log("=======================", res)
+  proxy.$api.login.getLoginUser().then((res) => {
+    uni.setStorageSync('h5_token', res.token)
+    const item = res.data;
+    uni.setStorageSync("currentUser", JSON.stringify(item));
+    // emit("loginSuccess", item);
+  }).catch(err => {
+    console.log(err);
+  });
+  // #endif
+
+  // #ifdef H5
   localStorage.setItem("h5_token", res.data);
   proxy.$api.login.getLoginUser().then((res) => {
     const item = res.data;
@@ -289,12 +313,91 @@ const login_success = (res) => {
   }).catch(err => {
     console.log(err);
   });
+  // #endif
+}
+const previewUrl = ref("")
+const phone = ref("")
+
+
+const getPhoneNumber=function (e){
+  console.log(e, "getPhoneNumber")
+  if (e.detail.errMsg === "getPhoneNumber:fail user deny") {
+    // 用户拒绝授权手机号
+    uni.showToast({
+      title: "您拒绝了授权",
+      icon: "none",
+      duration: 2000,
+    });
+  } else {
+    // 用户同意授权手机号
+    let token = uni.getStorageSync("token")
+    uni.login({
+      success: (res) => {
+        console.log(res,"res============")
+
+        service("/login/phone", {
+          code:  e.detail.code,
+          relevanceTable: props.relevanceTable,
+        }, "get").then((res) => {
+          console.log("获取手机号之后的结果：", res)
+          if (res.data.code === 0) {
+            phone.value = res.data.data
+            login_click();
+          }
+
+        })
+      }
+    })
+  }
 }
 
 function login_click() {
   let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodeURIComponent(callback)}&response_type=code&scope=snsapi_base&state=codeflying#wechat_redirect`;
-  window.location.href = url;
+// #ifdef MP-WEIXIN
+  if (props.login_type === 'wechat') {
+    console.log("进来了", import.meta.env.VITE_APP_SERVICE_API + '/login/wxApp')
+    uni.login({
+      "provider": "weixin",
+      "onlyAuthorize": true, // 微信登录仅请求授权认证
+      success: function (event) {
+        const {code} = event
+        //客户端成功获取授权临时票据（code）,向业务服务器发起登录请求。
+        uni.request({
+          url: import.meta.env.VITE_APP_SERVICE_API + '/login/wxApp', //仅为示例，并非真实接口地址。
+          method: 'POST',
+          data: {
+            code: event.code,
+            phone: phone.value,
+            relevanceTable: props.relevanceTable,
+          },
+          success: (res) => {
+            console.log(res,"loginSuccess")
+            if(res.data.code === 0) {
+              //获得token完成登录
+              uni.setStorageSync('h5_token', res.token)
+              // emit("loginSuccess")
+              login_success(res)
+            } else {
+              login_error()
+            }
+          }
+        });
+      },
+      fail: function (err) {
+        login_error(err)
+      }
+    })
+  }
+  // #endif
+
+  // #ifdef H5
+  if (props.login_type === 'h5') {
+    window.location.href = url;
+  }
+  // #endif
 }
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -364,6 +467,7 @@ function login_click() {
     margin-bottom: 8px !important;
   }
 }
+
 h5 {
   color: #888;
   margin-top: 20px;
@@ -388,7 +492,6 @@ h5 {
     color: rgb(93, 95, 239);
     margin-bottom: 20px;
   }
-
 
 
   .demo-form {

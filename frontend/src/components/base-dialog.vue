@@ -6,6 +6,7 @@
         :animation="true"
         :type="type"
         :class="popupClass"
+        @close="handleClose"
     >
       <view style="height: 100%;overflow-y: auto;">
         <slot name="dialog"/>
@@ -15,6 +16,8 @@
 </template>
 
 <script setup>
+
+import {onHide} from "@dcloudio/uni-app";
 
 const props = defineProps({
   text: {
@@ -29,6 +32,14 @@ const props = defineProps({
 });
 import {defineProps, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
+
+onUnmounted(() => {
+  console.log(12345678909876543)
+})
+onHide(()=>{
+  console.log("onhide")
+})
+
 
 
 console.log(props.type)
@@ -57,6 +68,7 @@ function showDialog() {
 function closeDialog() {
   popup.value.close();
 }
+
 
 // const closeDialog = () => {
 //   // const { path, query, params } = route.value;

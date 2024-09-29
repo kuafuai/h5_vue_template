@@ -15,30 +15,36 @@
           width:0.625rem;height:1.25rem;" mode="widthFill"/>
         </view>
       </view>
-      <!--      <view class="operate">-->
-      <!--        <view class="detail">-->
-      <!--          <image-->
-      <!--              style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
-      <!--              src="../static/detail.png"-->
-      <!--              mode="scaleToFill"-->
-      <!--          />-->
-      <!--          详情-->
-      <!--        </view>-->
-      <!--        <view class="edit">-->
-      <!--          <image-->
-      <!--              style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
-      <!--              src="../static/edit.png"-->
-      <!--              mode="scaleToFill"-->
-      <!--          />编辑-->
-      <!--        </view>-->
-      <!--        <view class="del">-->
-      <!--          <image-->
-      <!--              style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
-      <!--              src="../static/del.png"-->
-      <!--              mode="scaleToFill"-->
-      <!--          />删除-->
-      <!--        </view>-->
-      <!--      </view>-->
+<!--            <view class="operate">-->
+<!--              <view class="detail">-->
+<!--                <image-->
+<!--                    style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
+<!--                    src="../static/detail.png"-->
+<!--                    mode="scaleToFill"-->
+<!--                />-->
+<!--                详情-->
+<!--              </view>-->
+<!--              <view class="edit">-->
+<!--                <image-->
+<!--                    style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
+<!--                    src="../static/edit.png"-->
+<!--                    mode="scaleToFill"-->
+<!--                />编辑-->
+<!--              </view>-->
+<!--              <view class="del">-->
+<!--                <image-->
+<!--                    style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
+<!--                    src="../static/del.png"-->
+<!--                    mode="scaleToFill"-->
+<!--                />删除-->
+<!--              </view>-->
+<!--            </view>-->
+      <view class="op_button_list">
+        <slot name="op" :item="item">
+
+        </slot>
+      </view>
+
     </view>
     <view v-if="isPage" class="flex-end-center m-t-10 m-r-10">
       <fui-pagination :total="pageRes.total" :pageSize="pageParams.pageSize" :current="pageParams.current"
@@ -55,6 +61,7 @@
 <script setup>
 import {getCurrentInstance, ref} from "vue";
 import {onLoad} from "@dcloudio/uni-app";
+
 
 const {proxy} = getCurrentInstance();
 
@@ -195,6 +202,11 @@ function click_ok(item) {
 </script>
 
 <style lang="scss" scoped>
+.op_button_list{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
 ::v-deep .uni-list--border:after {
   position: none !important;
   height: 0px;
@@ -243,12 +255,12 @@ function click_ok(item) {
     font-family: 'DemiLight';
     font-weight: 400;
     background: white;
-    margin-bottom: 40 rpx;
+    margin-bottom: 40rpx;
   }
 
   .content {
     display: flex;
-    margin: 30 rpx 0 0 0;
+    margin: 30rpx 0 0 0;
     box-sizing: border-box;
     background: white;
     font-size: 1rem;
@@ -259,14 +271,14 @@ function click_ok(item) {
 
       view {
         margin: 0 auto;
-        margin-top: 40 rpx;
-        width: 80 rpx;
-        height: 80 rpx;
+        margin-top: 40rpx;
+        width: 80rpx;
+        height: 80rpx;
         opacity: 1;
         border-radius: 100px;
         background: rgba(93, 95, 239, 1);
         color: white;
-        line-height: 80 rpx;
+        line-height: 80rpx;
         text-align: center;
       }
     }
@@ -276,10 +288,10 @@ function click_ok(item) {
     width: 90%;
     background: white;
     display: flex;
-    border-top: 1 rpx solid #ccc;
+    border-top: 1rpx solid #ccc;
     margin: 0 auto;
     justify-content: space-between;
-    padding: 30 rpx 0;
+    padding: 30rpx 0;
     color: rgba(166, 166, 166, 1);
     font-size: 15px;
 
@@ -317,9 +329,9 @@ function click_ok(item) {
 
   .list {
     flex: 1;
-    margin: 30 rpx 0;
+    margin: 30rpx 0;
     box-sizing: border-box;
-    border-radius: 15 rpx;
+    border-radius: 15rpx;
     background: white;
     color: #fff !important;
 
@@ -336,15 +348,15 @@ function click_ok(item) {
     justify-content: center;
 
     image {
-      width: 50 rpx;
-      height: 50 rpx;
+      width: 50rpx;
+      height: 50rpx;
     }
   }
 
   .list:first-child {
-    margin: 0 rpx 0 rpx 30 rpx 0px;
+    margin: 0rpx 0rpx 30rpx 0px;
     box-sizing: border-box;
-    border-radius: 15 rpx;
+    border-radius: 15rpx;
     background: white;
     color: #fff !important;
 

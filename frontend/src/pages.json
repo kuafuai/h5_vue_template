@@ -35,6 +35,12 @@
         "style":  {
                 "navigationBarTitleText": ""
             }
+    },
+    {
+        "path": "pages/index/index",
+        "style": {
+            "navigationBarTitleText": ""
+        }
     }] ,
     "globalStyle": {
         "navigationBarTextStyle": "black",

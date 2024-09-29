@@ -1,5 +1,5 @@
 <template>
-  <uni-data-select @change="handleInput" :disabled="disabled" :clear="clear" v-bind="$attrs" :placeholder="'请选择'+title"
+  <uni-data-select v-model="select_item" @change="handleInput" :disabled="disabled" :clear="clear" v-bind="$attrs" :placeholder="'请选择'+title"
                    :localdata="selectData"
                    :filter="true">
 
@@ -9,6 +9,7 @@
 <script setup>
 import {onLoad} from "@dcloudio/uni-app";
 
+const select_item = defineModel()
 const {proxy} = getCurrentInstance();
 const props = defineProps({
   api: {type: String, default: ''},

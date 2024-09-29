@@ -17,6 +17,7 @@ import com.kuafu.web.annotation.IsNotNullField;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

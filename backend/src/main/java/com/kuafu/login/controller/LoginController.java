@@ -19,6 +19,7 @@ import com.kuafu.login.provider.WxAppAuthentication;
 import com.kuafu.login.provider.WxWebAuthentication;
 import com.kuafu.login.service.LoginBusinessService;
 import com.kuafu.login.service.TokenService;
+import com.kuafu.login.service.WechatRegisterService;
 import com.kuafu.login.service.WxAppService;
 import com.kuafu.login.utils.MessageTemplate;
 import com.kuafu.web.config.WechatConfig;
@@ -55,6 +56,9 @@ public class LoginController {
 
     @Autowired
     private LoginBusinessService loginBusinessService;
+
+    @Autowired
+    private WechatRegisterService wechatRegisterService;
 
     @Autowired
     private Cache cache;
@@ -122,7 +126,7 @@ public class LoginController {
         String phone = wxAppService.getPhone(code);
 
         if ("1".equals(WechatConfig.is_register)) {
-            Long loginId = loginBusinessService.insertRelevanceInfo(phone, relevanceTable);
+            Long loginId = wechatRegisterService.wechatRegister(phone, relevanceTable);
             log.info("【创建的用户ID】,用户ID:{}", loginId);
         }
 

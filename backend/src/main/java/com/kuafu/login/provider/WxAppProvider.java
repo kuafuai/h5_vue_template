@@ -32,6 +32,7 @@ public class WxAppProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException, BusinessException {
         LoginVo loginVo = (LoginVo) authentication.getPrincipal();
+        String relevanceTable = loginVo.getRelevanceTable();
 
         //1.根据code换取openid
         String openid = wxAppCode2Session(loginVo.getCode());
@@ -39,7 +40,8 @@ public class WxAppProvider implements AuthenticationProvider {
         //2.根据openid查询用户信息
         Long userId = loginBusinessService.getUserIdByOpenId(openid);
         if (userId != null) {
-            return new WxAppAuthentication(new LoginUser(userId), authentication.getAuthorities());
+            long relevanceId = loginBusinessService.getUserIdByRelevanceTable(loginVo.getRelevanceTable(), loginVo.getPhone());
+            return new WxAppAuthentication(new LoginUser(userId, String.valueOf(relevanceId), relevanceTable), authentication.getAuthorities());
         } else {
             if (StringUtils.isEmpty(loginVo.getPhone())) {
                 //只是登录
@@ -49,7 +51,7 @@ public class WxAppProvider implements AuthenticationProvider {
                 long relevanceId = loginBusinessService.getUserIdByRelevanceTable(loginVo.getRelevanceTable(), loginVo.getPhone());
                 if (userId != null && userId > 0) {
                     loginBusinessService.updateOpenIdByRelevanceId(relevanceId, openid);
-                    return new WxAppAuthentication(new LoginUser(userId), authentication.getAuthorities());
+                    return new WxAppAuthentication(new LoginUser(userId, String.valueOf(relevanceId), relevanceTable), authentication.getAuthorities());
                 } else {
                     throw new BusinessException(ErrorCode.NOT_FOUND_ERROR.getCode(), "数据不存在");
                 }

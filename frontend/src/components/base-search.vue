@@ -175,6 +175,60 @@ function iconClick() {
   background: rgba(93, 95, 239, 1);
   width: 100%;
   height: 100rpx;
+  color: rgba(255, 255, 255, 1);
+  font-size: 14px !important;
+  font-weight: 500;
+}
+
+::v-deep uni-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 1)
+}
+
+::v-deep .uni-select {
+  padding-left: 19px;
+  height: 100rpx !important;
+  border-radius: 10px;
+  border: 1px solid rgba(229, 229, 229, 1);
+
+}
+
+::v-deep .uni-select__input-placeholder {
+  font-size: 13px;
+  color: rgb(166, 166, 166);
+  font-weight: 500;
+  letter-spacing: -0.15px;
+}
+
+::v-deep .uni-easyinput__content-input {
+  padding-left: 19px !important;
+  height: 100 rpx;
+}
+
+::v-deep.is-input-border {
+  border-radius: 10px;
+  border: 1px solid rgba(229, 229, 229, 1);
+}
+
+.uni-easyinput__placeholder-class {
+  font-size: 13px;
+  font-weight: 500;
+  font-family: Inter;
+}
+
+::v-deep .uni-forms-item {
+  align-items: center;
+}
+
+.button-botttom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100px;
+  background: rgba(93, 95, 239, 1);
+  width: 100%;
+  height: 100rpx;
   margin-top: 10px;
   color: rgba(255, 255, 255, 1);
   font-size: 15px !important;

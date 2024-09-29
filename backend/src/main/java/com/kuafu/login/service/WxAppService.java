@@ -51,8 +51,8 @@ public class WxAppService {
         }
 
         WxAppAccessTokenRequest request = WxAppAccessTokenRequest.builder()
-                .appId(appId)
-                .appSecret(appSecret)
+                .appId(WechatConfig.appId)
+                .appSecret(WechatConfig.appSecret)
                 .grantType("client_credential")
                 .build();
 

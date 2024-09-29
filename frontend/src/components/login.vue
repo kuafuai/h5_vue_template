@@ -291,7 +291,7 @@ const login_success = (res) => {
     icon: "success",
     duration: 2000
   });
-
+  console.log("123456765","登陆成功")
   // #ifdef MP-WEIXIN
   console.log("=======================", res)
   proxy.$api.login.getLoginUser().then((res) => {
@@ -335,10 +335,14 @@ const getPhoneNumber=function (e){
       success: (res) => {
         console.log(res,"res============")
 
-        service("/login/phone", {
-          code:  e.detail.code,
-          relevanceTable: props.relevanceTable,
-        }, "get").then((res) => {
+        service({
+          url:"/login/phone",
+          method:"get",
+          data:{
+            code:  e.detail.code,
+            relevanceTable: props.relevanceTable,
+          }
+        }).then((res) => {
           console.log("获取手机号之后的结果：", res)
           if (res.data.code === 0) {
             phone.value = res.data.data
@@ -374,7 +378,7 @@ function login_click() {
             console.log(res,"loginSuccess")
             if(res.data.code === 0) {
               //获得token完成登录
-              uni.setStorageSync('h5_token', res.token)
+              uni.setStorageSync('h5_token', res.data.data)
               // emit("loginSuccess")
               login_success(res)
             } else {

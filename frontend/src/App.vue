@@ -8,7 +8,4 @@ console.log("stepup")
  ::v-deep .uni-popup__wrapper{
     width: 80%;
 }
-* {
-  font-family: "DemiLight";
-}
 </style>

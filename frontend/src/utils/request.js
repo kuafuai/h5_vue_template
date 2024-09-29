@@ -1,13 +1,18 @@
-let baseurl = import.meta.env.VITE_APP_BASE_API;
+// #ifdef MP-WEIXIN
+let baseurl = import.meta.env.VITE_APP_SERVICE_API;
+// #endif
 
+// #ifdef H5
+let baseurl = import.meta.env.VITE_APP_BASE_API;
+// #endif
 // #ifdef H5
 import axios from 'axios';
 
 // 创建 axios 实例
- const service = axios.create({
+const service = axios.create({
     baseURL: baseurl,
     timeout: 50000,
-    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+    headers: {'Content-Type': 'application/json;charset=utf-8'},
 });
 
 const useLogin = import.meta.env.VITE_USE_LOGIN === 'true'
@@ -34,7 +39,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     (response) => {
         const res = response.data;
-        const { code, message } = res;
+        const {code, message} = res;
         if (code === 0) {
             return res;
         } else {
@@ -44,8 +49,8 @@ service.interceptors.response.use(
                     import.meta.env.VITE_BASE;
             } else {
                 uni.showToast({
-                    title:message || '系统出错',
-                    icon:"none"
+                    title: message || '系统出错',
+                    icon: "none"
                 })
                 // ElMessage({
                 //     message: message || '系统出错',
@@ -64,8 +69,8 @@ service.interceptors.response.use(
                 import.meta.env.VITE_BASE;
         } else {
             uni.showToast({
-                title:'网络异常，请稍后再试!',
-                icon:"none"
+                title: '网络异常，请稍后再试!',
+                icon: "none"
             })
             // ElMessage({
             //     message: '网络异常，请稍后再试!',
@@ -79,12 +84,18 @@ service.interceptors.response.use(
 export default service
 // #endif
 // #ifdef MP-WEIXIN
-let request = (url, data, method, token) => {
+let service =  (res) => {
+    console.log("加载中", res)
     uni.showLoading({
         title: '加载中',
     })
 
+    let {url, data, method, token} = res
+    token =  uni.getStorageSync("h5_token")
+    console.log("token",token)
+
     return new Promise((resolve, reject) => {
+        console.log("1234567654321234567", url)
         uni.request({
             url: baseurl + url,
             // url: url,
@@ -126,5 +137,5 @@ let request = (url, data, method, token) => {
         })
     })
 }
-export default request
+export default service
 // #endif

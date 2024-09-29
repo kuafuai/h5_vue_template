@@ -1,7 +1,7 @@
 <template>
   <base-layout display="flex" direction="c" :w_full="true">
     <base-layout display="flex" x="end" :w_full="true">
-      <base-layout display="flex" y="center" class="m-r-20" style="width: 80%;">
+      <base-layout display="flex" y="center" class="m-r-20" style="width: 91%;height:72rpx">
         <uni-easyinput class="uni-mt-5" suffixIcon="search" v-model="props.searchData[firstSearchData]"
                        :placeholder="'请输入'+firstSearchDataComment" @iconClick="iconClick"></uni-easyinput>
         <button size="mini" class="m-l-10" @click="toggleAdvanced">
@@ -97,8 +97,8 @@ function iconClick() {
 
 <style scoped lang="scss">
 ::v-deep.uni-mt-5 {
-  height: 72 rpx;
-  border-radius: 10 ppx;
+  height: 72rpx;
+  border-radius: 10px;
 
 }
 
@@ -117,7 +117,7 @@ function iconClick() {
   border-radius: 100px;
   color: rgba(93, 95, 239, 1);
   font-size: 14px;
-  font-weight: 550;
+  font-weight: 500;
   height: 100% !important;
 
 }
@@ -134,7 +134,7 @@ function iconClick() {
 
 ::v-deep .uni-select {
   padding-left: 19px;
-  height: 100 rpx !important;
+  height: 100rpx !important;
   border-radius: 10px;
   border: 1px solid rgba(229, 229, 229, 1);
 
@@ -174,7 +174,7 @@ function iconClick() {
   border-radius: 100px;
   background: rgba(93, 95, 239, 1);
   width: 100%;
-  height: 100 rpx;
+  height: 100rpx;
   color: rgba(255, 255, 255, 1);
   font-size: 14px !important;
   font-weight: 500;

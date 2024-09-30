@@ -84,15 +84,15 @@ service.interceptors.response.use(
 export default service
 // #endif
 // #ifdef MP-WEIXIN
-let service =  (res) => {
+let service = (res) => {
     console.log("加载中", res)
     uni.showLoading({
         title: '加载中',
     })
 
     let {url, data, method, token} = res
-    token =  uni.getStorageSync("h5_token")
-    console.log("token",token)
+    token = uni.getStorageSync("h5_token")
+    console.log("token", token)
 
     return new Promise((resolve, reject) => {
         console.log("1234567654321234567", url)
@@ -107,7 +107,7 @@ let service =  (res) => {
                 "Authorization": 'Bearer ' + token
             },
             success(res) {
-                resolve(res)
+                resolve(res.data)
                 if (res.data.code == 40401) {
                     uni.showToast({
                         title: "请先去绑定手机号吧～",
@@ -118,6 +118,11 @@ let service =  (res) => {
                             url: "/pages/login/login"
                         })
                     }, 800)
+                } else if (res.data.code != 0) {
+                    uni.showToast({
+                        title: res.data.message || '系统出错',
+                        icon: "none"
+                    })
                 }
             },
             fail(err) {

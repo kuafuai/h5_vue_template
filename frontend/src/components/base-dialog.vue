@@ -1,21 +1,35 @@
 <template>
-  <view class="all_dialog">
-    <uni-popup
-        :showClose="true"
-        ref="popup"
-        :animation="true"
-        :type="type"
-        :class="popupClass"
-        @close="handleClose"
-    >
-      <view style="height: 100%;overflow-y: auto;">
-        <slot name="dialog"/>
-      </view>
+  <view v-if="comp_type === 'base'">
+
+    <view class="all_dialog">
+      <uni-popup
+          :showClose="true"
+          ref="popup"
+          :animation="true"
+          :type="type"
+          :class="popupClass"
+      >
+        <view style="height: 100%;overflow-y: auto;">
+          <slot name="dialog"/>
+        </view>
+      </uni-popup>
+    </view>
+  </view>
+  <view v-if="comp_type === 'popup' ">
+    <!-- 提示窗示例 -->
+    <uni-popup ref="popup" type="dialog">
+      <uni-popup-dialog :type="toast.msgType" cancelText="取消" confirmText="确定" title="提示" :content="props.content"
+                        @confirm="dialogConfirm"
+                        @close="dialogClose"></uni-popup-dialog>
     </uni-popup>
   </view>
 </template>
 
 <script setup>
+import {getCurrentInstance} from "vue"
+
+const {proxy} = getCurrentInstance();
+const emits = defineEmits(['success', 'fail'])
 
 import {onHide} from "@dcloudio/uni-app";
 
@@ -28,6 +42,16 @@ const props = defineProps({
     type: String,
     required: false,
     default: "center"
+  },
+  comp_type: {
+    type: String,
+    required: false,
+    default: "base"
+  },
+  content: {
+    type: String,
+    required: false,
+    default: "您确定要提交吗？"
   }
 });
 import {defineProps, ref} from "vue";
@@ -41,6 +65,25 @@ onHide(()=>{
 })
 
 
+const toast = {
+  type: 'center',
+  msgType: 'success',
+  messageText: '成功',
+  value: ''
+}
+
+
+function dialogConfirm() {
+  console.log('点击确认')
+  proxy.messageText = `点击确认了 ${toast.msgType} 窗口`
+  emits('success')
+}
+
+
+function dialogClose() {
+  console.log('点击关闭')
+  emits('fail')
+}
 
 console.log(props.type)
 // 根据 type 动态设置不同的 class
@@ -69,7 +112,6 @@ function closeDialog() {
   popup.value.close();
 }
 
-
 // const closeDialog = () => {
 //   // const { path, query, params } = route.value;
 //   // location.reload()
@@ -90,6 +132,54 @@ defineExpose({
 .all_dialog {
   width: 100vm;
   z-index: 99999;
+}
+
+@mixin flex {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  /* #endif */
+  flex-direction: row;
+}
+
+@mixin height {
+  /* #ifndef APP-NVUE */
+  height: 100%;
+  /* #endif */
+  /* #ifdef APP-NVUE */
+  flex: 1;
+  /* #endif */
+}
+
+.box {
+  @include flex;
+}
+
+.dialog,
+.share {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  /* #endif */
+  flex-direction: column;
+}
+
+.dialog-box {
+  padding: 10px;
+}
+
+.dialog .button,
+.share .button {
+  /* #ifndef APP-NVUE */
+  width: 100%;
+  /* #endif */
+  margin: 0;
+  margin-top: 10px;
+  padding: 3px 0;
+  flex: 1;
+}
+
+.dialog-text {
+  font-size: 14px;
+  color: #333;
 }
 
 //.dialog {

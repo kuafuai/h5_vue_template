@@ -13,14 +13,19 @@ import com.kuafu.common.util.StringUtils;
 import com.kuafu.common.util.WrapperFactory;
 import com.kuafu.login.config.LoginRelevanceConfig;
 import lombok.extern.slf4j.Slf4j;
+import com.kuafu.web.annotation.IsNotNullField;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -101,6 +106,19 @@ public class LoginBusinessService {
         UpdateWrapper<?> updateWrapper = new UpdateWrapper<>();
         updateWrapper
                 .eq("id", userId)
+                .set(openid_table_column, openId);
+        iService.update(updateWrapper);
+    }
+
+    public void updateOpenIdByRelevanceId(Object relevanceId, Object openId) {
+        String table = login_table;
+        if (StringUtils.isNotEmpty(openid_table)) {
+            table = openid_table;
+        }
+        IService iService = SpringUtils.getBean(table);
+        UpdateWrapper<?> updateWrapper = new UpdateWrapper<>();
+        updateWrapper
+                .eq(relevance_id_name, relevanceId)
                 .set(openid_table_column, openId);
         iService.update(updateWrapper);
     }
@@ -224,4 +242,121 @@ public class LoginBusinessService {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "关联字段不存在");
         }
     }
+
+    /**
+     *
+     * @param phone 手机号
+     * @param relevanceTable 登录关联表的名称
+     * @return ID
+     */
+    public Long insertRelevanceInfo(String phone, String relevanceTable) {
+        // 驼峰转下划线
+        String table = StringUtils.toUnderScoreCase(relevanceTable);
+        // 下划线转 entityName
+        String entityName = StringUtils.dbStrToHumpUpper(table);
+        Object entityObject = createNewUser(entityName);
+
+        String fieldName = StringUtils.dbStrToHumpLower(select_table_column);
+        // 拿到所有非空字段，设置默认值
+        Class<?> clazz = entityObject.getClass();
+        for (Field field : clazz.getDeclaredFields()) {
+            // 检查字段是否有@IsNotNullField注解
+            if (field.isAnnotationPresent(IsNotNullField.class)) {
+                try {
+                    // 设置字段为可访问的
+                    field.setAccessible(true);
+
+                    // 检查字段是否已经设置了值
+                    if (field.get(entityObject) == null) {
+                        // 根据字段类型设置默认值
+                        if (field.getType() == String.class) {
+                            field.set(entityObject, "");
+                        } else if (field.getType() == Integer.class) {
+                            field.set(entityObject, 0);
+                        } else if (field.getType() == Date.class) {
+                            field.set(entityObject, new Date());
+                        }
+                    }
+                } catch (IllegalAccessException e) {
+                    // 处理异常
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // 检查数据是否已经存在
+        IService iService = SpringUtils.getBean(entityName);
+        QueryWrapper<Object> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("phone_number", phone);
+        Object object = iService.getOne(queryWrapper);
+        if (object != null) {
+            return getId(object);
+        }
+
+        setFieldValue(entityObject, fieldName, phone);
+        boolean flag = iService.save(entityObject);
+        if (flag) {
+            return getRelevanceIdByPhoneAndSave(phone, relevanceTable, String.valueOf(getId(entityObject)));
+        } else {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR);
+        }
+    }
+
+    /**
+     * 根据手机号获取loginId
+     * @param phone 手机号
+     * @param relevanceTable 关联表
+     * @param relevanceId 关联ID
+     * @return
+     */
+    public long getRelevanceIdByPhoneAndSave(String phone, String relevanceTable, String relevanceId) {
+        String entityName = StringUtils.dbStrToHumpUpper(login_table);
+        Object loginInfo = createNewUser(entityName);
+
+        // 设置字段值
+        Map<String,Object> fieldMap = new HashMap<>();
+        String fieldPhoneNumber = StringUtils.dbStrToHumpLower(select_table_column);
+        fieldMap.put(fieldPhoneNumber, phone);
+        String fieldRelevanceTable = StringUtils.dbStrToHumpLower(relevance_table);
+        fieldMap.put(fieldRelevanceTable, relevanceTable);
+        String fieldRelevanceId = StringUtils.dbStrToHumpLower(relevance_id_name);
+        fieldMap.put(fieldRelevanceId, relevanceId);
+
+        for (String key : fieldMap.keySet()) {
+            Object value = fieldMap.get(key);
+            setFieldValue(loginInfo, key, value);
+        }
+        // 插入登录信息
+        IService iService = SpringUtils.getBean(entityName);
+        boolean result = iService.save(loginInfo);
+        if(result) {
+            return getId(loginInfo);
+        } else {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR);
+        }
+    }
+
+    /**
+     * 获取关联登录表用户的ID
+     *
+     * @param phone
+     * @return
+     */
+    public Long getUserIdByRelevanceTable(String relevanceTable, String phone) {
+        // 驼峰转下划线
+        String table = StringUtils.toUnderScoreCase(relevanceTable);
+        // 下划线转 entityName
+        String entityName = StringUtils.dbStrToHumpUpper(table);
+
+        // 检查数据是否已经存在
+        IService iService = SpringUtils.getBean(entityName);
+        QueryWrapper<Object> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("phone_number", phone);
+        Object object = iService.getOne(queryWrapper);
+        if (object != null) {
+            return getId(object);
+        }
+        return null;
+    }
+
 }

@@ -18,8 +18,8 @@ import java.io.Serializable;
 @TableName(value ="login")
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Login implements Serializable {
     /**
      * 

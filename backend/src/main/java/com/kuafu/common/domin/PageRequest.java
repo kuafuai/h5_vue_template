@@ -22,6 +22,6 @@ public class PageRequest {
      */
     private long pageSize = 10;
 
-    private List<String> other_search_condition;
+    private List<String>     other_search_condition;
 
 }

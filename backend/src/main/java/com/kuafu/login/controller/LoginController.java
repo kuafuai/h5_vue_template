@@ -58,9 +58,6 @@ public class LoginController {
     private LoginBusinessService loginBusinessService;
 
     @Autowired
-    private WechatRegisterService wechatRegisterService;
-
-    @Autowired
     private Cache cache;
 
     @Autowired

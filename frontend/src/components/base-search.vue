@@ -2,7 +2,7 @@
   <base-layout display="flex" direction="c" :w_full="true">
     <base-layout display="flex" x="end" :w_full="true">
       <base-layout display="flex" y="center" class="m-r-20" style="width: 91%;height:72rpx">
-        <uni-easyinput class="uni-mt-5" suffixIcon="search" v-model="props.searchData[firstSearchData]"
+        <uni-easyinput class="uni-mt-5" suffixIcon="search" v-model="searchDataValue[firstSearchData]"
                        :placeholder="'请输入' + firstSearchDataComment" @iconClick="iconClick"></uni-easyinput>
         <button size="mini" class="m-l-10" @click="toggleAdvanced">
           高级搜索
@@ -21,12 +21,12 @@
         <base-layout :w_full="true">
           <!--          <uni-collapse accordion>-->
           <!--            <uni-collapse-item :open="advanced" titleBorder="none">-->
-          <uni-forms :inline="true" :modelValue="props.searchData" class="m-20">
-            <slot name="collapse" :item="props.searchData">
+          <uni-forms :inline="true" :modelValue="searchDataValue" class="m-20">
+            <slot name="collapse" :item="searchDataValue">
             </slot>
 
             <uni-forms-item v-for="(item, index) in other_search_condition" :label="item.name" name="">
-              <base-select v-model="props.searchData.other_search_condition[index]" :data="item.value"
+              <base-select v-model="searchDataValue.other_search_condition[index]" :data="item.value"
                            :title="item.name"></base-select>
 
 
@@ -51,23 +51,23 @@
 
 <script setup>
 
-const { proxy } = getCurrentInstance()
+const {proxy} = getCurrentInstance()
 
 const props = defineProps({
-  searchItems: { type: Array, default: () => [] },
+  searchItems: {type: Array, default: () => []},
   searchData: {
     type: Object, default: () => {
     }
   },
-  firstSearchData: { type: String },
-  firstSearchDataComment: { type: String },
+  firstSearchData: {type: String},
+  firstSearchDataComment: {type: String},
   other_search_condition: {
     type: Array,
     default: []
   }
 });
-
-props.searchData.other_search_condition = []
+let searchDataValue = ref(JSON.parse(JSON.stringify(props.searchData)))
+searchDataValue.value.other_search_condition = []
 const advanced = ref(false);
 
 // 定义事件
@@ -85,8 +85,8 @@ function toggleAdvanced() {
 }
 
 function iconClick() {
-  console.log(props.searchData)
-  emit("search", props.searchData);
+  console.log(searchDataValue.value)
+  emit("search", searchDataValue.value);
   proxy.$refs.base_search_dailog.closeDialog()
   // toggleAdvanced()
 
@@ -97,7 +97,7 @@ function iconClick() {
 
 <style scoped lang="scss">
 ::v-deep.uni-mt-5 {
-  height: 72rpx;
+  height: 72 rpx;
   border-radius: 10px;
 
 }
@@ -134,7 +134,7 @@ function iconClick() {
 
 ::v-deep .uni-select {
   padding-left: 19px;
-  height: 100rpx !important;
+  height: 100 rpx !important;
   border-radius: 10px;
   border: 1px solid rgba(229, 229, 229, 1);
 
@@ -149,7 +149,7 @@ function iconClick() {
 
 ::v-deep .uni-easyinput__content-input {
   padding-left: 19px !important;
-  height: 100rpx !important;
+  height: 100 rpx !important;
 }
 
 ::v-deep.is-input-border {
@@ -174,7 +174,7 @@ function iconClick() {
   border-radius: 100px;
   background: rgba(93, 95, 239, 1);
   width: 100%;
-  height: 100rpx;
+  height: 100 rpx;
   color: rgba(255, 255, 255, 1);
   font-size: 14px !important;
   font-weight: 500;
@@ -188,7 +188,7 @@ function iconClick() {
 
 ::v-deep .uni-select {
   padding-left: 19px;
-  height: 100rpx !important;
+  height: 100 rpx !important;
   border-radius: 10px;
   border: 1px solid rgba(229, 229, 229, 1);
 
@@ -228,21 +228,23 @@ function iconClick() {
   border-radius: 100px;
   background: rgba(93, 95, 239, 1);
   width: 100%;
-  height: 100rpx;
+  height: 100 rpx;
   margin-top: 10px;
   color: rgba(255, 255, 255, 1);
   font-size: 15px !important;
   font-weight: 500;
 }
-.uni-forms-item:last-child{
-  margin-bottom:0px ;
+
+.uni-forms-item:last-child {
+  margin-bottom: 0px;
 }
 
 .content {
   margin: 0;
   border-radius: 0
 }
-.m-20{
+
+.m-20 {
   width: 100%;
 }
 </style>

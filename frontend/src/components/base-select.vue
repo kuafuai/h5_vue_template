@@ -1,5 +1,6 @@
 <template>
-  <uni-data-select v-model="select_item" @change="handleInput" :disabled="disabled" :clear="clear" v-bind="$attrs" :placeholder="'请选择'+title"
+  <uni-data-select v-model="select_item" @change="handleInput" :disabled="disabled" :clear="clear"
+                   :placeholder="'请选择'+title"
                    :localdata="selectData"
                    :filter="true">
 
@@ -22,6 +23,7 @@ const selectData = ref([]);
 const emits = defineEmits(["change"])
 const handleInput = (e) => {
   console.log(678, e)
+
   emits("change", e,)
 }
 onLoad(() => {

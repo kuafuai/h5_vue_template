@@ -29,7 +29,31 @@
       }
     },
     {
-      "path": "pages/two/index",
+      "path": "pages/approve/index",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
+      "path": "pages/approve/detail",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
+      "path": "pages/submission/index",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
+      "path": "pages/submission/detail",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
+      "path": "pages/form/index",
       "style": {
         "leftWindow": true
       }

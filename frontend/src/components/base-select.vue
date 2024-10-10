@@ -27,8 +27,11 @@ const handleInput = (e) => {
   emits("change", e,)
 }
 onLoad(() => {
-  refresh();
+
 });
+onMounted(()=>{
+  refresh();
+})
 
 function refresh() {
   getApiData();

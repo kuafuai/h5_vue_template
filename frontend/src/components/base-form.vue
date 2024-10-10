@@ -62,11 +62,14 @@ const props = defineProps({
 
 });
 const emit = defineEmits(['success', "fail", "message_perfect"]);
-
+// 保留其实的form
+const origin_form=JSON.parse(JSON.stringify(props.form))
 // Defining the reset function
 const onResetForm = () => {
   for (const key in props.form) {
-    if (props.form.hasOwnProperty(key)) {
+    if (origin_form.hasOwnProperty(key)) {
+      props.form[key] = origin_form[key];
+    }else {
       props.form[key] = null;
     }
   }

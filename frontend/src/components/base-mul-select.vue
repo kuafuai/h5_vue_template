@@ -3,7 +3,7 @@
     <view class="example-body m-y-20">
 
       <uni-badge v-for="(item, index) in fileList" :key="index"
-                 class="uni-badge-left-margin m-x-10" text="X" @click="remove_tag(item)" absolute="rightTop"
+                 class="uni-badge-left-margin m-x-10 tag_box" text="X" @click="remove_tag(item)" absolute="rightTop"
                  size="small">
         <uni-tag :circle="true" :inverted="true" :text="item.text" type="primary" size="small"/>
       </uni-badge>
@@ -75,3 +75,12 @@ function remove_tag(item) {
 }
 
 </script>
+<style>
+.example-body{
+  display: flex;
+  flex-wrap: wrap;
+}
+.tag_box{
+  margin: .5rem;
+}
+</style>

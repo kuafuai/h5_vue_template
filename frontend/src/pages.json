@@ -8,40 +8,70 @@
         }
     },
     "pages": [{
-        "path": "pages/user/index",
-        "style": {
-            "navigationBarTitleText": ""
+            "path": "pages/login/index",
+            "style": {
+                "leftWindow": false,
+                "navigationBarTitleText": ""
+            }
+        },
+        {
+            "path": "pages/home/index",
+            "style": {
+                "leftWindow": true,
+                "navigationBarTitleText": ""
+            }
+        },
+        {
+            "path": "pages/user/index",
+            "style": {
+                "leftWindow": true
+            }
+        },
+        {
+            "path": "pages/approve/index",
+            "style": {
+                "leftWindow": true
+            }
+        },
+        {
+            "path": "pages/approve/detail",
+            "style": {
+                "leftWindow": true
+            }
+        },
+        {
+            "path": "pages/submission/index",
+            "style": {
+                "leftWindow": true
+            }
+        },
+        {
+            "path": "pages/submission/detail",
+            "style": {
+                "leftWindow": true
+            }
+        },
+        {
+            "path": "pages/form/index",
+            "style": {
+                "leftWindow": true
+            }
+        },
+        {
+            "path": "pages/setForm/index"
         }
-    }, {
-        "path": "pages/register/index",
+    ],
+    "leftWindow": {
+        "path": "responsive/leftwin.vue",
         "style": {
-            "navigationBarTitleText": ""
+            "width": "300px"
         }
-    }, {
-        "path": "pages/company/index",
-        "style": {
-            "navigationBarTitleText": ""
-        }
-    }, {
-        "path": "pages/survey_info/index",
-        "style": {
-            "navigationBarTitleText": ""
-        }
-    }, {
-        "path": "pages/survey_info_detail/index",
-        "style": {
-            "navigationBarTitleText": ""
-        }
-    }, {
-        "path": "pages/answer/index",
-        "style": {
-            "navigationBarTitleText": ""
-        }
-    }],
+    },
     "globalStyle": {
         "navigationBarTextStyle": "black",
         "navigationBarTitleText": "uni-app",
         "navigationBarBackgroundColor": "#F8F8F8",
-        "backgroundColor": "#F8F8F8"
+        "backgroundColor": "#F8F8F8",
+        "navigationStyle": "custom"
     }
 }

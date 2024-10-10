@@ -134,5 +134,5 @@ yarn.lock
 .DS_Store
 .idea
 
-src/api/*
-src/pages/*
+#src/api/*
+#src/pages/*

@@ -61,26 +61,33 @@ function apiMethod() {
 function select_change(value) {
   const selectedOption = selectData.value.find(option => option.value === value);
   if (selectedOption) {
-    let exists = fileList.value.some(item => item.id === selectedOption.value);
-    if(!exists) {
-      fileList.value.push({'id': selectedOption.value, 'text': selectedOption.text})
+    let exists = fileList.value.some(item => item.id === String(selectedOption.value));
+    if (!exists) {
+      fileList.value.push({'id': String(selectedOption.value), 'text': selectedOption.text})
       emits("change", fileList.value);
+    } else {
+      uni.showToast({
+        'title': '该数据已经添加！',
+        'position': 'center',
+        'icon': 'error'
+      });
     }
   }
 }
 
 function remove_tag(item) {
-  fileList.value = fileList.value.filter(p=> p.id !== item.id)
+  fileList.value = fileList.value.filter(p => p.id !== item.id)
   emits("change", fileList.value);
 }
 
 </script>
 <style>
-.example-body{
+.example-body {
   display: flex;
   flex-wrap: wrap;
 }
-.tag_box{
+
+.tag_box {
   margin: .5rem;
 }
 </style>

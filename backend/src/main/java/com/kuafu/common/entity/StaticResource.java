@@ -19,7 +19,7 @@ public class StaticResource implements Serializable {
     /**
      * 资源名称
      */
-    @JsonProperty("fileName")
+    @JsonProperty("name")
     private String resourceName;
 
     /**

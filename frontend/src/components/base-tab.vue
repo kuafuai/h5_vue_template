@@ -39,7 +39,7 @@ const onClickItem = (e) => {
 .content,
 .cont,
 .content-text {
-  height: 100%;
+  height: 95%;
   overflow: auto;
   background: rgb(245, 247, 250);
 }

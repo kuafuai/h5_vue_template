@@ -22,7 +22,7 @@ uni-left-window{
 }
 .uni-forms{
   width: 90%;
-  max-width: 430px;
+  max-width: 410px;
 }
 .main-header{
   display: none;

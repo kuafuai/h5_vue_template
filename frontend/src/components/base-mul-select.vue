@@ -1,5 +1,5 @@
 <template>
-  <base-wrapper class="w-full">
+  <base-wrapper class="w-full borderradio">
     <view class="example-body m-y-20">
 
       <uni-badge v-for="(item, index) in fileList" :key="index"
@@ -89,5 +89,8 @@ function remove_tag(item) {
 
 .tag_box {
   margin: .5rem;
+}
+.borderradio{
+  border-radius: 11px
 }
 </style>

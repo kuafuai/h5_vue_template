@@ -38,6 +38,16 @@ public class StaticResource implements Serializable {
      */
     private Integer relatedTableKey;
 
+    private String relateTableColumnName;
+
+    public String getRelateTableColumnName() {
+        return relateTableColumnName;
+    }
+
+    public void setRelateTableColumnName(String relateTableColumnName) {
+        this.relateTableColumnName = relateTableColumnName;
+    }
+
     // Getter and Setter methods
 
     public Integer getResourceId() {

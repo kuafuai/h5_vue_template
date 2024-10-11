@@ -1,10 +1,14 @@
 show tables;
-CREATE TABLE static_resources (
-                                  resource_id INT AUTO_INCREMENT PRIMARY KEY, -- 资源ID，自增主键
-                                  resource_name VARCHAR(255) NOT NULL,        -- 资源名称
-                                  resource_path VARCHAR(500) NOT NULL,        -- 资源路径
-                                  related_table_name VARCHAR(255),            -- 关联表名称，可以为空
-                                  related_table_key INT                       -- 关联表主键ID，可以为空
+drop table if exists static_resources;
+create table static_resources
+(
+    resource_id              int
+        primary key autoincrement,
+    resource_name            VARCHAR(255) not null,
+    resource_path            VARCHAR(500) not null,
+    related_table_name       VARCHAR(255),
+    related_table_key        int,
+    relate_table_column_name varchar(255)
 );
 
 

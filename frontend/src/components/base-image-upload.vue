@@ -1,6 +1,7 @@
 <template>
   <!-- 文件选择区域 -->
   <!--  <view class="example-body">-->
+
   <uni-file-picker
       :limit="limit"
       :return-type="'array'"
@@ -14,19 +15,27 @@
 
 <script setup>
 import {ref, watch} from 'vue';
+import {onLoad, onShow} from "@dcloudio/uni-app";
 
 // 通过 defineModel() 传递资源数组，支持外部传入
 
 const resources = ref([])
-const image_model = defineModel()
 // const pre_url = import.meta.env.VITE_APP_SERVICE_API;
 const pre_url = import.meta.env.VITE_APP_BASE_API;
 console.log("pre", pre_url);
+const image_model = defineModel()
+console.log("初始值", image_model.value)
+const selectedFiles = ref([]);
+
+onLoad(() => {
+  // console.log("1234321234321234321234321234", image_model.value)
+  // selectedFiles.value = image_model.value
+})
 
 const props = defineProps({
   limit: {
     type: Number,
-    default: 3,
+    default: 1,
   },
 
   title: {
@@ -54,19 +63,42 @@ function extractFileNameAndExtension(url) {
   };
 }
 
-const selectedFiles = ref([]);
+// 监听 image_model 数组变化，只触发一次
+watch(image_model, (newValue) => {
+  console.log("image_model111", newValue)
+  selectedFiles.value = newValue;
+}, {deep: true, once: true});
 
 // 监听外部传入的资源数组，如果发生变化则更新 selectedFiles
 watch(resources.value, (newValue) => {
   if (newValue && newValue.length > 0) {
-    console.log("印社", newValue)
+    console.log("", newValue)
     selectedFiles.value = newValue.map(resource => ({
       name: resource.fileName,
       extname: extractFileNameAndExtension(resource.url),
       url: resource.url,
     }));
+    image_model.value.splice(0, image_model.value.length);
+
+    image_model.value.push(...resources.value)
+    console.log("resources.value变化后的元素",resources.value,selectedFiles.value,image_model.value)
   }
-});
+
+},{deep:true});
+
+// 监听外部传入的资源数组，如果发生变化则更新 selectedFiles
+// watch(image_model.value, (newValue) => {
+//   console.log("监听", image_model.value)
+//   if (newValue && newValue.length > 0) {
+//
+//     // selectedFiles.value = newValue.map(resource => ({
+//     //   name: resource.fileName,
+//     //   extname: extractFileNameAndExtension(resource.url),
+//     //   url: resource.url,
+//     // }));
+//     selectedFiles.value = newValue
+//   }
+// },{ deep: true });
 
 
 const handleFileChange = async (files) => {
@@ -94,8 +126,11 @@ const handleFileChange = async (files) => {
 const handelDelete = (e) => {
 
   resources.value.splice(e.index, 1)
-  image_model.value = resources.value
-  console.log("删除后的元素", image_model.value)
+  image_model.value.splice(e.index,1)
+  // image_model.value = resources.value.splice(e.index, 1)
+  // // resources.value=resources.value.splice(e.index, 1)
+  // // image_model.value = resources.value
+  // console.log("删除后的元素", resources.value, image_model.value)
 }
 
 const uploadFiles = async () => {
@@ -145,8 +180,8 @@ const uploadFile = (file) => {
               extension: fileInfo.extension,
               url: response.data.url,
             });
-            image_model.value = resources.value
-            console.log("select_image", selectedFiles.value)
+            // image_model.value = resources.value
+            console.log("select_image", resources.value, selectedFiles.value)
 
             resolve(res);
           } else {

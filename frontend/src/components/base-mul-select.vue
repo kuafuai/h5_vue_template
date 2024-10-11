@@ -93,4 +93,8 @@ function remove_tag(item) {
 .borderradio{
   border-radius: 11px
 }
+::v-deep .uni-select__selector{
+  height: 8rem;
+  overflow: auto;
+}
 </style>

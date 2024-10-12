@@ -25,7 +25,7 @@
             <slot name="collapse" :item="searchDataValue">
             </slot>
 
-            <uni-forms-item v-for="(item, index) in other_search_condition" :label="item.name" name="">
+            <uni-forms-item v-for="(item, index) in other_search_condition" :label="item.name" name="" :key="index">
               <base-select v-model="searchDataValue.other_search_condition[index]" :data="item.value"
                            :title="item.name"></base-select>
 
@@ -101,7 +101,7 @@ function iconClick() {
 
 <style scoped lang="scss">
 ::v-deep.uni-mt-5 {
-  height: 72 rpx;
+  height: 72rpx;
   border-radius: 10px;
 
 }
@@ -120,9 +120,8 @@ function iconClick() {
   border: 1px solid rgba(93, 95, 239, 1);
   border-radius: 100px;
   color: rgba(93, 95, 239, 1);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
-  //height: 100% !important;
   align-items: center;
 }
 
@@ -131,29 +130,29 @@ function iconClick() {
 }
 
 ::v-deep uni-text {
-  font-size: 14px;
+  font-size: 0.75rem;
   font-weight: 500;
   color: rgba(0, 0, 0, 1)
 }
 
 ::v-deep .uni-select {
-  padding-left: 19px;
-  height: 100 rpx !important;
+  padding-left: 1.1875rem;
+  height: 100rpx !important;
   border-radius: 10px;
   border: 1px solid rgba(229, 229, 229, 1);
 
 }
 
 ::v-deep .uni-select__input-placeholder {
-  font-size: 15px;
+  font-size: 0.875rem;
   color: rgb(166, 166, 166);
   font-weight: 500;
   letter-spacing: -0.15px;
 }
 
 ::v-deep .uni-easyinput__content-input {
-  padding-left: 19px !important;
-  height: 100 rpx !important;
+  padding-left: 1.1875rem !important;
+  height: 100rpx !important;
 }
 
 ::v-deep.is-input-border {
@@ -162,7 +161,7 @@ function iconClick() {
 }
 
 .uni-easyinput__placeholder-class {
-  font-size: 15px;
+  font-size: 0.875rem;
   font-weight: 500;
   font-family: Inter;
 }
@@ -178,64 +177,10 @@ function iconClick() {
   border-radius: 100px;
   background: rgba(93, 95, 239, 1);
   width: 100%;
-  height: 100 rpx;
+  height: 100rpx;
+  margin-top: 20rpx;
   color: rgba(255, 255, 255, 1);
-  font-size: 14px !important;
-  font-weight: 500;
-}
-
-::v-deep uni-text {
-  font-size: 12px;
-  font-weight: 500;
-  color: rgba(0, 0, 0, 1)
-}
-
-::v-deep .uni-select {
-  padding-left: 19px;
-  height: 100 rpx !important;
-  border-radius: 10px;
-  border: 1px solid rgba(229, 229, 229, 1);
-
-}
-
-::v-deep .uni-select__input-placeholder {
-  font-size: 13px;
-  color: rgb(166, 166, 166);
-  font-weight: 500;
-  letter-spacing: -0.15px;
-}
-
-::v-deep .uni-easyinput__content-input {
-  padding-left: 19px !important;
-  height: 100 rpx;
-}
-
-::v-deep.is-input-border {
-  border-radius: 10px;
-  border: 1px solid rgba(229, 229, 229, 1);
-}
-
-.uni-easyinput__placeholder-class {
-  font-size: 13px;
-  font-weight: 500;
-  font-family: Inter;
-}
-
-::v-deep .uni-forms-item {
-  align-items: center;
-}
-
-.button-botttom {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 100px;
-  background: rgba(93, 95, 239, 1);
-  width: 100%;
-  height: 100 rpx;
-  margin-top: 10px;
-  color: rgba(255, 255, 255, 1);
-  font-size: 15px !important;
+  font-size: 0.875rem !important;
   font-weight: 500;
 }
 

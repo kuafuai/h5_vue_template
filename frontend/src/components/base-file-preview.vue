@@ -1,20 +1,24 @@
 <template>
   <div class="file-preview">
     <!-- 如果是图片类型，则显示图片 -->
-    <img v-if="isImage" :src="url" alt="预览图片" class="preview-image"/>
+    <view v-for="item in url">
+      <img v-if="isImage(item.url)" :src="item.url" alt="预览图片" class="preview-image"/>
+      <div v-else class="file-preview-button">
+        <view v-if="item!=null && item!=''">
+          <button @click="openFile(item.url)" class="custom-button">
+            {{item.fileName}}
+          </button>
+        </view>
+        <view v-else>
+          暂无文件
+        </view>
+
+      </div>
+    </view>
+
 
     <!-- 如果是文件类型，则显示打开文件按钮 -->
-    <div v-else class="file-preview-button">
-      <view v-if="url!=null && url!=''">
-        <button @click="openFile" class="custom-button">
-          打开文件
-        </button>
-      </view>
-      <view v-else>
-        暂无文件
-      </view>
 
-    </div>
   </div>
 </template>
 
@@ -23,28 +27,35 @@ import {ref, computed, watch} from 'vue';
 
 const props = defineProps({
   url: {
-    type: String,
+    type: Array,
     required: true,
   },
 });
 
+
 const fileExtension = ref('');
 
-// 监听 props.url 的变化
-watch(
-    () => props.url,
-    (newUrl) => {
-      console.log('URL 发生变化:', newUrl);
-      fileExtension.value = extractFileExtension(newUrl);
-    },
-    {immediate: true} // 立即执行一次，以处理初始值
-);
-
+// // 监听 props.url 的变化
+// watch(
+//     () => props.url,
+//     (newUrl) => {
+//       console.log('URL 发生变化:', newUrl);
+//       fileExtension.value = extractFileExtension(newUrl);
+//     },
+//     {immediate: true} // 立即执行一次，以处理初始值
+// );
+//
 // 计算属性：判断文件是否为图片类型
-const isImage = computed(() => {
+// const isImage = computed(() => {
+//   const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+//   return imageTypes.includes(fileExtension.value);
+// });
+const isImage =  (newUrl) => {
+  var fileExtension = extractFileExtension(newUrl);
   const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
-  return imageTypes.includes(fileExtension.value);
-});
+  return imageTypes.includes(fileExtension);
+}
+
 
 // 提取文件扩展名的函数
 function extractFileExtension(url) {
@@ -53,11 +64,11 @@ function extractFileExtension(url) {
 }
 
 // 方法：打开文件
-const openFile = () => {
-  if (props.url) {
+const openFile = (url) => {
+  if (url) {
     // 使用 uniapp 内置的 api 打开文件
     uni.openDocument({
-      filePath: props.url,
+      filePath: url,
       success: function () {
         console.log('文件打开成功');
       },
@@ -86,7 +97,7 @@ const openFile = () => {
   padding: 5px;
   /*border: 2px solid #e0e0e0;*/
   border-radius: 10px;
-  margin: 10px 0 0 0 ;
+  margin: 10px 0 0 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* 添加轻微阴影效果 */
 }
 

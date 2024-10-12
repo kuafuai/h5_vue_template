@@ -66,6 +66,9 @@ public class LoginController {
     @Autowired
     private MessageTemplate messageTemplate;
 
+    @Autowired
+    private WechatRegisterService wechatRegisterService;
+
     @PostMapping("/login/wxApp")
     @ApiOperation("小程序CODE登陆")
     @ApiOperationSupport(includeParameters = {"loginVo.code"})

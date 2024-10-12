@@ -18,7 +18,7 @@ const {proxy} = getCurrentInstance();
 
 // Importing to define props and emit
 import {defineProps, defineEmits, toRefs} from 'vue';
-import {onLoad} from "@dcloudio/uni-app";
+import {onLoad, onShow} from "@dcloudio/uni-app";
 // import {ElMessage} from 'element-plus';
 // Defining props to receive form and rules from parent
 const props = defineProps({
@@ -35,6 +35,10 @@ const props = defineProps({
     type: String,
     required: true
   },
+  query_module:{
+    type: String,
+    required: true
+  },
   model: {
     type: String,
     required: true,
@@ -47,15 +51,29 @@ const props = defineProps({
   params: {
     type: Object,
     required: true
+  },
+  // 缓存哪个字段的值
+  cache_field: {
+    type: Array,
+    required: false,
+    default: []
+  },
+  unique_id: {
+    type: String,
+    required: false,
+    default: ""
   }
 
 });
 const emit = defineEmits(['success', "fail", "message_perfect"]);
-
+// 保留其实的form
+const origin_form=JSON.parse(JSON.stringify(props.form))
 // Defining the reset function
 const onResetForm = () => {
   for (const key in props.form) {
-    if (props.form.hasOwnProperty(key)) {
+    if (origin_form.hasOwnProperty(key)) {
+      props.form[key] = origin_form[key];
+    }else {
       props.form[key] = null;
     }
   }
@@ -70,9 +88,23 @@ const handleSubmit = async () => {
     if (props.model != "add") {
       apiName = "update"
     }
+
+
     let res = await proxy.$api[props.table_module][apiName](props.form);
     console.log(res.data)
-    let form_message = await proxy.$api[props.table_module]["get"](res.data);
+    if (props.cache_field != null && props.cache_field.length > 0) {
+      let cache_value = {}
+      for (var i = 0; i < props.cache_field.length; i++) {
+        var item = props.cache_field[i]
+        cache_value[item] = props.form[item]
+      }
+      console.log("cache_value", cache_value)
+      // 保存到缓存中
+      uni.setStorageSync(props.unique_id, cache_value);
+    }
+
+
+    let form_message = await proxy.$api[props.query_module]["get"](res.data);
     console.log(form_message)
 
 
@@ -96,18 +128,19 @@ const handleSubmit = async () => {
 }
 onLoad(async () => {
   console.log(1212131313)
+
   //   根据查询条件搜索
   if (props.model != "add") {
     // console.log(121212)
     let form = null
     // 如果id不为null，使用id查询
     if (props.id != null && props.id != '') {
-      let res = await proxy.$api[props.table_module]["get"](props.id);
+      let res = await proxy.$api[props.query_module]["get"](props.id);
       form = res.data
     }
     // 如果param不为null，使用param查询,只取第一个
     else if (props.params != null) {
-      let res = await proxy.$api[props.table_module]["page"](props.params);
+      let res = await proxy.$api[props.query_module]["page"](props.params);
       form = res.data.records[0]
     }
 
@@ -131,6 +164,25 @@ onLoad(async () => {
       }
     }
 
+  }
+})
+
+onShow(()=>{
+  console.log("onshow")
+  // 保留之前的数据
+  if (props.cache_field != null && props.cache_field.length > 0) {
+    let cache_form = uni.getStorageSync(props.unique_id)
+    console.log(cache_form)
+    if (cache_form != null) {
+      for (let key in cache_form) {
+        console.log("onshow-for",key)
+          var item = props.form[key]
+          if (item == undefined || item == null || item == '') {
+            props.form[key] = cache_form[key]
+          }
+      }
+    }
+    console.log("执行",props.form)
   }
 })
 // Defining the submit function
@@ -216,7 +268,7 @@ const onSubmit = () => {
 .up,
 .reset {
   border-radius: 100px;
-  width:10rem;
+  width: 10rem;
   height: 3.2rem;
   font-size: 0.9375rem;
   color: rgba(255, 255, 255, 1);

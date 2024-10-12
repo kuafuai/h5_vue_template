@@ -215,9 +215,9 @@ const handleInput = (e) => {
 }
 onLoad(() => {
 
-    });
+});
 onMounted(()=>{
-      refresh();
+  refresh();
 })
 
     function refresh() {

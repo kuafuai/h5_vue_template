@@ -368,7 +368,6 @@ public class LoginBusinessService {
      * @return
      */
     public Integer getUserTenantIdByLoginUser(LoginUser loginUser) {
-//        LoginUser loginUser = SecurityUtils.getLoginUser();
         // 通过关联用户的ID，查询关联表信息的租户ID
         String relevanceId = loginUser.getRelevanceId();
         String relevanceTable = loginUser.getRelevanceTable();
@@ -391,7 +390,9 @@ public class LoginBusinessService {
         QueryWrapper<Object> objectQueryWrapper = new QueryWrapper<>();
         objectQueryWrapper.eq(StringUtils.toUnderScoreCase(relevanceUserIdName), relevanceId);
         Object bean = iservice.getOne(objectQueryWrapper);
+
         Object tenantId = this.getValue(bean, StringUtils.dbStrToHumpLower(TenantContextHolder.TENANT_TABLE_FIELD_NAME));
+        loginUser.setTenantId(Integer.valueOf(tenantId.toString()));
         TenantContextHolder.setTenant(Integer.valueOf(tenantId.toString()));
         return Integer.valueOf(tenantId.toString());
     }

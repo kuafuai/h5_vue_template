@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import {onLoad} from "@dcloudio/uni-app";
+import {onLoad, onShow} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance()
 const data_value = defineModel()
@@ -25,21 +25,31 @@ onLoad((options) => {
   param = options;
 })
 
-onMounted(() => {
-
-  for (let i = 0; i < 3; i++) {
+onShow(()=>{
+  // for (let i = 0; i < 3; i++) {
     // 防止网络延迟无法成功赋值
     setTimeout(() => {
-      show_value_one.value = props.show_value;
-      let value = param["select_result_" + props.ref_id];
-      let show = param["select_show_" + props.ref_id];
+      // show_value_one.value = props.show_value;
+      console.log("key1232123212321234321234323","select_storage_" + props.ref_id)
+      let res = uni.getStorageSync("select_storage_" + props.ref_id)
+       res={...res}
+      // let value = param["select_result_" + props.ref_id];
+      // let show = param["select_show_" + props.ref_id];
 
-      if (value != null && value != undefined) {
-        data_value.value = value;
-        show_value_one.value = show;
+      if (res != null) {
+        console.log("select_result_" + props.ref_id,res["select_result_" + props.ref_id])
+        data_value.value = res["select_result_" + props.ref_id];
+        show_value_one.value = res["select_show_" + props.ref_id];
+        // uni.removeStorageSync("select_storage_" + props.ref_id)
+        // console.log("data_value",props.ref_id,data_value.value,show_value_one.value)
       }
-    }, i * 100); // 每次延迟 i*100 毫秒，依次执行
-  }
+
+    }, 200); // 每次延迟 i*100 毫秒，依次执行
+  // }
+})
+onMounted(() => {
+
+
 })
 
 
@@ -54,12 +64,12 @@ const handleClick = () => {
     flag = true;
   }
 
-  var select_result=null
+  var select_result = null
   if (data_value.value) {
     if (!flag) {
       path += "?"
     }
-    select_result=data_value.value
+    select_result = data_value.value
   }
 
   path = path + "select_result=" + select_result
@@ -69,8 +79,8 @@ const handleClick = () => {
   if (path.endsWith("&")) {
     path = path.slice(0, -1); // 移除最后一个字符（即 "&"）
   }
-
-  proxy.$navigate(path, true)
+  console.log("one",path)
+  proxy.$navigate(path, false)
 }
 </script>
 

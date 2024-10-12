@@ -74,8 +74,9 @@ const refresh = (item) => {
     }
   }
 
-
-  proxy.$navigate(path, true)
+  uni.setStorageSync("select_storage_" + select_id, param)
+  uni.navigateBack()
+  // proxy.$navigate(path, true)
 }
 
 // 暴露方法

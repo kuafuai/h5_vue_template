@@ -3,6 +3,9 @@ package com.kuafu.common.config;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
+import com.kuafu.web.handler.CustomTenantHandler;
+import com.kuafu.web.handler.TenantContextHolder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +21,7 @@ public class MyBatisPlusConfig {
 
     @Value("${spring.profiles.active}")
     private String dbType;
+    private final boolean enableTenant = TenantContextHolder.getEnableTenant();
 
     /**
      * 拦截器配置
@@ -27,6 +31,12 @@ public class MyBatisPlusConfig {
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+
+        // 多租户插件
+        if (enableTenant) {
+            interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new CustomTenantHandler()));
+        }
+
         // 分页插件
         if ("mysql".equalsIgnoreCase(dbType)) {
             interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));

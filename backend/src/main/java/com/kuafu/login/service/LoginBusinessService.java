@@ -1,6 +1,7 @@
 package com.kuafu.login.service;
 
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -12,6 +13,7 @@ import com.kuafu.common.util.SpringUtils;
 import com.kuafu.common.util.StringUtils;
 import com.kuafu.common.util.WrapperFactory;
 import com.kuafu.login.config.LoginRelevanceConfig;
+import com.kuafu.web.handler.TenantContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import com.kuafu.web.annotation.IsNotNullField;
 import org.springframework.beans.factory.annotation.Value;
@@ -178,7 +180,7 @@ public class LoginBusinessService {
         queryWrapper.eq(key, value)
                 .eq(relevance_table, LoginRelevanceConfig.getLoginRelevanceTable())
                 .isNotNull(relevance_id_name)
-                .ne(relevance_id_name,"");
+                .ne(relevance_id_name, "");
         return iService.getOne(queryWrapper);
     }
 
@@ -206,7 +208,7 @@ public class LoginBusinessService {
                 Class<?> entityClazz = Class.forName(entityType.getTypeName());
                 return entityClazz.getDeclaredConstructor().newInstance();
             } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
-                    InvocationTargetException e) {
+                     InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
         } else {
@@ -304,9 +306,10 @@ public class LoginBusinessService {
 
     /**
      * 根据手机号获取loginId
-     * @param phone 手机号
+     *
+     * @param phone          手机号
      * @param relevanceTable 关联表
-     * @param relevanceId 关联ID
+     * @param relevanceId    关联ID
      * @return
      */
     public long getRelevanceIdByPhoneAndSave(String phone, String relevanceTable, String relevanceId) {
@@ -314,7 +317,7 @@ public class LoginBusinessService {
         Object loginInfo = createNewUser(entityName);
 
         // 设置字段值
-        Map<String,Object> fieldMap = new HashMap<>();
+        Map<String, Object> fieldMap = new HashMap<>();
         String fieldPhoneNumber = StringUtils.dbStrToHumpLower(select_table_column);
         fieldMap.put(fieldPhoneNumber, phone);
         String fieldRelevanceTable = StringUtils.dbStrToHumpLower(relevance_table);
@@ -329,7 +332,7 @@ public class LoginBusinessService {
         // 插入登录信息
         IService iService = SpringUtils.getBean(entityName);
         boolean result = iService.save(loginInfo);
-        if(result) {
+        if (result) {
             return getId(loginInfo);
         } else {
             throw new BusinessException(ErrorCode.OPERATION_ERROR);
@@ -359,4 +362,37 @@ public class LoginBusinessService {
         return null;
     }
 
+    /**
+     * 获取登录用户的 tenantId
+     *
+     * @return
+     */
+    public Integer getUserTenantIdByLoginUser(LoginUser loginUser) {
+//        LoginUser loginUser = SecurityUtils.getLoginUser();
+        // 通过关联用户的ID，查询关联表信息的租户ID
+        String relevanceId = loginUser.getRelevanceId();
+        String relevanceTable = loginUser.getRelevanceTable();
+        String relevanceTableScore = StringUtils.toUnderScoreCase(relevanceTable);
+        String RelevanceTableUpper = StringUtils.dbStrToHumpUpper(relevanceTableScore);
+        Object entityObject = this.createNewUser(RelevanceTableUpper);
+        Class<?> clazz = entityObject.getClass();
+        String relevanceUserIdName = "";
+        for (Field field : clazz.getDeclaredFields()) {
+            // 检查字段是否有@TableId注解
+            if (field.isAnnotationPresent(TableId.class)) {
+                // 设置字段为可访问的
+                field.setAccessible(true);
+                relevanceUserIdName = field.getName();
+                break;
+            }
+        }
+
+        IService iservice = SpringUtils.getBean(RelevanceTableUpper);
+        QueryWrapper<Object> objectQueryWrapper = new QueryWrapper<>();
+        objectQueryWrapper.eq(StringUtils.toUnderScoreCase(relevanceUserIdName), relevanceId);
+        Object bean = iservice.getOne(objectQueryWrapper);
+        Object tenantId = this.getValue(bean, StringUtils.dbStrToHumpLower(TenantContextHolder.TENANT_TABLE_FIELD_NAME));
+        TenantContextHolder.setTenant(Integer.valueOf(tenantId.toString()));
+        return Integer.valueOf(tenantId.toString());
+    }
 }

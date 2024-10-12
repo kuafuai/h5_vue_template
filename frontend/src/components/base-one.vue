@@ -54,14 +54,16 @@ const handleClick = () => {
     flag = true;
   }
 
+  var select_result=null
   if (data_value.value) {
     if (!flag) {
       path += "?"
     }
-
-    path = path + "select_result=" + data_value.value
-        + "&" + "select_path=" + props.origin_page_path + "&" + "select_id=" + props.ref_id
+    select_result=data_value.value
   }
+
+  path = path + "select_result=" + select_result
+      + "&" + "select_path=" + props.origin_page_path + "&" + "select_id=" + props.ref_id
 
   // 删除最后一个 "&"
   if (path.endsWith("&")) {

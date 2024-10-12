@@ -12,28 +12,7 @@
           :firstSearchData="firstSearchData"
       >
       </base-search>
-      <base-list
-          ref="show_task_info_list0000000"
-          :isPage="true"
-          @click="click_8259"
-          :api="list_api"
-      >
-        <template #default="{item}">
-          <slot name="list" :item="item"></slot>
-        </template>
-        <template #op="{item}">
-          <base-button
-              ref="click_123"
-              @click="click_9777(item)"
-              model="base"
-              type="primary"
-              title="选择"
-              op_param="item"
-          >
-
-          </base-button>
-        </template>
-      </base-list>
+      <slot name="list"/>
     </base-wrapper>
   </base-wrapper>
 </template>
@@ -50,6 +29,8 @@ const props = defineProps({
   firstSearchDataComment: {type: String, default: ""},
   list_api: {type: String, default: ""},
 });
+
+
 let url_params
 onLoad((options) => {
   url_params = options
@@ -97,18 +78,16 @@ const refresh = (item) => {
   proxy.$navigate(path, true)
 }
 
+// 暴露方法
+defineExpose({
+  refresh,
+});
 
-const click_9777 = (
-    item
-) => {
-
-  refresh(item)
-}
+const emits = defineEmits(["show_search"])
 const search_875 = (
     item
 ) => {
-  proxy.$refs.show_task_info_list0000000.refresh(item)
-
+  emits("show_search", item)
 }
 const click_8259 = (
     item

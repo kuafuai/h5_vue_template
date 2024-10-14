@@ -3,7 +3,7 @@
     <base-wrapper
 >
 <base-search
-@search="search_3170"
+@search="search_8951"
 ref="base_search_ref"
 firstSearchDataComment="企业名称"
 :searchData="{}"
@@ -18,7 +18,7 @@ firstSearchData="enterpriseName"
 <base-list
 ref="show_task_info_list"
 :isPage="true"
-@click="click_316"
+@click="click_9503"
 api="enterprise_information.page"
 >
 <template #default="{item}">
@@ -56,7 +56,7 @@ title="所属行业:"
 <template #op="{item}">
 <base-button
         ref="click_123"
-    @click="click_7473(item)"
+    @click="click_6669(item)"
     model="base"
     type="primary"
     title="选择"
@@ -117,18 +117,18 @@ if (currentUser != null) {
 
 
 
-const click_7473=(
+const click_6669=(
 item
 )=>{
 
 }
-const search_3170=(
+const search_8951=(
 item
 )=>{
   proxy.$refs.show_task_info_list.refresh(item)
 
 }
-const click_316=(
+const click_9503=(
 item
 )=>{
 

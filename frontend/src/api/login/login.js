@@ -22,7 +22,7 @@ export default {
             data: data
         });
     },
-    getMessage() {
+    getUserInfo() {
         return service({
             url: "/getUserInfo",
             method: "get",

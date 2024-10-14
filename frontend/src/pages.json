@@ -1,77 +1,117 @@
 {
-    "easycom": {
-        "autoscan": true,
-        "custom": {
-            "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
-            "fui-(.*)": "firstui-uni/firstui/fui-$1/fui-$1.vue",
-            "^base-(.*)": "@/components/base-$1.vue"
-        }
-    },
-    "pages": [{
-            "path": "pages/login/index",
-            "style": {
-                "leftWindow": false,
-                "navigationBarTitleText": ""
-            }
-        },
-        {
-            "path": "pages/home/index",
-            "style": {
-                "leftWindow": true,
-                "navigationBarTitleText": ""
-            }
-        },
-        {
-            "path": "pages/user/index",
-            "style": {
-                "leftWindow": true
-            }
-        },
-        {
-            "path": "pages/approve/index",
-            "style": {
-                "leftWindow": true
-            }
-        },
-        {
-            "path": "pages/approve/detail",
-            "style": {
-                "leftWindow": true
-            }
-        },
-        {
-            "path": "pages/submission/index",
-            "style": {
-                "leftWindow": true
-            }
-        },
-        {
-            "path": "pages/submission/detail",
-            "style": {
-                "leftWindow": true
-            }
-        },
-        {
-            "path": "pages/form/index",
-            "style": {
-                "leftWindow": true
-            }
-        },
-        {
-            "path": "pages/setForm/index"
-        }
-    ],
-    "leftWindow": {
-        "path": "responsive/leftwin.vue",
-        "style": {
-            "width": "300px"
-        }
-    },
-    "globalStyle": {
-        "navigationBarTextStyle": "black",
-        "navigationBarTitleText": "uni-app",
-        "navigationBarBackgroundColor": "#F8F8F8",
-        "backgroundColor": "#F8F8F8",
-        "navigationStyle": "custom"
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
+      "fui-(.*)": "firstui-uni/firstui/fui-$1/fui-$1.vue",
+      "^base-(.*)": "@/components/base-$1.vue"
     }
+  },
+  "pages": [
+    {
+      "path": "pages/login/index",
+      "style": {
+        "leftWindow": false,
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/home/index",
+      "style": {
+        "leftWindow": true,
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/user/index",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
+      "path": "pages/approve/index",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
+      "path": "pages/approve/detail",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
+      "path": "pages/submission/index",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
+      "path": "pages/submission/detail",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
+      "path": "pages/form/index",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
+      "path": "pages/setForm/index",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
+      "path": "pages/change/index",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
+      "path": "pages/change/change",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
+      "path": "pages/change/info",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
+      "path": "pages/flowable/definition/index"
+    },
+    {
+      "path": "pages/flowable/myProcess/index"
+    },
+    {
+      "path": "pages/flowable/myProcess/detail"
+    },
+    {
+      "path": "pages/flowable/send/index"
+    },
+    {
+      "path": "pages/flowable/todo/index"
+    },
+    {
+      "path": "pages/flowable/todo/detail"
+    }
+  ],
+  "leftWindow": {
+    "path": "responsive/leftwin.vue",
+    "style": {
+      "width": "220px"
+    }
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8",
+    "navigationStyle": "custom"
+  }
 }

@@ -7,7 +7,8 @@
 <script setup>
 const { proxy } = getCurrentInstance();
 function login_success(){
-  proxy.$navigate("/pages/index/index", false);
+  console.log(1122222)
+  proxy.$navigate("/pages/home/index", false);
 }
 
 </script>

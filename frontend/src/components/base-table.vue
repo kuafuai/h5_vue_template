@@ -1,20 +1,22 @@
 <template>
   <view>
-    <uni-table stripe :type="selection?'selection':''" border emptyText="暂无更多数据"
-               ref="baseTableRef"
-               :loading="isLoading"
-               @selection-change="selectionChange">
-      <uni-tr>
-        <template v-for="item in columns" :key="item">
-          <uni-th align="center" :width="item.width">{{ item.label }}</uni-th>
-        </template>
-      </uni-tr>
-      <uni-tr v-for="(item, index) in pageRes.records" :key="index">
-        <slot name="default" :item="item">old {{ item }}</slot>
-      </uni-tr>
+    <view class="overflow-x-scroll">
+      <uni-table stripe :type="selection?'selection':''" border emptyText="暂无更多数据"
+                 ref="baseTableRef"
+                 :loading="isLoading"
+                 @selection-change="selectionChange">
+        <uni-tr>
+          <template v-for="item in columns" :key="item">
+            <uni-th align="center" :width="item.width">{{ item.label }}</uni-th>
+          </template>
+        </uni-tr>
+        <uni-tr v-for="(item, index) in pageRes.records" :key="index" style="height: 50px">
+          <slot name="default" :item="item">old {{ item }}</slot>
+        </uni-tr>
 
-    </uni-table>
-    <view v-if="isPage" class="uni-pagination-box">
+      </uni-table>
+    </view>
+    <view v-if="isPage" class="uni-pagination-box m-t-6">
       <uni-pagination
           v-if="pageRes && pageRes.total > 0"
           show-icon
@@ -65,7 +67,6 @@ function refresh(search) {
   searchParams.value = {}
   searchParams.value = {...search}
 
-  isLoading.value = true;
   if (props.data && props.data.length > 0) {
     // 情况1：走父组件传值过来
     tableDataList.value = props.data;
@@ -83,7 +84,6 @@ function refresh(search) {
     }
     getApiData();
   }
-  isLoading.value = false;
 }
 
 // 获取接口数据

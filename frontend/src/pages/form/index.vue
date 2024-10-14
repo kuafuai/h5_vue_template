@@ -7,7 +7,7 @@
                    @refreshTableData="search_click"
       ></base-search>
       <view class="w-full m-b-20">
-        <base-table @click="formFn" ref="refTableUserInfo" class="m-r-20" api="form_setting.page" :columns="[
+        <base-table ref="refTableUserInfo" class="m-r-20" api="form_setting.page" :columns="[
             { prop: 'name', label: '表单名称', width: '20' },
             { prop: 'name', label: '说明', width: '100' },
         ]">
@@ -24,11 +24,10 @@
 </template>
 
 <script setup>
-import { onShow } from "@dcloudio/uni-app";
-const { proxy } = getCurrentInstance();
-const formFn= ()=>{
-  proxy.$navigate("/pages/setForm/index")
-}
+import {onShow} from "@dcloudio/uni-app";
+
+const {proxy} = getCurrentInstance();
+
 const base_search = ref({})
 
 function search_click(item) {
@@ -38,9 +37,10 @@ function search_click(item) {
 function jump_edit(item) {
   // let url = '/pages/approve/detail?approveNodeId=' + item.approveNodeId;
   // proxy.$navigate(url)
+  proxy.$navigate("/pages/setForm/index?formId=" + item.formId)
 }
 
-onShow(()=>{
+onShow(() => {
   const pages = getCurrentPages();
   const currentPage = pages[pages.length - 1];
   const route = currentPage.route;
@@ -50,6 +50,6 @@ onShow(()=>{
 
 <style scoped lang="scss">
 ::v-deep .uni-left-window {
-  height: 100% ;
+  height: 100%;
 }
 </style>

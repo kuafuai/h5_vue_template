@@ -22,10 +22,10 @@ import {onLoad, onShow} from "@dcloudio/uni-app";
 const resources = ref([])
 // const pre_url = import.meta.env.VITE_APP_SERVICE_API;
 const pre_url = import.meta.env.VITE_APP_BASE_API;
-console.log("pre", pre_url);
-const image_model = defineModel()
-console.log("初始值", image_model.value)
-const selectedFiles = ref([]);
+// console.log("pre", pre_url);
+let image_model = defineModel()
+// console.log("初始值", image_model.value)
+let selectedFiles = ref([]);
 
 onLoad(() => {
   // console.log("1234321234321234321234321234", image_model.value)
@@ -78,13 +78,19 @@ watch(resources.value, (newValue) => {
       extname: extractFileNameAndExtension(resource.url),
       url: resource.url,
     }));
+    if (image_model.value == undefined || image_model.value == null) {
+      image_model.value = []
+      // console.log(image_model.value)
+
+    }
     image_model.value.splice(0, image_model.value.length);
 
+
     image_model.value.push(...resources.value)
-    console.log("resources.value变化后的元素",resources.value,selectedFiles.value,image_model.value)
+    // console.log("resources.value变化后的元素", resources.value, selectedFiles.value, image_model.value)
   }
 
-},{deep:true});
+}, {deep: true});
 
 // 监听外部传入的资源数组，如果发生变化则更新 selectedFiles
 // watch(image_model.value, (newValue) => {
@@ -126,7 +132,7 @@ const handleFileChange = async (files) => {
 const handelDelete = (e) => {
 
   resources.value.splice(e.index, 1)
-  image_model.value.splice(e.index,1)
+  image_model.value.splice(e.index, 1)
   // image_model.value = resources.value.splice(e.index, 1)
   // // resources.value=resources.value.splice(e.index, 1)
   // // image_model.value = resources.value
@@ -176,12 +182,17 @@ const uploadFile = (file) => {
             const fileInfo = extractFileNameAndExtension(response.data.url);
             // 将文件上传结果存储到传入的资源数组中
             resources.value.push({
-              fileName: fileInfo.fileName,
+              name: fileInfo.fileName,
               extension: fileInfo.extension,
               url: response.data.url,
             });
+
+            if (image_model.value == undefined) {
+              image_model.value = []
+            }
+            image_model.value.push(resources.value)
             // image_model.value = resources.value
-            console.log("select_image", resources.value, selectedFiles.value)
+            console.log("select_image", resources.value,image_model.value, selectedFiles.value)
 
             resolve(res);
           } else {

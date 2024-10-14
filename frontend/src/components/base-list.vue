@@ -11,8 +11,11 @@
           </slot>
         </uni-list>
         <view v-show="is_click" class="imgs">
-          <image src="../static/toRight.png" style="
+          <slot name="left" :item="item">
+            <image src="../static/toRight.png" style="
           width:0.625rem;height:1.25rem;" mode="widthFill"/>
+          </slot>
+
         </view>
       </view>
 <!--            <view class="operate">-->

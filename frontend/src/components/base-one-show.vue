@@ -13,6 +13,10 @@
       >
       </base-search>
       <slot name="list"/>
+
+      <view v-if="type=='more'">
+        <base-button model="base" title="选择" @click="click_select"/>
+      </view>
     </base-wrapper>
   </base-wrapper>
 </template>
@@ -23,6 +27,8 @@ import {onLoad} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance();
 const props = defineProps({
+  // 显示多选还是单选
+  type: {String, default: "one"},
   select_text_key: {type: String, default: ""},
   select_value_key: {type: String, default: ""},
   firstSearchData: {type: String, default: ""},
@@ -95,8 +101,15 @@ const click_8259 = (
 ) => {
 
 }
+
+// 多选情况下的点击按钮
+const click_select = () => {
+
+}
 </script>
 
 <style scoped>
-
+::v-deep .checklist-text{
+  display: none;
+}
 </style>

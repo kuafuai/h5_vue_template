@@ -2,7 +2,7 @@
 <template>
   <uni-list-item
       :rightText="sub_title_ref_value"
-      title="title"
+      :title="title"
   />
 </template>
 
@@ -30,10 +30,10 @@ watch(
       // 在这里可以执行你想要的逻辑，比如数据处理
     }
 );
-const init=()=>{
+const init = () => {
 
   if (prop.rightText != undefined && prop.rightText != null) {
-    let obj = JSON.parse(prop.sub_title);
+    let obj = JSON.parse(prop.rightText);
     if (typeof obj === 'object' && obj !== null && !Array.isArray(obj)) {
       // 获取对象的所有 value 列表
       var values = Object.values(obj);
@@ -45,7 +45,7 @@ const init=()=>{
     }
     sub_title_ref_value.value = more_result_list.value.map(item => item.text).join(',');
 
-  }else {
+  } else {
 
   }
 }

@@ -1,6 +1,14 @@
 <template>
-  <view>
-    <view>数据的值id：{{ show_value_one ? show_value_one : data_value }}</view>
+  <view v-if="model=='one'">
+    <view>数据的值id：{{ show_value_one }}</view>
+    <button @click="handleClick">前去选择{{ title }}</button>
+  </view>
+  <view v-else-if="model='more'">
+    <!--    {{// JSON.parse(data_value)}}-->
+    <view v-for="(item, index) in data_value_show" :key="index">
+      {{ item.text }}
+
+    </view>
     <button @click="handleClick">前去选择{{ title }}</button>
   </view>
 </template>
@@ -10,7 +18,9 @@ import {onLoad, onShow} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance()
 const data_value = defineModel()
+// const show_value_one = defineModel()
 const props = defineProps({
+  model: {type: String, default: "one"},
   show_value: {type: String, default: ""},
   origin_page_path: {type: String, default: ""},
   // api: {type: String, default: ''},
@@ -20,38 +30,75 @@ const props = defineProps({
 });
 let param;
 let show_value_one = ref()
+let data_value_show = ref()
 onLoad((options) => {
+
   console.log('URL参数:', options)
   param = options;
 })
 
-onShow(()=>{
+onShow(() => {
   // for (let i = 0; i < 3; i++) {
-    // 防止网络延迟无法成功赋值
-    setTimeout(() => {
-      // show_value_one.value = props.show_value;
+  // 防止网络延迟无法成功赋值
+  setTimeout(() => {
+
+
+    // let value = param["select_result_" + props.ref_id];
+    // let show = param["select_show_" + props.ref_id];
+    if (props.model === 'one') {
 
       let res = uni.getStorageSync("select_storage_" + props.ref_id)
-       res={...res}
-      // let value = param["select_result_" + props.ref_id];
-      // let show = param["select_show_" + props.ref_id];
-
-      if ( res!=null && Object.keys(res).length != 0 ) {
-        // console.log("one,"+props.ref_id,res)
+      //  单选的情况
+      res = {...res}
+      if (res != null && Object.keys(res).length != 0) {
+        console.log("one," + props.ref_id, res)
         data_value.value = res["select_result_" + props.ref_id];
         show_value_one.value = res["select_show_" + props.ref_id];
         uni.removeStorageSync("select_storage_" + props.ref_id)
         // console.log("data_value",props.ref_id,data_value.value,show_value_one.value)
+      } else {
+        // show_value_one.value = props.show_value;
+      }
+    } else if (props.model === 'more') {
+
+      let res = uni.getStorageSync("select_storage_" + props.ref_id)
+      //  单选的情况
+      res = {...res}
+
+
+      if (data_value.value != null) {
+        data_value_show.value = JSON.parse(data_value.value)
+      }
+      console.log(res)
+      //  多选的数据赋值
+      if (res != null && Object.keys(res).length != 0) {
+        data_value.value = JSON.stringify(res)
+        data_value_show.value = res
+        // data_value_more_length.value =res.length
+        // console.log("长度",data_value_more_length.value)
+        uni.removeStorageSync("select_storage_" + props.ref_id)
       }
 
-    }, 200); // 每次延迟 i*100 毫秒，依次执行
+    }
+
+
+  }, 150); // 每次延迟 i*100 毫秒，依次执行
   // }
 })
+
 onMounted(() => {
-
-
+  show_value_one.value = props.show_value;
+  console.log(show_value_one.value)
 })
-
+//  监听props.show_value的变化
+watch(
+    () => props.show_value, // 监听的目标是 props.show_value
+    (newValue, oldValue) => {
+      console.log('show_value 变化:', oldValue, '=>', newValue);
+      show_value_one.value = props.show_value;
+      // 在这里可以执行你想要的逻辑，比如数据处理
+    }
+);
 
 const handleClick = () => {
   let path = props.page_path;
@@ -79,7 +126,7 @@ const handleClick = () => {
   if (path.endsWith("&")) {
     path = path.slice(0, -1); // 移除最后一个字符（即 "&"）
   }
-  console.log("one",path)
+  console.log("one", path)
   proxy.$navigate(path, false)
 }
 </script>

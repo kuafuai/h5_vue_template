@@ -23,7 +23,11 @@ onShow(() => {
   let res = uni.getStorageSync(props.page_name)
   if (res != null && Object.keys(res).length !== 0) {
     for (var item in props.map) {
-      form.value[item] = res[props.map[item]]  // 修改表单中其他的值
+      // 如果form有值，不进行赋值
+      if (form.value[item]==undefined ||  form.value[item]==null || form.value[item]==""){
+        form.value[item] = res[props.map[item]]  // 修改表单中其他的值
+      }
+
     }
     data.value = res[props.value_name] // 赋值给变量
     show_value.value = res[props.show_name]

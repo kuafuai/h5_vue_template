@@ -13,7 +13,7 @@ public class OrderCondition {
     /**
      * 排序方式
      */
-    private SortEnum sort;
+    private String sort;
 
 
 

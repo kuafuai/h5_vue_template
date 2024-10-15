@@ -78,6 +78,9 @@ uni-navigator {
   height: 3rem;
   transition: background 0.3s, color 0.3s; /* 添加过渡效果 */
 }
+.navigator-hover {
+  opacity: 1 !important;
+}
 
 .active_text {
   margin-left: 10px;

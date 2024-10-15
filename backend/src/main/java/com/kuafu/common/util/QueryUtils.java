@@ -40,12 +40,17 @@ public class QueryUtils {
 
 
         // 处理 orFilter，并将它们包含在一个 and 条件中
-        if (andFilter != null && !andFilter.isEmpty() && !orFilter.isEmpty()) {
-            wrapper.and(w -> {
-                processOrFilter((QueryWrapper) w, orFilter);
-            });
+        if (andFilter != null && !andFilter.isEmpty()) {
+            if (orFilter!=null &&  !orFilter.isEmpty()){
+                wrapper.and(w -> {
+                    processOrFilter((QueryWrapper) w, orFilter);
+                });
+            }
+
         } else {
-            processOrFilter(wrapper, orFilter);
+            if (orFilter!=null &&  !orFilter.isEmpty()){
+                processOrFilter(wrapper, orFilter);
+            }
         }
 
 //      处理排序字段

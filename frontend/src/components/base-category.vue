@@ -1,7 +1,7 @@
 <template>
   <uni-forms-item v-for="item in category_size_list" :label="'分类'+(item+1)">
     <base-select v-model="data[item]" v-model:data="select_value[item]"
-                 :title="'分类'+(item+1)"></base-select>
+                 :title="'分类'+(item+1)" @change="handleChange(item)"></base-select>
   </uni-forms-item>
 
   <!--  <uni-forms-item label=>-->
@@ -36,9 +36,9 @@ for (var i = 0; i < props.category_size; i++) {
  * @param index
  */
 async function getSelectValue(update_index, index) {
+  console.log("121212`1212")
   let parentId = null;
   if (index > 0) {
-
     parentId = data.value[index - 1];
     console.log("11111111", parentId)
   }
@@ -48,11 +48,12 @@ async function getSelectValue(update_index, index) {
     relevanceTableColumn: "first_menu"
   })
   console.log(res)
-  select_value.value[update_index] = res.data
+
   if (update_index == null) {
     update_index = index
   }
-  console.log(update_index, select_value.value[index])
+  select_value.value[update_index] = res.data
+  console.log(update_index, select_value.value, select_value.value[index])
 }
 
 getSelectValue(0)
@@ -74,10 +75,17 @@ watch(data.value, (newValue, oldValue) => {
   }
   result.value = data.value.map(i => "<" + i + ">").join(','); // 使用< > 包裹，like查询时包括
 
-  getSelectValue(update_index, data.value.length)
+  // getSelectValue(update_index, data.value.length)
 
 
 });
+
+const handleChange = (item) => {
+  console.log("change",item)
+  for (var i = item+1; i <= data.value.length; i++) {
+    getSelectValue(i, i)
+  }
+}
 
 </script>
 

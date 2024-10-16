@@ -1,6 +1,6 @@
 <template>
   <uni-data-select v-model="select_item" @change="handleInput" :disabled="disabled" :clear="clear" v-bind="$attrs"
-    :placeholder="'请选择' + title" :localdata="selectData" :filter="true">
+                   :placeholder="'请选择' + title" :localdata="selectData" :filter="true">
   </uni-data-select>
 
 
@@ -195,51 +195,71 @@
 //   emits("click", item);
 // }
 
-    import {onLoad} from "@dcloudio/uni-app";
+import {onLoad} from "@dcloudio/uni-app";
 
-    const select_item = defineModel()
-    const {proxy} = getCurrentInstance();
-    const props = defineProps({
-      api: {type: String, default: ''},
-    disabled: {type: Boolean, default: false},
-    title: {type: String, default: ""},
-    clear: {type: Boolean, default: true},
-    data: {type: Array, default: []}
+const select_item = defineModel()
+const select_item_fullData = defineModel('fullData')
+const {proxy} = getCurrentInstance();
+const props = defineProps({
+  api: {type: String, default: ''},
+  disabled: {type: Boolean, default: false},
+  title: {type: String, default: ""},
+  clear: {type: Boolean, default: true},
+  data: {type: Array, default: []}
 });
-    const selectData = ref([]);
-    const emits = defineEmits(["change"])
+const selectData = ref([]);
+const emits = defineEmits(["change"])
 const handleInput = (e) => {
-      console.log(678, e)
+  console.log(678, e)
 
   emits("change", e,)
 }
 onLoad(() => {
 
 });
-onMounted(()=>{
+onMounted(() => {
   refresh();
 })
 
-    function refresh() {
-      getApiData();
+const dataModel=defineModel('data')
+watch(dataModel,(newValue,oldValue)=>{
+  console.log("select_12321",newValue,oldValue)
+  getApiData()
+})
+function refresh() {
+  getApiData();
 }
 
-    async function getApiData() {
+
+
+// const data_ref=toRef(props.data)
+async function getApiData() {
   if (props.api == null || props.api == '') {
+    if (props.data!=null){
       selectData.value = props.data
+    }
+    if (dataModel.value != null){
+      selectData.value = dataModel.value
+    }
+
+
+
     return
   }
-    let response = await apiMethod();
-    selectData.value = response.data;
+  let response = await apiMethod();
+  selectData.value = response.data;
 }
 
-    function apiMethod() {
+
+
+function apiMethod() {
   return props.api.split('.').reduce((acc, item) => acc[item], proxy.$api)();
 }
 
 </script>
 
-// <style lang="scss" scoped>
+//
+<style lang="scss" scoped>
 // uni-button[disabled]:not([type]) {
 //   color: rgba(229, 229, 229, 1) !important;
 //   background-color: rgba(206, 206, 206, 1) !important;

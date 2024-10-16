@@ -13,3 +13,18 @@ create table static_resources
 
 
 
+drop table if exists category;
+create table if not exists category
+(
+    id                     integer primary key autoincrement, -- id
+    name                   varchar(255) not null,             -- 列别名称
+    parent_id              integer      not null,             -- 父级类别id
+    create_time            date,
+    update_time            date,
+    relevance_table        varchar(255),                      -- 表分类
+    relevance_table_column varchar(255)                       -- 分类字段
+    );
+
+
+
+

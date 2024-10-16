@@ -8,15 +8,14 @@
         :file-extname="file_extname"
         v-model="selectedFiles"
         @select="handleFileChange"
-        @delete="handelDelete"
     ></uni-file-picker>
   </view>
 </template>
 
 <script setup>
 import {ref, watch} from 'vue';
-const resources = ref([])
-const image_model = defineModel();
+
+const fileurl = defineModel();
 // const pre_url = import.meta.env.VITE_APP_SERVICE_API;
 const pre_url = import.meta.env.VITE_APP_BASE_API;
 console.log("pre", pre_url)
@@ -55,29 +54,16 @@ function extractFileNameAndExtension(url) {
 }
 
 const selectedFiles = ref([]);
-
-// 监听 image_model 数组变化，只触发一次
-watch(image_model, (newValue) => {
-  console.log("image_model111", newValue)
-  selectedFiles.value = newValue;
-}, {deep: true, once: true});
-
-// 监听外部传入的资源数组，如果发生变化则更新 selectedFiles
-watch(resources.value, (newValue) => {
-  if (newValue && newValue.length > 0) {
-    console.log("变化的时", newValue)
-    selectedFiles.value = newValue.map(resource => ({
-      name: resource.fileName,
-      extname: extractFileNameAndExtension(resource.url),
-      url: resource.url,
-    }));
-    image_model.value.splice(0, image_model.value.length);
-
-    image_model.value.push(...resources.value)
-    console.log("resources.value变化后的元素",resources.value,selectedFiles.value,image_model.value)
+watch(fileurl, (newValue) => {
+  if (newValue) {
+    const e = extractFileNameAndExtension(newValue);
+    selectedFiles.value = [{
+      "name": e.fileName,
+      "extname": e.extension,
+      "url": newValue,
+    }];
   }
-
-},{deep:true});
+});
 
 const handleFileChange = async (files) => {
   for (var i = 0; i < files.tempFiles.length; i++) {
@@ -101,16 +87,6 @@ const handleFileChange = async (files) => {
   // 自动上传文件
   await uploadFiles();
 };
-
-const handelDelete = (e) => {
-
-  resources.value.splice(e.index, 1)
-  image_model.value.splice(e.index,1)
-  // image_model.value = resources.value.splice(e.index, 1)
-  // // resources.value=resources.value.splice(e.index, 1)
-  // // image_model.value = resources.value
-  // console.log("删除后的元素", resources.value, image_model.value)
-}
 
 const uploadFiles = async () => {
   if (selectedFiles.value.length === 0) {
@@ -139,28 +115,19 @@ const uploadFiles = async () => {
 
 const uploadFile = (file) => {
   return new Promise((resolve, reject) => {
+    console.log(import.meta.env.VITE_APP_SERVICE_API)
     uni.uploadFile({
       url: props.uploadUrl,
       filePath: file.path,
       name: 'file',
       header: {
-        "BackendAddress": import.meta.env.VITE_APP_SERVICE_API,
+        "BackendAddress": import.meta.env.VITE_APP_SERVICE_API
       },
       success: (res) => {
-        console.log("base-image", res)
         if (res.statusCode === 200) {
           const response = JSON.parse(res.data);
           if (response.code === 0) {
-            const fileInfo = extractFileNameAndExtension(response.data.url);
-            // 将文件上传结果存储到传入的资源数组中
-            resources.value.push({
-              fileName: fileInfo.fileName,
-              extension: fileInfo.extension,
-              url: response.data.url,
-            });
-            // image_model.value = resources.value
-            console.log("select_image", resources.value, selectedFiles.value)
-
+            fileurl.value = response.data.url;
             resolve(res);
           } else {
             reject(new Error(response.message));

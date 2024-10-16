@@ -39,4 +39,4 @@ function navigate(path,is_redirect) {
             uni.navigateTo({url: path});
         }    }
 }
-export default  navigate;;
+export default  navigate;

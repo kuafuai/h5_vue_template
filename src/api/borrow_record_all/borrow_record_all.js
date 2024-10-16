@@ -1,0 +1,44 @@
+// import request from '@/utils/request';
+
+import service from "@/utils/request";
+const BASE_API = "/borrowRecordAll";
+
+export default {
+  page(query) {
+    return service({
+      url: BASE_API + "/page",
+      method: "post",
+      data: query
+    });
+  },
+  get(id){
+    return service({
+      url: BASE_API + "/get/" + id,
+      method: "get"
+    });
+  },
+  list(query) {
+    return service({
+      url: BASE_API + "/list",
+      method: "post",
+      data: query
+    });
+  },
+
+
+get_user_list(){
+  return service({
+    url: BASE_API + "/get/user_list",
+    method: "get"
+  });
+},
+
+
+get_book_list(){
+  return service({
+    url: BASE_API + "/get/book_list",
+    method: "get"
+  });
+},
+
+};

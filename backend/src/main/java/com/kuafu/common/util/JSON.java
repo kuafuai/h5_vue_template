@@ -31,6 +31,12 @@ public class JSON {
         return instance.fromJson(element, type);
     }
 
+    public static <T> List<T> parseArray(String value) {
+        Type listType = new TypeToken<List<T>>() {
+        }.getType();
+        return instance.fromJson(value, listType);
+    }
+
     public String toJson(Object obj) {
         return this.gson.toJson(obj);
     }
@@ -43,5 +49,8 @@ public class JSON {
         return this.gson.fromJson(element, typeOf);
     }
 
+    public <T> T fromJson(String element, Type typeOf) {
+        return this.gson.fromJson(element, typeOf);
+    }
 
 }

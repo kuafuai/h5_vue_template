@@ -1,8 +1,5 @@
 package com.kuafu.web.config;
 
-import lombok.Data;
-
-
 public class SmsConfig {
     public static final String accessKeyId="xxxxxxx";
 

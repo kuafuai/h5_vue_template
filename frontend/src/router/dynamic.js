@@ -14,7 +14,7 @@ export const dynamicRoutes = [
         }
     },
     {
-        path: '/pages/change/info',
+        path: '/pages/change/list_info',
         meta: {
             title: '变更明细',
             shownot: false

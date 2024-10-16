@@ -42,5 +42,46 @@ export default {
             method: "get",
             params: query
         });
+    },
+    changeRecords(query){
+        return service({
+            url: BASE_API + "/changeRecords",
+            method: "get",
+            params: query
+        });
+    },
+    completeApprove(data) {
+        return service({
+            url: BASE_API + "/completeApprove",
+            method: "post",
+            data: data
+        });
+    },
+    completeSubmit(data) {
+        return service({
+            url: BASE_API + "/completeSubmit",
+            method: "post",
+            data: data
+        });
+    },
+    completeSubmitUpload(data) {
+        return service({
+            url: BASE_API + "/completeSubmitUpload",
+            method: "post",
+            data: data
+        });
+    },
+    completeCheckFile(data) {
+        return service({
+            url: BASE_API + "/completeCheckFile",
+            method: "post",
+            data: data
+        });
+    },
+    myTodo(){
+        return service({
+            url: BASE_API + "/myTodo",
+            method: "get"
+        });
     }
 };

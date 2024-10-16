@@ -24,7 +24,7 @@
         ]">
           <template #default="{item}">
             <uni-td align="center">
-              <fui-text :text="item.changeTitle" type="primary"></fui-text>
+              <fui-text :text="item.changeTitle" @click="jump_edit(item)" type="primary"></fui-text>
             </uni-td>
             <uni-td align="center">
               <fui-text :text="item.changeCustomer" :size="28"></fui-text>
@@ -62,8 +62,13 @@ function search_click(item) {
   proxy.$refs.refTableUserInfo.refresh(item);
 }
 
-function handle_change(){
+function handle_change() {
   let url = '/pages/change/change'
+  proxy.$navigate(url)
+}
+
+function jump_edit(item) {
+  let url = '/pages/change/info?changeId=' + item.changeId + "&procInsId=" + item.flowableInstanceId;
   proxy.$navigate(url)
 }
 

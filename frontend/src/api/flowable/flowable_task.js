@@ -66,6 +66,13 @@ export default {
             params: query
         });
     },
+    complete(data){
+        return service({
+            url: BASE_API + "/complete",
+            method: "post",
+            data: data
+        });
+    },
     get(id) {
         return service({
             url: BASE_API + "/get/" + id,

@@ -1,0 +1,331 @@
+package com.kuafu.web.flowable;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.kuafu.common.login.SecurityUtils;
+import com.kuafu.common.util.DateUtils;
+import com.kuafu.common.util.StringUtils;
+import com.kuafu.flowable.domain.FlowTaskDto;
+import com.kuafu.flowable.domain.FlowTaskVo;
+import com.kuafu.flowable.service.IFlowDefinitionService;
+import com.kuafu.flowable.service.IFlowTaskService;
+import com.kuafu.web.entity.ChangeManager;
+import com.kuafu.web.entity.ChangeManagerInfo;
+import com.kuafu.web.entity.ChangeManagerSub;
+import com.kuafu.web.entity.UserInfo;
+import com.kuafu.web.service.IChangeManagerInfoService;
+import com.kuafu.web.service.IChangeManagerService;
+import com.kuafu.web.service.IChangeManagerSubService;
+import com.kuafu.web.service.IUserInfoService;
+import com.kuafu.web.vo.ChangeManagerVO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Service
+@Slf4j
+public class ChangeManagerBusinessService {
+
+    @Autowired
+    private IChangeManagerService changeManagerService;
+
+    @Autowired
+    private IFlowTaskService flowTaskService;
+
+    @Autowired
+    private IFlowDefinitionService flowDefinitionService;
+
+    @Autowired
+    private IUserInfoService userInfoService;
+
+    @Autowired
+    private IChangeManagerSubService changeManagerSubService;
+
+    @Autowired
+    private IChangeManagerInfoService changeManagerInfoService;
+
+    @Transactional
+    public boolean processAddChangeManager(ChangeManagerVO changeManagerVO) {
+        String deployId = changeManagerVO.getDeployId();
+        String procDefId = changeManagerVO.getProcDefId();
+        Map<String, Object> variables = Maps.newHashMap();
+        variables.putAll(changeManagerVO.getVariables());
+
+        String procInsId = flowDefinitionService.startProcessInstanceById(procDefId, variables);
+
+        UserInfo currentUserInfo = userInfoService.getById(SecurityUtils.getUserId());
+
+        ChangeManager changeManager = ChangeManager.builder()
+                .changeType(changeManagerVO.getChangeType())
+                .changeTitle(changeManagerVO.getChangeTitle())
+                .changeCustomer(changeManagerVO.getChangeCustomer())
+                .changeProjectName(changeManagerVO.getChangeProjectName())
+                .changeProductName(changeManagerVO.getChangeProductName())
+                .changeStartTime(DateUtils.getNowDate())
+                .changeEndTime(changeManagerVO.getChangeEndTime())
+                .changePerson(currentUserInfo.getUserInfoId().toString())
+                .changePersonName(currentUserInfo.getUserName())
+                .flowableInstanceId(procInsId)
+                .build();
+
+        boolean flag = changeManagerService.save(changeManager);
+        List<ChangeManagerInfo> infoList = Lists.newArrayList();
+        for (Map.Entry<String, Object> entry : changeManagerVO.getVariables().entrySet()) {
+            if (!StringUtils.equalsIgnoreCase(entry.getKey(), "formJson")) {
+                ChangeManagerInfo info = ChangeManagerInfo.builder()
+                        .changeId(changeManager.getChangeId())
+                        .procInsId(procInsId)
+                        .infoKey(entry.getKey())
+                        .infoValue(entry.getValue().toString())
+                        .build();
+
+                infoList.add(info);
+            }
+        }
+
+        changeManagerInfoService.saveBatch(infoList);
+        return flag;
+    }
+
+    public List<FlowTaskDto> getChangeFlowRecords(String procInsId) {
+        if (StringUtils.isNotEmpty(procInsId)) {
+
+            Map<String, FlowTaskDto> taskMap = Maps.newLinkedHashMap();
+
+            LambdaQueryWrapper<ChangeManagerSub> subQueryWrapper = new LambdaQueryWrapper<>();
+            subQueryWrapper.eq(ChangeManagerSub::getParentProcInsId, procInsId);
+
+            List<ChangeManagerSub> subRecordInfo = changeManagerSubService.list(subQueryWrapper);
+            Map<String, String> subTaskInfoMap = subRecordInfo
+                    .stream()
+                    .collect(Collectors.toMap(ChangeManagerSub::getParentTaskId, ChangeManagerSub::getSubProcInsId));
+
+            List<FlowTaskDto> parentList = flowTaskService.getFlowRecordByInsId(procInsId);
+
+            for (FlowTaskDto taskDto : parentList) {
+                String taskName = taskDto.getTaskName();
+                String taskId = taskDto.getTaskId();
+                if (subTaskInfoMap.containsKey(taskId)) {
+                    //子任务
+                    FlowTaskDto parentTaskDto;
+                    if (taskMap.containsKey(taskName)) {
+                        parentTaskDto = taskMap.get(taskName);
+                        parentTaskDto.setFinishTime(taskDto.getFinishTime());
+                    } else {
+                        //不存在
+                        parentTaskDto = new FlowTaskDto();
+                        parentTaskDto.setTaskName(taskName);
+                        parentTaskDto.setHasChild(true);
+                        parentTaskDto.setFinishTime(taskDto.getFinishTime());
+                        taskMap.put(taskName, parentTaskDto);
+                    }
+
+                    String subProcInsId = subTaskInfoMap.get(taskId);
+                    List<FlowTaskDto> subList = flowTaskService.getFlowRecordByInsId(subProcInsId);
+                    taskDto.getSubTask().addAll(subList);
+
+                    parentTaskDto.getSubTask().add(taskDto);
+
+                } else {
+                    //不是子任务
+                    if (taskMap.containsKey(taskName)) {
+                        //不是子任务，多实例任务
+                        taskMap.get(taskName).getSubTask().add(taskDto);
+                    } else {
+                        taskMap.put(taskName, taskDto);
+                    }
+                }
+            }
+
+            return Lists.newArrayList(taskMap.values());
+        } else {
+            return Lists.newArrayList();
+        }
+    }
+
+
+    public List<FlowTaskDto> getTodoListByCurrentUser() {
+        Long userId = SecurityUtils.getUserId();
+
+
+        List<FlowTaskDto> todoList = flowTaskService.todoListByUserId(userId.toString());
+        for (FlowTaskDto taskDto : todoList) {
+            String procInsId = taskDto.getProcInsId();
+
+            LambdaQueryWrapper<ChangeManager> parentQuery = new LambdaQueryWrapper<>();
+            parentQuery.eq(ChangeManager::getFlowableInstanceId, procInsId);
+
+            ChangeManager parentManager = changeManagerService.getOne(parentQuery);
+            if (parentManager == null) {
+                //说明是子任务
+                LambdaQueryWrapper<ChangeManagerSub> subQuery = new LambdaQueryWrapper<>();
+                subQuery.eq(ChangeManagerSub::getSubProcInsId, procInsId);
+                ChangeManagerSub subTask = changeManagerSubService.getOne(subQuery);
+
+                String parentProcInsId = subTask.getParentProcInsId();
+
+                parentQuery = new LambdaQueryWrapper<>();
+                parentQuery.eq(ChangeManager::getFlowableInstanceId, parentProcInsId);
+                parentManager = changeManagerService.getOne(parentQuery);
+            }
+            taskDto.setProcInsId(parentManager.getFlowableInstanceId());
+            taskDto.setChangeId(parentManager.getChangeId().toString());
+            taskDto.setChangeTitle(parentManager.getChangeTitle());
+            taskDto.setFinishTime(parentManager.getChangeEndTime());
+        }
+
+        return todoList;
+    }
+
+
+    public boolean completeApprove(FlowTaskVo flowTaskVo) {
+        if (flowTaskVo.getVariables() == null) {
+            flowTaskVo.setVariables(Maps.newHashMap());
+        }
+
+        return flowTaskService.complete(flowTaskVo);
+    }
+
+    /**
+     * 完成提交物 节点
+     *
+     * @param flowTaskVo
+     * @return
+     */
+    public boolean completeSubmit(FlowTaskVo flowTaskVo) {
+        int subTaskNumber = 0;
+        if (flowTaskVo.getCheckSubmits() != null && !flowTaskVo.getCheckSubmits().isEmpty()) {
+            subTaskNumber = flowTaskVo.getCheckSubmits().size();
+        }
+
+        if (subTaskNumber == 0) {
+            return false;
+        } else {
+            if (flowTaskVo.getChoosePerson() == null || flowTaskVo.getChoosePerson().isEmpty()) {
+                return false;
+            }
+            List<Map<String, Object>> subTasks = Lists.newArrayList();
+            for (String checkSubmit : flowTaskVo.getCheckSubmits()) {
+                if (flowTaskVo.getChoosePerson().containsKey(checkSubmit)) {
+                    Map<String, Object> map = (Map<String, Object>) flowTaskVo.getChoosePerson().get(checkSubmit);
+                    map.put("title", checkSubmit);
+                    subTasks.add(map);
+                } else {
+                    log.error("{} has no person information", checkSubmit);
+                    return false;
+                }
+            }
+
+            Map<String, Object> taskMap = Maps.newHashMap();
+
+            taskMap.put("sub_number", subTaskNumber);
+            taskMap.put("subTasks", subTasks);
+
+            flowTaskVo.setVariables(taskMap);
+
+            return flowTaskService.complete(flowTaskVo);
+        }
+    }
+
+
+    @Transactional
+    public boolean completeSubmitUpload(FlowTaskVo flowTaskVo) {
+
+        if (flowTaskVo.getVariables() == null) {
+            flowTaskVo.setVariables(Maps.newHashMap());
+        }
+
+        String procInsId = flowTaskVo.getInstanceId();
+        //查询 sub
+        LambdaQueryWrapper<ChangeManagerSub> subQuery = new LambdaQueryWrapper<>();
+        subQuery.eq(ChangeManagerSub::getSubProcInsId, procInsId);
+        ChangeManagerSub subTask = changeManagerSubService.getOne(subQuery);
+
+        // 查询parent
+        String parentProcInsId = subTask.getParentProcInsId();
+
+        LambdaQueryWrapper<ChangeManager> parentQuery = new LambdaQueryWrapper<>();
+        parentQuery.eq(ChangeManager::getFlowableInstanceId, parentProcInsId);
+
+        ChangeManager parentManager = changeManagerService.getOne(parentQuery);
+
+        List<ChangeManagerInfo> infoList = Lists.newArrayList();
+        for (Map.Entry<String, Object> entry : flowTaskVo.getVariables().entrySet()) {
+            if (!StringUtils.equalsIgnoreCase(entry.getKey(), "formJson")) {
+                ChangeManagerInfo info = ChangeManagerInfo.builder()
+                        .changeId(parentManager.getChangeId())
+                        .procInsId(parentManager.getFlowableInstanceId())
+
+                        .infoKey(entry.getKey())
+                        .infoValue(entry.getValue().toString())
+                        .build();
+
+                infoList.add(info);
+            }
+        }
+        changeManagerInfoService.saveBatch(infoList);
+
+        return flowTaskService.complete(flowTaskVo);
+    }
+
+    public boolean completeCheckFile(FlowTaskVo flowTaskVo) {
+        if (flowTaskVo.getVariables() == null) {
+            flowTaskVo.setVariables(Maps.newHashMap());
+        }
+
+        String procInsId = flowTaskVo.getInstanceId();
+
+        LambdaQueryWrapper<ChangeManager> parentQuery = new LambdaQueryWrapper<>();
+        parentQuery.eq(ChangeManager::getFlowableInstanceId, procInsId);
+
+        ChangeManager parentManager = changeManagerService.getOne(parentQuery);
+
+        List<ChangeManagerInfo> infoList = Lists.newArrayList();
+        for (Map.Entry<String, Object> entry : flowTaskVo.getVariables().entrySet()) {
+            if (!StringUtils.equalsIgnoreCase(entry.getKey(), "formJson")) {
+                ChangeManagerInfo info = ChangeManagerInfo.builder()
+                        .changeId(parentManager.getChangeId())
+                        .procInsId(parentManager.getFlowableInstanceId())
+
+                        .infoKey(entry.getKey())
+                        .infoValue(entry.getValue().toString())
+                        .build();
+
+                infoList.add(info);
+            }
+        }
+        changeManagerInfoService.saveBatch(infoList);
+
+        return flowTaskService.complete(flowTaskVo);
+    }
+
+
+    private String getDate(long ms) {
+
+        long day = ms / (24 * 60 * 60 * 1000);
+        long hour = (ms / (60 * 60 * 1000) - day * 24);
+        long minute = ((ms / (60 * 1000)) - day * 24 * 60 - hour * 60);
+        long second = (ms / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - minute * 60);
+
+        if (day > 0) {
+            return day + "天" + hour + "小时" + minute + "分钟";
+        }
+        if (hour > 0) {
+            return hour + "小时" + minute + "分钟";
+        }
+        if (minute > 0) {
+            return minute + "分钟";
+        }
+        if (second > 0) {
+            return second + "秒";
+        } else {
+            return 0 + "秒";
+        }
+    }
+}

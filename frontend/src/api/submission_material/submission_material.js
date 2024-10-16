@@ -10,6 +10,13 @@ export default {
             data: query
         });
     },
+    list(query) {
+        return service({
+            url: BASE_API + "/list",
+            method: "post",
+            data: query
+        });
+    },
     get(id) {
         return service({
             url: BASE_API + "/get/" + id,

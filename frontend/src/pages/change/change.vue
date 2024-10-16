@@ -127,6 +127,10 @@ async function type_change(e) {
 async function submitForm() {
   proxy.$refs.baseForm.validate().then(async (res) => {
 
+    uni.showLoading({
+      title: '发起变更中'
+    });
+
     let formDataMap = await proxy.$refs.vFormRef.getFormData();
     const params = {
       formJson: formJson.value,
@@ -137,6 +141,18 @@ async function submitForm() {
 
     let resAdd = await proxy.$api.change_manager.add(baseFormData.value)
     console.log(resAdd)
+
+    uni.hideLoading();
+
+    if (resAdd.code === 0) {
+      proxy.$navigate('/pages/change/index')
+    } else {
+      uni.showToast({
+        'title': '操作失败',
+        'position': 'center',
+        'icon': 'error'
+      });
+    }
   }).catch(err => {
 
   })

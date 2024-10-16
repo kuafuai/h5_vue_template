@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.0</version>
+        <version>2.5.15</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.kuafu</groupId>
@@ -194,6 +194,26 @@
                     <artifactId>log4j-slf4j-impl</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-spring-boot-starter-process</artifactId>
+            <version>6.8.0</version>
+            <!-- 排除flowable自带的权限认证 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.flowable</groupId>
+                    <artifactId>flowable-spring-security</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--el表达式计算-->
+        <dependency>
+            <groupId>com.googlecode.aviator</groupId>
+            <artifactId>aviator</artifactId>
+            <version>5.3.3</version>
         </dependency>
 
 

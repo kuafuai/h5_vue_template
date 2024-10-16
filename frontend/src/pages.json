@@ -83,6 +83,12 @@
       }
     },
     {
+      "path": "pages/change/list_info",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
       "path": "pages/flowable/definition/index"
     },
     {

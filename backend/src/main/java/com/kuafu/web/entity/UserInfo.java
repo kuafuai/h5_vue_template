@@ -2,6 +2,7 @@ package com.kuafu.web.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,17 +12,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName("user_info")
 public class UserInfo {
 
     @TableId(value = "user_info_id", type = IdType.AUTO)
-    private Integer userInfoId;
+    private Long userInfoId;
 
     private String userName;
     private String departmentName;
     private String userId;
     private String openUserid;
 
-    private Integer admin;
-    private Integer adminReadOnly;
-    private Integer changePerson;
+    private Boolean admin;
+    private Boolean adminReadOnly;
+    private Boolean changePerson;
 }

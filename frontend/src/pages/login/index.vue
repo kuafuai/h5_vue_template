@@ -5,9 +5,9 @@
 </template>
 
 <script setup>
-const { proxy } = getCurrentInstance();
-function login_success(){
-  console.log(1122222)
+const {proxy} = getCurrentInstance();
+
+function login_success() {
   proxy.$navigate("/pages/home/index", false);
 }
 

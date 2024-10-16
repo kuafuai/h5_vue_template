@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuafu.flowable.mapper.FlowDeployMapper">
+
+    <select id="selectPage" resultType="com.kuafu.flowable.domain.FlowProcDefDto">
+        SELECT
+            rp.id_ as id,
+            rp.deployment_id_ as deploymentId,
+            rd.name_ as name,
+            rd.category_ as category,
+            rp.key_ as flowKey,
+            rp.version_ as version,
+            rp.suspension_state_ as suspensionState,
+            rd.deploy_time_  as deploymentTime
+        FROM
+            ACT_RE_PROCDEF rp
+                LEFT JOIN ACT_RE_DEPLOYMENT rd ON rp.deployment_id_ = rd.id_
+
+        ${ew.customSqlSegment}
+    </select>
+
+</mapper>

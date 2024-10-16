@@ -5,6 +5,12 @@
       <view style="width: 5%"></view>
       <view style="width: 40%">
         <v-form-render ref="vFormRef"/>
+
+        <view class="flex-center-center">
+          <fui-button type="success" text="审批"
+                      btnSize="small" size="25"
+                      @click="submitApprove"></fui-button>
+        </view>
       </view>
       <view style="width: 55%">
         <el-timeline style="max-width: 600px">
@@ -47,6 +53,21 @@
       </view>
     </base-layout>
   </base-wrapper>
+  <uni-popup ref="completePopup" style="width: 200px"
+             borderRadius="10px 10px 10px 10px"
+             background-color="#fff">
+    <view class="m-10 w-full">
+      <uni-forms ref="refTaskForm" style="max-width: 100%" :modelValue="taskForm" label-position="top">
+        <uni-forms-item label="处理意见">
+          <uni-easyinput type="textarea" v-model="taskForm.comment" placeholder="请输入处理意见"/>
+        </uni-forms-item>
+      </uni-forms>
+      <view class="flex-center-center">
+        <button type="primary" size="mini" @click="cancel">取 消</button>
+        <button type="primary" size="mini" @click="submitForm">确 定</button>
+      </view>
+    </view>
+  </uni-popup>
 </template>
 
 <script setup>
@@ -125,6 +146,37 @@ function setColor(val) {
   }
 }
 
+
+function submitApprove() {
+  proxy.$refs.completePopup.open();
+}
+
+function cancel() {
+  proxy.$refs.completePopup.close();
+}
+
+async function submitForm() {
+
+  let formDataMap = await proxy.$refs.vFormRef.getFormData();
+  taskForm.value.variables = formDataMap;
+  taskForm.value.variables.formJson = formJson.value;
+  console.log('====', taskForm.value)
+
+  let res = await proxy.$api.flowable_task.complete(taskForm.value);
+  if (res.code === 0) {
+    proxy.$refs.completePopup.close();
+    proxy.$navigate('/pages/flowable/todo/index')
+  } else {
+    uni.showToast({
+      'title': '审批失败',
+      'position': 'center',
+      'icon': 'error'
+    });
+  }
+
+}
+
+
 onShow(() => {
   const pages = getCurrentPages();
   const currentPage = pages[pages.length - 1];
@@ -137,4 +189,10 @@ onShow(() => {
 ::v-deep .uni-left-window {
   height: 100%;
 }
+
+::v-deep .uni-popup__wrapper {
+  width: 600px;
+  height: 210px;
+}
+
 </style>

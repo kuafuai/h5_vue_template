@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuafu.flowable.mapper.FlowFormMapper">
+
+    <select id="selectFormByDeployId" resultType="com.kuafu.flowable.domain.FlowFormDto">
+        select fs.*
+        from form_setting fs left join deploy_form df on fs.form_id = df.form_id
+        where df.deploy_id = #{deployId}
+        limit 1
+    </select>
+
+    <select id="selectFormById" resultType="com.kuafu.flowable.domain.FlowFormDto">
+        select *
+        from form_setting
+        where form_id = #{formId}
+        limit 1
+    </select>
+
+
+</mapper>

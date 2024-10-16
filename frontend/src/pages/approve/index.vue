@@ -2,10 +2,16 @@
   <base-wrapper>
     <base-list-header nickname="审批人管理" description="审批流程节点的审批人设置"></base-list-header>
     <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
-      <base-search firstSearchData="approveNodeName" :searchData="base_search"
-                   firstSearchPlaceholder="请输入要搜索的环节名称"
-                   @refreshTableData="search_click"
-      ></base-search>
+      <view class="w-full flex-between-start">
+        <view style="width: 200px">
+          <fui-button btnSize="small" @click="handle_add_approve" radius="96rpx">新建审批人</fui-button>
+        </view>
+        <base-search firstSearchData="approveNodeName" :searchData="base_search"
+                     firstSearchPlaceholder="请输入要搜索的环节名称"
+                     @refreshTableData="search_click"
+        ></base-search>
+      </view>
+
       <view class="w-full m-b-20">
         <base-table ref="refTableUserInfo" class="m-r-20" api="approvenode.page" :columns="[
             { prop: 'name', label: '环节名称', width: '20' },
@@ -37,6 +43,11 @@ const base_search = ref({})
 
 function search_click(item) {
   proxy.$refs.refTableUserInfo.refresh(item);
+}
+
+function handle_add_approve() {
+  let url = '/pages/approve/detail';
+  proxy.$navigate(url)
 }
 
 function jump_edit(item) {

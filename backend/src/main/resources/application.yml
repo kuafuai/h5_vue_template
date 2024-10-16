@@ -79,9 +79,17 @@ llm:
 qywx:
   corp_id: ${CORP_ID:ww72adcae86ddaa0f3}
   corp_secret: ${CORP_SECRET:HpDqe_v9AL52fPyGpZIqQq2MWsfGQmAJ9OKaiGnUOg8}
+  agent_id: ${AGENT_ID:1000017}
   message:
     token: ${MESSAGE_TOKEN:5J07lqDR79J8OZZCc6LreP}
     aes: ${MESSAGE_AES:dWSLWl9g6M9Hmy2auEePaBw19wrz8a8qosZ9Uj3QCCC}
+
+# flowable相关表
+flowable:
+  # true 会对数据库中所有表进行更新操作。如果表不存在，则自动创建(建议开发时使用)
+  database-schema-update: true
+  # 关闭定时任务JOB
+  async-executor-activate: false
 
 logging:
   level:
@@ -90,3 +98,4 @@ logging:
         boot:
           autoconfigure:
             logging: info
+      flowable: debug

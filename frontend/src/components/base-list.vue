@@ -1,56 +1,62 @@
 <template>
   <view v-if="pageRes.records.length" class="list_box">
-    <view class="box" v-for="(item, index) in pageRes.records" :key="index">
-      <view @click="click_ok(item)" class="content">
-        <view class="indexBox">
-          <view>{{ index + 1 }}</view>
-        </view>
-        <uni-list class="list" :border="false">
-          <slot name="default" :item="item">
-            <uni-list-item :title="item.title"> old{{ item }}</uni-list-item>
-          </slot>
-        </uni-list>
-        <view v-show="is_click" class="imgs">
-          <image src="../static/toRight.png" style="
+    <checkbox-group @change="check_box">
+      <view class="box" v-for="(item, index) in pageRes.records" :key="index">
+        <view @click="click_ok(item)" class="content">
+          <view class="indexBox">
+            <view>{{ index + 1 }}</view>
+          </view>
+          <uni-list class="list" :border="false">
+            <slot name="default" :item="item">
+              <uni-list-item :title="item.title"> old{{ item }}</uni-list-item>
+            </slot>
+          </uni-list>
+          <view v-show="is_click" class="imgs">
+            <slot name="right" :item="item">
+              <image src="../static/toRight.png" style="
           width:0.625rem;height:1.25rem;" mode="widthFill"/>
+            </slot>
+          </view>
         </view>
-      </view>
-<!--            <view class="operate">-->
-<!--              <view class="detail">-->
-<!--                <image-->
-<!--                    style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
-<!--                    src="../static/detail.png"-->
-<!--                    mode="scaleToFill"-->
-<!--                />-->
-<!--                详情-->
-<!--              </view>-->
-<!--              <view class="edit">-->
-<!--                <image-->
-<!--                    style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
-<!--                    src="../static/edit.png"-->
-<!--                    mode="scaleToFill"-->
-<!--                />编辑-->
-<!--              </view>-->
-<!--              <view class="del">-->
-<!--                <image-->
-<!--                    style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
-<!--                    src="../static/del.png"-->
-<!--                    mode="scaleToFill"-->
-<!--                />删除-->
-<!--              </view>-->
-<!--            </view>-->
-      <view class="op_button_list">
-        <slot name="op" :item="item" style="display:flex">
 
-        </slot>
-      </view>
+        <!--            <view class="operate">-->
+        <!--              <view class="detail">-->
+        <!--                <image-->
+        <!--                    style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
+        <!--                    src="../static/detail.png"-->
+        <!--                    mode="scaleToFill"-->
+        <!--                />-->
+        <!--                详情-->
+        <!--              </view>-->
+        <!--              <view class="edit">-->
+        <!--                <image-->
+        <!--                    style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
+        <!--                    src="../static/edit.png"-->
+        <!--                    mode="scaleToFill"-->
+        <!--                />编辑-->
+        <!--              </view>-->
+        <!--              <view class="del">-->
+        <!--                <image-->
+        <!--                    style="width: 30rpx; height: 30rpx; margin-right: 10rpx"-->
+        <!--                    src="../static/del.png"-->
+        <!--                    mode="scaleToFill"-->
+        <!--                />删除-->
+        <!--              </view>-->
+        <!--            </view>-->
+        <view class="op_button_list">
+          <slot name="op" :item="item">
 
-    </view>
-    <view v-if="isPage" class="flex-end-center m-t-10 m-r-10">
-      <fui-pagination :total="pageRes.total" :pageSize="pageParams.pageSize" :current="pageParams.current"
-                      @change="handleCurrentChange" :pageType="2" style="width:100%"></fui-pagination>
-    </view>
+          </slot>
+        </view>
+
+      </view>
+      <view v-if="isPage" class="flex-end-center m-t-10 m-r-10">
+        <fui-pagination :total="pageRes.total" :pageSize="pageParams.pageSize" :current="pageParams.current"
+                        @change="handleCurrentChange" :pageType="2"></fui-pagination>
+      </view>
+    </checkbox-group>
   </view>
+
   <view v-else class="list_box">
     <view class="nodata">
       <img src="../static/noData.png" style="width:12.5rem;height:auto" alt=""/>
@@ -58,13 +64,6 @@
     </view>
   </view>
 </template>
-<script>
-export default {
-  options: {
-    styleIsolation: 'shared', // 解除样式隔离
-  }
-};
-</script>
 <script setup>
 import {getCurrentInstance, ref} from "vue";
 import {onLoad} from "@dcloudio/uni-app";
@@ -113,7 +112,7 @@ let isLoading = ref(true);
 let pageRes = ref({current: 1, pages: 1, size: 10, total: 0, records: []});
 let pageParams = ref({current: 1, pageSize: 10});
 
-const emits = defineEmits(["click"]);
+const emits = defineEmits(["click","check_group_change"]);
 // 暴露方法
 defineExpose({
   refresh,
@@ -122,11 +121,10 @@ defineExpose({
 onLoad(() => {
   refresh();
 });
-console.log(1221);
 
 // 刷新
 function refresh(query_param) {
-  console.log("list refresh",query_param)
+  console.log("list refresh", query_param)
   isLoading.value = true;
   // 情况2：走api接口数据
   if (props.isPage) {
@@ -145,9 +143,9 @@ function refresh(query_param) {
   //   query_param.page = 1;
   //   query_param.limit = pageParams.value.pageSize
   // }
-  if (query_param!=null && query_param!=undefined){
-    for (var item in query_param){
-        pageParams.value[item]=query_param[item]
+  if (query_param != null && query_param != undefined) {
+    for (var item in query_param) {
+      pageParams.value[item] = query_param[item]
     }
   }
 
@@ -207,6 +205,11 @@ function handleSizeChange(val) {
 function click_ok(item) {
   emits("click", item);
 }
+
+function check_box(e){
+  console.log("选中",e)
+  emits("check_group_change",e.detail.value)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -218,8 +221,8 @@ function click_ok(item) {
 ::v-deep .op_button_list view{
   width: 100%;
   display: flex;
-    justify-content: flex-end;
-    align-items: center;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 ::v-deep .uni-list--border:after {

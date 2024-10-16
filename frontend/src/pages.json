@@ -6,41 +6,65 @@
 "fui-(.*)": "firstui-uni/firstui/fui-$1/fui-$1.vue","^base-(.*)": "@/components/base-$1.vue"        }
     },
     "pages": [{
-        "path": "pages/user/index",
+        "path": "pages/user_login/index",
         "style":  {
                 "navigationBarTitleText": ""
             }
     }, {
-        "path": "pages/register/index",
+        "path": "pages/user_register/index",
         "style":  {
                 "navigationBarTitleText": ""
             }
     }, {
-        "path": "pages/company/index",
+        "path": "pages/task_info_list/index",
         "style":  {
                 "navigationBarTitleText": ""
             }
     }, {
-        "path": "pages/survey_info/index",
+        "path": "pages/task_info_detail/index",
         "style":  {
                 "navigationBarTitleText": ""
             }
     }, {
-        "path": "pages/survey_info_detail/index",
+        "path": "pages/update_task_info/index",
         "style":  {
                 "navigationBarTitleText": ""
             }
     }, {
-        "path": "pages/answer/index",
+        "path": "pages/hazard_info_list/index",
         "style":  {
                 "navigationBarTitleText": ""
             }
-    },
-    {
-        "path": "pages/index/index",
-        "style": {
-            "navigationBarTitleText": ""
-        }
+    }, {
+        "path": "pages/hazard_info_detail/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/hazard_basic_list/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/task_info_list_enterprise_information_id/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/task_info_list_checker/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/update_task_info_enterprise_information_id/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
+    }, {
+        "path": "pages/update_task_info_checker/index",
+        "style":  {
+                "navigationBarTitleText": ""
+            }
     }] ,
     "globalStyle": {
         "navigationBarTextStyle": "black",

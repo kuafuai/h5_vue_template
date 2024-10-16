@@ -40,7 +40,7 @@
 <!--              </view>-->
 <!--            </view>-->
       <view class="op_button_list">
-        <slot name="op" :item="item">
+        <slot name="op" :item="item" style="display:flex">
 
         </slot>
       </view>
@@ -48,7 +48,7 @@
     </view>
     <view v-if="isPage" class="flex-end-center m-t-10 m-r-10">
       <fui-pagination :total="pageRes.total" :pageSize="pageParams.pageSize" :current="pageParams.current"
-                      @change="handleCurrentChange" :pageType="2"></fui-pagination>
+                      @change="handleCurrentChange" :pageType="2" style="width:100%"></fui-pagination>
     </view>
   </view>
   <view v-else class="list_box">
@@ -58,6 +58,13 @@
     </view>
   </view>
 </template>
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
 import {getCurrentInstance, ref} from "vue";
 import {onLoad} from "@dcloudio/uni-app";
@@ -115,6 +122,7 @@ defineExpose({
 onLoad(() => {
   refresh();
 });
+console.log(1221);
 
 // 刷新
 function refresh(query_param) {
@@ -207,7 +215,15 @@ function click_ok(item) {
   justify-content: flex-end;
   align-items: center;
 }
+::v-deep .op_button_list view{
+  width: 100%;
+  display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 ::v-deep .uni-list--border:after {
+  display: none !important;
   position: none !important;
   height: 0px;
 }
@@ -249,7 +265,7 @@ function click_ok(item) {
   position: static;
   //overflow: auto;
   overflow-x: hidden;
-  z-index: 8;
+  // z-index: 8;
 
   .box {
     font-family: 'DemiLight';

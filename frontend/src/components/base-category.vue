@@ -30,7 +30,7 @@ const props = defineProps({
  * 查询值
  * @param index
  */
-async function getSelectValue(index) {
+async function getSelectValue(update_index,index) {
   let parentId = null;
   if (index > 0) {
 
@@ -43,8 +43,11 @@ async function getSelectValue(index) {
     relevanceTableColumn: "first_menu"
   })
   console.log(res)
-  select_value.value[index] = res.data
-  console.log(index, select_value.value[index])
+  select_value.value[update_index] = res.data
+  if (update_index==null){
+    update_index=index
+  }
+  console.log(update_index, select_value.value[index])
 }
 
 getSelectValue(0)
@@ -65,10 +68,8 @@ watch(data.value, (newValue, oldValue) => {
     //  触发分类表的请求
   }
   result.value = data.value.map(i => "<" + i + ">").join(','); // 使用< > 包裹，like查询时包括
-  if (update_index!=null){
-    // result.value = JSON.stringify(data.value)
-    getSelectValue(update_index,data.value.length)
-  }
+
+  getSelectValue(update_index,data.value.length)
 
 
 });

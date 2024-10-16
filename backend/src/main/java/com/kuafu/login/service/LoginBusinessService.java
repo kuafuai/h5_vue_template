@@ -13,6 +13,7 @@ import com.kuafu.common.util.SpringUtils;
 import com.kuafu.common.util.StringUtils;
 import com.kuafu.common.util.WrapperFactory;
 import com.kuafu.login.config.LoginRelevanceConfig;
+import com.kuafu.web.handler.CustomTenantHandler;
 import com.kuafu.web.handler.TenantContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import com.kuafu.web.annotation.IsNotNullField;
@@ -389,11 +390,15 @@ public class LoginBusinessService {
         IService iservice = SpringUtils.getBean(RelevanceTableUpper);
         QueryWrapper<Object> objectQueryWrapper = new QueryWrapper<>();
         objectQueryWrapper.eq(StringUtils.toUnderScoreCase(relevanceUserIdName), relevanceId);
+
+        // 首次登录忽略
+        CustomTenantHandler.threadLocalSet.get().add(relevanceTableScore);
         Object bean = iservice.getOne(objectQueryWrapper);
+        CustomTenantHandler.threadLocalSet.get().remove(relevanceTableScore);
 
         Object tenantId = this.getValue(bean, StringUtils.dbStrToHumpLower(TenantContextHolder.TENANT_TABLE_FIELD_NAME));
+        log.info("获取登录用户的 tenantId:{}", tenantId);
         loginUser.setTenantId(Integer.valueOf(tenantId.toString()));
-        TenantContextHolder.setTenant(Integer.valueOf(tenantId.toString()));
         return Integer.valueOf(tenantId.toString());
     }
 }

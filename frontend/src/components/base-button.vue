@@ -13,7 +13,7 @@
         src="../static/options.png" alt="">
     </button>
   </view>
-  <button class="base-buttom" v-if="model == 'base'" :type="type" @click="click">{{ title }}</button>
+  <button class="base-buttom" v-if="model == 'base'" :type="type" @click="click">{{ title}}</button>
 </template>
 
 <script setup>
@@ -44,6 +44,7 @@ const click = () => {
 
 <style scoped lang="scss">
 .base-buttom {
+  color: white;
   background-color: rgba(93, 95, 239, 1);
   margin: 0.625rem;
   display: flex;
@@ -63,7 +64,7 @@ const click = () => {
   //background-color: rgba(93, 95, 239, .5);
   position: fixed;
   right: 3%;
-  z-index: 99;
+  // z-index: 99;
   border-radius: 50%;
   display: flex;
   width: 3.5rem;

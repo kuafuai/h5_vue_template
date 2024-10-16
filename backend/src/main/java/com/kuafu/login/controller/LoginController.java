@@ -19,8 +19,10 @@ import com.kuafu.login.provider.WxAppAuthentication;
 import com.kuafu.login.provider.WxWebAuthentication;
 import com.kuafu.login.service.LoginBusinessService;
 import com.kuafu.login.service.TokenService;
+import com.kuafu.login.service.WechatRegisterService;
 import com.kuafu.login.service.WxAppService;
 import com.kuafu.login.utils.MessageTemplate;
+import com.kuafu.web.config.WechatConfig;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -63,6 +65,9 @@ public class LoginController {
 
     @Autowired
     private MessageTemplate messageTemplate;
+
+    @Autowired
+    private WechatRegisterService wechatRegisterService;
 
     @PostMapping("/login/wxApp")
     @ApiOperation("小程序CODE登陆")
@@ -112,12 +117,19 @@ public class LoginController {
     @GetMapping("/login/phone")
     @ApiOperation("小程序获取手机号")
     @Log
-    public BaseResponse<String> getPhone(@Parameter(name = "code", description = "小程序code") String code) {
+    public BaseResponse<String> getPhone(@Parameter(name = "code", description = "小程序code") String code,
+                                         @RequestParam(name = "relevanceTable", required = false) String relevanceTable) {
         log.info("【获取手机号】,code:{}", code);
         if (StringUtils.isEmpty(code)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         String phone = wxAppService.getPhone(code);
+
+        if ("1".equals(WechatConfig.is_register)) {
+            Long loginId = wechatRegisterService.wechatRegister(phone, relevanceTable);
+            log.info("【创建的用户ID】,用户ID:{}", loginId);
+        }
+
         return ResultUtils.success(phone);
     }
 

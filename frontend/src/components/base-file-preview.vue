@@ -6,9 +6,9 @@
     <!-- 如果是文件类型，则显示打开文件按钮 -->
     <div v-else class="file-preview-button">
       <view v-if="url!=null && url!=''">
-        <uni-button @click="openFile" class="custom-button">
+        <button @click="openFile" class="custom-button">
           打开文件
-        </uni-button>
+        </button>
       </view>
       <view v-else>
         暂无文件

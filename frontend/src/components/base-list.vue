@@ -122,6 +122,7 @@ defineExpose({
 onLoad(() => {
   refresh();
 });
+console.log(1221);
 
 // 刷新
 function refresh(query_param) {

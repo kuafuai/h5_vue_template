@@ -48,7 +48,13 @@
 
   </base-layout>
 </template>
-
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
 
 const {proxy} = getCurrentInstance()
@@ -100,8 +106,22 @@ function iconClick() {
 
 
 <style scoped lang="scss">
+::v-deep uni-transition > view:first-child {
+  z-index: 999;
+  padding-bottom: 0px !important;
+}
+::v-deep .uni-forms{
+  margin: 40rpx;
+}
+::v-deep .w-full base-layout{
+  width: 100% !important;
+}
+::v-deep .m-r-20{
+  display: flex;
+  justify-content: flex-end;
+}
 ::v-deep.uni-mt-5 {
-  height: 72rpx;
+  height: 72 rpx;
   border-radius: 10px;
 
 }
@@ -120,8 +140,9 @@ function iconClick() {
   border: 1px solid rgba(93, 95, 239, 1);
   border-radius: 100px;
   color: rgba(93, 95, 239, 1);
-  font-size: 0.875rem;
+  font-size: 14px;
   font-weight: 500;
+  //height: 100% !important;
   align-items: center;
 }
 
@@ -130,29 +151,29 @@ function iconClick() {
 }
 
 ::v-deep uni-text {
-  font-size: 0.75rem;
+  font-size: 14px;
   font-weight: 500;
   color: rgba(0, 0, 0, 1)
 }
 
 ::v-deep .uni-select {
-  padding-left: 1.1875rem;
-  height: 100rpx !important;
+  padding-left: 19px;
+  height: 100 rpx !important;
   border-radius: 10px;
   border: 1px solid rgba(229, 229, 229, 1);
 
 }
 
 ::v-deep .uni-select__input-placeholder {
-  font-size: 0.875rem;
+  font-size: 15px;
   color: rgb(166, 166, 166);
   font-weight: 500;
   letter-spacing: -0.15px;
 }
 
 ::v-deep .uni-easyinput__content-input {
-  padding-left: 1.1875rem !important;
-  height: 100rpx !important;
+  padding-left: 19px !important;
+  height: 100 rpx !important;
 }
 
 ::v-deep.is-input-border {
@@ -161,7 +182,8 @@ function iconClick() {
 }
 
 .uni-easyinput__placeholder-class {
-  font-size: 0.875rem;
+  // font-size: 15px;
+  font-size:0.9375rem;
   font-weight: 500;
   font-family: Inter;
 }
@@ -177,10 +199,65 @@ function iconClick() {
   border-radius: 100px;
   background: rgba(93, 95, 239, 1);
   width: 100%;
-  height: 100rpx;
-  margin-top: 20rpx;
+  height: 100 rpx;
   color: rgba(255, 255, 255, 1);
-  font-size: 0.875rem !important;
+  font-size: 14px !important;
+  font-weight: 500;
+}
+
+::v-deep uni-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 1)
+}
+
+::v-deep .uni-select {
+  padding-left: 19px;
+  height: 100 rpx !important;
+  border-radius: 10px;
+  border: 1px solid rgba(229, 229, 229, 1);
+
+}
+
+::v-deep .uni-select__input-placeholder {
+  font-size: 13px;
+  color: rgb(166, 166, 166);
+  font-weight: 500;
+  letter-spacing: -0.15px;
+}
+
+::v-deep .uni-easyinput__content-input {
+  padding-left: 19px !important;
+  height: 100 rpx;
+}
+
+::v-deep.is-input-border {
+  border-radius: 10px;
+  border: 1px solid rgba(229, 229, 229, 1);
+}
+
+.uni-easyinput__placeholder-class {
+  // font-size: 13px;
+  font-size:0.8125rem;
+  font-weight: 500;
+  font-family: Inter;
+}
+
+::v-deep .uni-forms-item {
+  align-items: center;
+}
+
+.button-botttom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100px;
+  background: rgba(93, 95, 239, 1);
+  width: 100%;
+  height: 100 rpx;
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 1);
+  font-size: 15px !important;
   font-weight: 500;
 }
 
@@ -188,9 +265,9 @@ function iconClick() {
   margin-bottom: 0px;
 }
 
-.content {
-  margin: 0;
-  border-radius: 0
+::v-deep.content {
+  margin: 0 !important;
+  border-radius: 20px 20px 0px 0px !important
 }
 
 .m-20 {

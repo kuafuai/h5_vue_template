@@ -24,7 +24,13 @@
     </uni-popup>
   </view>
 </template>
-
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
 import {getCurrentInstance} from "vue"
 
@@ -54,8 +60,8 @@ const props = defineProps({
     default: "您确定要提交吗？"
   }
 });
-import {defineProps, ref} from "vue";
-import {useRoute, useRouter} from "vue-router";
+
+
 
 onUnmounted(() => {
   console.log(12345678909876543)
@@ -129,6 +135,9 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+::v-deep uni-transition >view:first-child{
+  padding-bottom: 0px !important;
+}
 .all_dialog {
   width: 100vm;
   z-index: 99999;
@@ -238,6 +247,9 @@ button {
   overflow: auto;
   width: 100%;
   border-radius: 20px 20px 0px 0px;
+}
+::v-deep .uni-popup__wrapper{
+  width: auto !important;
 }
 
 ::v-deep .type-other .uni-popup__wrapper {

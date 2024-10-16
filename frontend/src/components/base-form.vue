@@ -10,15 +10,21 @@
     </uni-forms>
   </view>
 </template>
-
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
 import {getCurrentInstance, ref} from "vue"
-
 const {proxy} = getCurrentInstance();
 
 // Importing to define props and emit
 import {defineProps, defineEmits, toRefs} from 'vue';
 import {onLoad, onShow} from "@dcloudio/uni-app";
+
 // import {ElMessage} from 'element-plus';
 // Defining props to receive form and rules from parent
 const props = defineProps({
@@ -203,9 +209,21 @@ const onSubmit = () => {
 </script>
 
 <style scoped lang="scss">
+::v-deep.uni-forms-item__content base-select{
+width: 100%;
+}
+::v-deep .uni-forms-item__label {
+  width: 100% !important;
+}
+::v-deep .uni-forms{
+width: 100%;
+background: white;
+padding:40rpx;
+box-sizing:border-box
+}
 .all {
   height: 100%;
-  overflow: auto;
+  // overflow: auto;
 }
 
 ::v-deep .uni-forms-item__error {
@@ -253,7 +271,8 @@ const onSubmit = () => {
 
 ::v-deep.uni-easyinput__placeholder-class {
   color: rgba(166, 166, 166, 1);
-  font-size: 14px;
+  // font-size: 14px;
+  font-size:0.875rem;
 }
 
 ::v-deep uni-text {

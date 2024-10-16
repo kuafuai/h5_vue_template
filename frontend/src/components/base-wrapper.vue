@@ -92,7 +92,7 @@ getWrapperClass();
   flex-direction: column;
   /* height: 100%; */
   background: rgb(245, 247, 250);
-  padding: 0 0 2rem 0;
+  /* padding: 0 0 2rem 0; */
   /* box-sizing: border-box; */
   /*overflow: hidden;*/
 }

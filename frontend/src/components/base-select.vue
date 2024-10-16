@@ -258,8 +258,7 @@ function apiMethod() {
 
 </script>
 
-//
-<style lang="scss" scoped>
+// <style lang="scss" scoped>
 // uni-button[disabled]:not([type]) {
 //   color: rgba(229, 229, 229, 1) !important;
 //   background-color: rgba(206, 206, 206, 1) !important;

@@ -52,7 +52,7 @@
       <h2>{{ show_title }}</h2>
     </view>
     <uni-forms style="max-width: 320px; width: 100%; margin: 0 auto;" :modelValue="form_sms" :rules="rules_sms"
-               ref="loginForm_sms" label-width="auto" status-icon>
+      ref="loginForm_sms" label-width="auto" status-icon>
       <!-- 手机号输入框 -->
       <uni-forms-item name="phone">
         <view class="icon-input-container">
@@ -123,9 +123,16 @@
     本应用由AI智能软件开发平台CodeFlying自动开发
   </view>
 </template>
-
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
 import { getCurrentInstance, ref } from "vue";
+import service from "@/utils/request";
 
 const radio1 = ref(false)
 const isCheck = () => {
@@ -149,6 +156,7 @@ const btnF1 = () => {
   });
   return;
 }
+
 
 const isTrue = ref(false)
 const { proxy } = getCurrentInstance();
@@ -445,12 +453,29 @@ function login_click() {
 </script>
 
 <style lang="scss" scoped>
-::v-deep.uni-input-input {
+::v-deep .title view {
+  width: 100%;
+  // max-width: 320px;
+  max-width: 20rem;
+  font-size: 0.9375rem;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  color: rgba(93, 95, 239, 1);
+  margin-bottom: 8px !important;
+}
+
+.custom-form {
+  width: 90% !important;
+  margin: 0 auto;
+}
+
+::v-deep .uni-input-input {
   color: #999 !important;
 }
 
 ::v-deep .uni-easyinput__content-input {
-  padding-left: 20px !important;
+  padding-left: 1.25rem !important;
 }
 
 ::v-deep .uni-forms-item_error {
@@ -460,22 +485,25 @@ function login_click() {
 ::v-deep.is-input-error-border .uni-easyinput__placeholder-class {
   color: #999;
 }
-
+::v-deep.uni-easyinput__placeholder-class {
+  font-size:0.75rem;
+}
 ::v-deep .code-input-container .is-input-border uni-input {
   width: 46%;
   position: relative;
   overflow: hidden;
   flex: none;
   line-height: 1;
-  font-size: 14px;
-  height: 35px;
+  // font-size: 14px;
+  font-size:0.875rem;
+  height:2.1875rem
 }
 
 .hello {
-  max-width: 320px;
-  width: 100%;
-  height: 140px;
-  font-size: 26px;
+  // max-width: 320px;
+  width: 90%;
+  height:8.75rem;
+  font-size:1.625rem;
   letter-spacing: 1px;
   color: rgba(52, 57, 101, 1);
 }
@@ -487,7 +515,8 @@ function login_click() {
 ::v-deep .is-input-border {
   border-radius: 30px;
   padding-left: 15px;
-  height: 58px;
+  // height: 58px;
+  height:3.625rem;
   background: rgba(236, 242, 255, 1) !important;
   justify-content: flex-start;
   border: none;
@@ -498,9 +527,9 @@ function login_click() {
 }
 
 .title {
-  width: 100%;
-  max-width: 320px;
-  font-size: 15px;
+  width: 90%;
+  // max-width: 320px;
+  font-size:0.9375rem;
   display: flex;
   justify-content: flex-start;
   border-bottom: 1px solid rgba(230, 232, 240, 1);
@@ -522,7 +551,6 @@ h5 {
   width: 100%;
   max-width: 100%;
   height: 100vh;
-  // background: #ffffff;
   border-radius: 10px;
   margin: 0 auto;
   display: flex;
@@ -549,13 +577,12 @@ h5 {
 
 
   .input-field {
-    // height: 45px;
-    font-size: 16px;
+    font-size:1rem;
   }
 
   .submit-btn {
     width: 100%;
-    height: 55px;
+    height:3.4375rem;
     margin-top: 35px;
     background: rgba(93, 95, 239, 1);
     box-shadow: 0px 7px 40px rgba(0, 29, 176, 0.3);
@@ -563,7 +590,7 @@ h5 {
     border: none;
     border-radius: 30px;
     cursor: pointer;
-    font-size: 16px;
+    font-size:1rem;
     transition: background-color 0.3s;
     display: flex;
     align-items: center;
@@ -641,7 +668,6 @@ h5 {
   background-color: #007aff;
   color: white;
   border-radius: 5px;
-  //padding: 15px;
   text-align: center;
 }
 
@@ -649,7 +675,7 @@ h5 {
   width: 100%;
   display: flex;
   justify-content: center;
-  font-size: 12px;
+  font-size:0.75rem;
   color: rgba(166, 166, 166, 1);
   margin-bottom: 5px;
 }

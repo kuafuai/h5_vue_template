@@ -31,11 +31,6 @@
                 "navigationBarTitleText": ""
             }
     }, {
-        "path": "pages/update_task_info_company/index",
-        "style":  {
-                "navigationBarTitleText": ""
-            }
-    }, {
         "path": "pages/hazard_info_list/index",
         "style":  {
                 "navigationBarTitleText": ""

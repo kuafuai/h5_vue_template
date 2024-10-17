@@ -1,15 +1,39 @@
 <template>
   <view v-if="model=='one'">
-    <view>数据的值id：{{ show_value_one }}</view>
-    <button @click="handleClick">前去选择{{ title }}</button>
+    <!--    <view>数据的值id：{{ // show_value_one }}</view>-->
+    <button @click="handleClick">{{ show_value_one ? show_value_one : '前去选择' + title }}
+
+      <image src="../static/right.png"
+             style="width:32rpx;position:absolute;right:24rpx;display: flex; justify-content:center; " mode="widthFix">
+      </image>
+    </button>
+
   </view>
   <view v-else-if="model='more'">
     <!--    {{// JSON.parse(data_value)}}-->
-    <view v-for="(item, index) in data_value_show" :key="index">
-      {{ item.text }}
+    <view>
 
+      <button  @click="handleClick">
+
+
+
+
+        <text class="show_text" v-if="data_value_show!=null" v-for="(item, index) in data_value_show"
+              :key="index">
+          {{ item.text }}
+<!--          {{Object.keys(data_value_show).length}}-->
+          <text v-if="index < (Object.keys(data_value_show).length-1)">,</text>
+        </text>
+        <text class="show_text"  v-else>前去选择{{ title }}</text>
+
+
+        <image src="../static/right.png"
+               style="width:32rpx;position:absolute;right:24rpx;display: flex; justify-content:center; "
+               mode="widthFix">
+        </image>
+      </button>
     </view>
-    <button @click="handleClick">前去选择{{ title }}</button>
+
   </view>
 </template>
 
@@ -30,7 +54,7 @@ const props = defineProps({
 });
 let param;
 let show_value_one = ref()
-let data_value_show = ref()
+let data_value_show = ref(null)
 onLoad((options) => {
 
   console.log('URL参数:', options)
@@ -132,5 +156,28 @@ const handleClick = () => {
 </script>
 
 <style scoped>
+::v-deep uni-forms-item__content >view:first-child{
+  width:100%
+}
 
+::v-deep uni-button {
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 1);
+  border: 1px solid #dcdfe6;
+  color: rgb(166, 166, 166);
+  font-size: 0.875rem;
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+  height: 100rpx;
+  width: 100%;
+}
+
+::v-deep uni-button::after {
+  border: none;
+
+}
+.show_text{
+  color: rgb(166, 166, 166);
+}
 </style>

@@ -33,11 +33,14 @@ export default {
 </script>
 <script setup>
 import {getCurrentInstance} from "vue"
+import { onHide } from "@dcloudio/uni-app";
+import { defineProps, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 const {proxy} = getCurrentInstance();
 const emits = defineEmits(['success', 'fail'])
 
-import {onHide} from "@dcloudio/uni-app";
+
 
 const props = defineProps({
   text: {
@@ -60,8 +63,6 @@ const props = defineProps({
     default: "您确定要提交吗？"
   }
 });
-import {defineProps, ref} from "vue";
-import {useRoute, useRouter} from "vue-router";
 
 onUnmounted(() => {
   console.log(12345678909876543)

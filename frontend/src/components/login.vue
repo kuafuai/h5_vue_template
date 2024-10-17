@@ -10,7 +10,7 @@
     </view>
     <!-- <uni-forms style="max-width: 320px; width: 100%; margin: 0 auto;" :="" :rules="" ref="loginForm_sms" label-width="auto" status-icon> -->
     <uni-forms ref="formRef" style="max-width: 320px; width: 100%; margin: 0 auto;" :modelValue="form" :rules="rules"
-      label-width="auto" status-icon>
+               label-width="auto" status-icon>
 
       <uni-forms-item name="phone">
         <view class="icon-input-container">
@@ -52,7 +52,7 @@
       <h2>{{ show_title }}</h2>
     </view>
     <uni-forms style="max-width: 320px; width: 100%; margin: 0 auto;" :modelValue="form_sms" :rules="rules_sms"
-      ref="loginForm_sms" label-width="auto" status-icon>
+               ref="loginForm_sms" label-width="auto" status-icon>
       <!-- 手机号输入框 -->
       <uni-forms-item name="phone">
         <view class="icon-input-container">
@@ -654,6 +654,70 @@ h5 {
   margin-bottom: 5px;
 }
 
+.wxlogin {
+  width: 100%;
+  max-width: 100%;
+  height: 100vh;
+  // background: #ffffff;
+  border-radius: 10px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  justify-content: normal;
+  box-sizing: border-box;
+}
+
+
+.h5Login {
+  width: 100%;
+  height: 11.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1.9375rem;
+  font-size: 1.375rem;
+  font-weight: 500;
+  color: rgba(65, 67, 79, 1);
+}
+
+.identity {
+  color: rgba(250, 251, 255, 1);
+  background-color: rgba(93, 95, 239, 1);
+  border-radius: 10px;
+  line-height: 25px;
+  width: 512rpx;
+  height: 88rpx;
+  font-size: 36rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.radios {
+  display: flex;
+  justify-content: center;
+  font-size: 28rpx;
+  margin-top: 48rpx;
+  height: 300rpx;
+
+  .radio {
+    display: flex;
+    justify-content: center;
+
+    .agreement {
+      color: rgba(93, 95, 239, 1);
+    }
+  }
+}
+
+.add {
+  line-height: 19px;
+  color: rgba(169, 169, 169, 1);
+  font-size: 0.8125rem;
+  margin-top: 10.375rem;
+}
 .wxlogin {
   width: 100%;
   max-width: 100%;

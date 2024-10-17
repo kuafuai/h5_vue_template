@@ -3,7 +3,7 @@
     <base-layout display="flex" x="end" :w_full="true">
       <base-layout display="flex" y="center" class="m-r-20" style="width: 91%;height:72rpx">
         <uni-easyinput class="uni-mt-5" suffixIcon="search" v-model="searchDataValue[firstSearchData]"
-          :placeholder="'请输入' + firstSearchDataComment" @iconClick="iconClick"></uni-easyinput>
+                       :placeholder="'请输入' + firstSearchDataComment" @iconClick="iconClick"></uni-easyinput>
         <button v-if="is_show_advance" size="mini" class="m-l-10" @click="toggleAdvanced">
           高级搜索
           <!--          <a style="margin-left: 8px">-->
@@ -14,36 +14,36 @@
       </base-layout>
     </base-layout>
 
-      <base-dialog ref="base_search_dailog" type="bottom">
-        <template #dialog>
+    <base-dialog ref="base_search_dailog" type="bottom">
+      <template #dialog>
 
-          <base-layout :w_full="true">
-            <!--          <uni-collapse accordion>-->
-            <!--            <uni-collapse-item :open="advanced" titleBorder="none">-->
-            <uni-forms :inline="true" :modelValue="searchDataValue" class="m-20">
-              <slot name="collapse" :item="searchDataValue">
-              </slot>
+        <base-layout :w_full="true">
+          <!--          <uni-collapse accordion>-->
+          <!--            <uni-collapse-item :open="advanced" titleBorder="none">-->
+          <uni-forms :inline="true" :modelValue="searchDataValue" class="m-20">
+            <slot name="collapse" :item="searchDataValue">
+            </slot>
 
-              <uni-forms-item v-for="(item, index) in other_search_condition" :label="item.name" name="" :key="index">
-                <base-select v-model="searchDataValue.other_search_condition[index]" :data="item.value"
-                  :title="item.name"></base-select>
+            <uni-forms-item v-for="(item, index) in other_search_condition" :label="item.name" name="" :key="index">
+              <base-select v-model="searchDataValue.other_search_condition[index]" :data="item.value"
+                           :title="item.name"></base-select>
 
 
-              </uni-forms-item>
+            </uni-forms-item>
 
-              <uni-forms-item>
-                <button class="button-botttom" size="mini" style="float: right;" @click="iconClick">
-                  搜索
-                </button>
-              </uni-forms-item>
-            </uni-forms>
+            <uni-forms-item>
+              <button class="button-botttom" size="mini" style="float: right;" @click="iconClick">
+                搜索
+              </button>
+            </uni-forms-item>
+          </uni-forms>
 
-            <!--            </uni-collapse-item>-->
-            <!--          </uni-collapse>-->
-          </base-layout>
-        </template>
+          <!--            </uni-collapse-item>-->
+          <!--          </uni-collapse>-->
+        </base-layout>
+      </template>
 
-      </base-dialog>
+    </base-dialog>
 
   </base-layout>
 </template>
@@ -93,12 +93,28 @@ function toggleAdvanced() {
 
 }
 
-function iconClick() {
-  console.log(searchDataValue.value)
-  emit("search", searchDataValue.value);
+async function iconClick() {
+  console.log("搜索组件", searchDataValue.value)
+
+  // searchDataValue.value.orderConditions = []
+  for (let i = 0; i < searchDataValue.value.other_search_condition.length; i++) {
+    let condition = searchDataValue.value.other_search_condition[i];
+    var text = condition.replaceAll("'", "\"").replaceAll("?", "\"");
+    console.log(text)
+    var json = JSON.parse(text);
+    for (var item in json) {
+      searchDataValue.value[item] = json[item]
+    }
+  }
+  searchDataValue.value.other_search_condition = []
+
+  console.log()
   proxy.$refs.base_search_dailog.closeDialog()
   // toggleAdvanced()
-
+  await emit("search", searchDataValue.value);
+  for (var item in json) {
+    searchDataValue.value[item] = null
+  }
   advanced.value = false;
 }
 </script>
@@ -109,16 +125,20 @@ function iconClick() {
   z-index: 999;
   padding-bottom: 0px !important;
 }
-::v-deep .uni-forms{
-  margin: 40rpx;
+
+::v-deep .uni-forms {
+  margin: 40 rpx;
 }
-::v-deep .w-full base-layout{
+
+::v-deep .w-full base-layout {
   width: 100% !important;
 }
-::v-deep .m-r-20{
+
+::v-deep .m-r-20 {
   display: flex;
   justify-content: flex-end;
 }
+
 ::v-deep.uni-mt-5 {
   height: 72 rpx;
   border-radius: 10px;
@@ -182,7 +202,7 @@ function iconClick() {
 
 .uni-easyinput__placeholder-class {
   // font-size: 15px;
-  font-size:0.9375rem;
+  font-size: 0.9375rem;
   font-weight: 500;
   font-family: Inter;
 }
@@ -237,7 +257,7 @@ function iconClick() {
 
 .uni-easyinput__placeholder-class {
   // font-size: 13px;
-  font-size:0.8125rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   font-family: Inter;
 }

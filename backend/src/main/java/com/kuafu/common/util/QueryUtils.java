@@ -67,6 +67,9 @@ public class QueryUtils {
     private static void processSortCondition(OrderCondition orderCondition, QueryWrapper wrapper) {
 
         final String name = orderCondition.getName();
+        if (StringUtils.isEmpty(name)){
+            return;
+        }
         final String sortStr = orderCondition.getSort();
         SortEnum sort = SortEnum.fromValue(sortStr);
         if (sort == null) {

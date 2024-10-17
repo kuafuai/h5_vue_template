@@ -64,6 +64,13 @@
     </view>
   </view>
 </template>
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
 import {getCurrentInstance, ref} from "vue";
 import {onLoad} from "@dcloudio/uni-app";
@@ -213,13 +220,20 @@ function check_box(e){
 </script>
 
 <style lang="scss" scoped>
-.op_button_list {
+.op_button_list{
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
+::v-deep .op_button_list view{
+  width: 100%;
+  display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
 
 ::v-deep .uni-list--border:after {
+  display: none !important;
   position: none !important;
   height: 0px;
 }
@@ -261,7 +275,7 @@ function check_box(e){
   position: static;
   //overflow: auto;
   overflow-x: hidden;
-  z-index: 8;
+  // z-index: 8;
 
   .box {
     font-family: 'DemiLight';

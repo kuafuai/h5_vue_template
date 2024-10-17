@@ -48,7 +48,13 @@
 
   </base-layout>
 </template>
-
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
 
 const {proxy} = getCurrentInstance()
@@ -100,6 +106,20 @@ function iconClick() {
 
 
 <style scoped lang="scss">
+::v-deep uni-transition > view:first-child {
+  z-index: 999;
+  padding-bottom: 0px !important;
+}
+::v-deep .uni-forms{
+  margin: 40rpx;
+}
+::v-deep .w-full base-layout{
+  width: 100% !important;
+}
+::v-deep .m-r-20{
+  display: flex;
+  justify-content: flex-end;
+}
 ::v-deep.uni-mt-5 {
   height: 72rpx;
   border-radius: 10px;
@@ -120,8 +140,9 @@ function iconClick() {
   border: 1px solid rgba(93, 95, 239, 1);
   border-radius: 100px;
   color: rgba(93, 95, 239, 1);
-  font-size: 0.875rem;
+  font-size: 14px;
   font-weight: 500;
+  //height: 100% !important;
   align-items: center;
 }
 

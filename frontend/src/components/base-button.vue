@@ -10,14 +10,15 @@
       <img style="width:100%" src="../static/options.png" alt="">
     </button>
     <button v-if="model == 'slot'" class="btnDialog" :type="type" @click="click"><img style="width:100%"
-        src="../static/options.png" alt="">
+                                                                                      src="../static/options.png"
+                                                                                      alt="">
     </button>
   </view>
-  <button class="base-buttom" v-if="model == 'base'" :type="type" @click="click">{{ title}}</button>
+  <button class="base-buttom" v-if="model == 'base'" :type="type" @click="click">{{ title }}</button>
 </template>
 
 <script setup>
-import { defineProps, ref } from "vue";
+import {defineProps, ref} from "vue";
 
 const props = defineProps({
   model: {
@@ -64,7 +65,7 @@ const click = () => {
   //background-color: rgba(93, 95, 239, .5);
   position: fixed;
   right: 3%;
-  // z-index: 99;
+  z-index: 99;
   border-radius: 50%;
   display: flex;
   width: 3.5rem;

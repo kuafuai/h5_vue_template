@@ -10,21 +10,15 @@
     </uni-forms>
   </view>
 </template>
-<script>
-export default {
-  options: {
-    styleIsolation: 'shared', // 解除样式隔离
-  }
-};
-</script>
+
 <script setup>
 import {getCurrentInstance, ref} from "vue"
-import { defineProps, defineEmits, toRefs } from 'vue';
-import { onLoad, onShow } from "@dcloudio/uni-app";
+
 const {proxy} = getCurrentInstance();
 
 // Importing to define props and emit
-
+import {defineProps, defineEmits, toRefs} from 'vue';
+import {onLoad, onShow} from "@dcloudio/uni-app";
 // import {ElMessage} from 'element-plus';
 // Defining props to receive form and rules from parent
 const props = defineProps({
@@ -38,6 +32,10 @@ const props = defineProps({
     default: {}
   },
   table_module: {
+    type: String,
+    required: true
+  },
+  query_module:{
     type: String,
     required: true
   },
@@ -106,7 +104,7 @@ const handleSubmit = async () => {
     }
 
 
-    let form_message = await proxy.$api[props.table_module]["get"](res.data);
+    let form_message = await proxy.$api[props.query_module]["get"](res.data);
     console.log(form_message)
 
 
@@ -137,12 +135,12 @@ onLoad(async () => {
     let form = null
     // 如果id不为null，使用id查询
     if (props.id != null && props.id != '') {
-      let res = await proxy.$api[props.table_module]["get"](props.id);
+      let res = await proxy.$api[props.query_module]["get"](props.id);
       form = res.data
     }
     // 如果param不为null，使用param查询,只取第一个
     else if (props.params != null) {
-      let res = await proxy.$api[props.table_module]["page"](props.params);
+      let res = await proxy.$api[props.query_module]["page"](props.params);
       form = res.data.records[0]
     }
 
@@ -178,10 +176,10 @@ onShow(()=>{
     if (cache_form != null) {
       for (let key in cache_form) {
         console.log("onshow-for",key)
-          var item = props.form[key]
-          if (item == undefined || item == null || item == '') {
-            props.form[key] = cache_form[key]
-          }
+        var item = props.form[key]
+        if (item == undefined || item == null || item == '') {
+          props.form[key] = cache_form[key]
+        }
       }
     }
     console.log("执行",props.form)
@@ -204,18 +202,20 @@ const onSubmit = () => {
 
 </script>
 
+
+
 <style scoped lang="scss">
 ::v-deep.uni-forms-item__content base-select{
-width: 100%;
+  width: 100%;
 }
 ::v-deep .uni-forms-item__label {
   width: 100% !important;
 }
 ::v-deep .uni-forms{
-width: 100%;
-background: white;
-padding:40rpx;
-box-sizing:border-box
+  width: 100%;
+  background: white;
+  padding:40rpx;
+  box-sizing:border-box
 }
 .all {
   //height: 100%;

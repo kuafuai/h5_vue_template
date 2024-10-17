@@ -3,7 +3,7 @@ create table if not exists static_resources
 (
     resource_id              INTEGER
         primary key autoincrement,
-    resource_name            VARCHAR(255) not null,
+    resource_name            VARCHAR(255) ,
     resource_path            VARCHAR(500) not null,
     related_table_name       VARCHAR(255),
     related_table_key        INTEGER,

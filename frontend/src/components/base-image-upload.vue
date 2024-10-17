@@ -66,31 +66,33 @@ function extractFileNameAndExtension(url) {
 // 监听 image_model 数组变化，只触发一次
 watch(image_model, (newValue) => {
   console.log("image_model111", newValue)
+  resources.value=newValue
   selectedFiles.value = newValue;
+  console.log(image_model.value,resources.value,selectedFiles.value)
 }, {deep: true, once: true});
 
-// 监听外部传入的资源数组，如果发生变化则更新 selectedFiles
-watch(resources.value, (newValue) => {
-  if (newValue && newValue.length > 0) {
-    console.log("", newValue)
-    selectedFiles.value = newValue.map(resource => ({
-      name: resource.fileName,
-      extname: extractFileNameAndExtension(resource.url),
-      url: resource.url,
-    }));
-    if (image_model.value == undefined || image_model.value == null) {
-      image_model.value = []
-      // console.log(image_model.value)
-
-    }
-    image_model.value.splice(0, image_model.value.length);
-
-
-    image_model.value.push(...resources.value)
-    // console.log("resources.value变化后的元素", resources.value, selectedFiles.value, image_model.value)
-  }
-
-}, {deep: true});
+// // 监听外部传入的资源数组，如果发生变化则更新 selectedFiles
+// watch(resources.value, (newValue) => {
+//   if (newValue && newValue.length > 0) {
+//     console.log("resources.value变化", newValue)
+//     selectedFiles.value = newValue.map(resource => ({
+//       name: resource.name,
+//       extname: extractFileNameAndExtension(resource.url),
+//       url: resource.url,
+//     }));
+//     if (image_model.value == undefined || image_model.value == null) {
+//       image_model.value = []
+//       // console.log(image_model.value)
+//
+//     }
+//     image_model.value.splice(0, image_model.value.length);
+//
+//
+//     image_model.value.push(...resources.value)
+//     // console.log("resources.value变化后的元素", resources.value, selectedFiles.value, image_model.value)
+//   }
+//
+// }, {deep: true});
 
 // 监听外部传入的资源数组，如果发生变化则更新 selectedFiles
 // watch(image_model.value, (newValue) => {
@@ -182,7 +184,7 @@ const uploadFile = (file) => {
             const fileInfo = extractFileNameAndExtension(response.data.url);
             // 将文件上传结果存储到传入的资源数组中
             resources.value.push({
-              name: fileInfo.fileName,
+              name: fileInfo.name,
               extension: fileInfo.extension,
               url: response.data.url,
             });
@@ -190,7 +192,8 @@ const uploadFile = (file) => {
             if (image_model.value == undefined) {
               image_model.value = []
             }
-            image_model.value.push(resources.value)
+            image_model.value=resources.value
+            selectedFiles.value=resources.value
             // image_model.value = resources.value
             console.log("select_image", resources.value,image_model.value, selectedFiles.value)
 

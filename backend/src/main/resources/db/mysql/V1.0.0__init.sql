@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS static_resources;
 CREATE TABLE IF NOT EXISTS static_resources
 (
     resource_id              INT PRIMARY KEY AUTO_INCREMENT, -- 设置为自增
-    resource_name            VARCHAR(255) NOT NULL,
+    resource_name            VARCHAR(255) ,
     resource_path            VARCHAR(500) NOT NULL,
     related_table_name       VARCHAR(255) DEFAULT NULL,
     related_table_key        INT DEFAULT NULL,

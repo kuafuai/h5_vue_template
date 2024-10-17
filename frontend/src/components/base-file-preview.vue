@@ -1,8 +1,9 @@
 <template>
   <div class="file-preview">
     <!-- 如果是图片类型，则显示图片 -->
-    <view v-for="item in url">
-      <img v-if="isImage(item.url)" :src="item.url" alt="预览图片" class="preview-image"/>
+    <view class="image_list" v-for="item in url">
+      <image  v-if="isImage(item.url)" :src="item.url" mode="widthFix" alt="预览图片" class="preview-image"/>
+
       <div v-else class="file-preview-button">
         <view v-if="item!=null && item!=''">
           <button @click="openFile(item.url)" class="custom-button">
@@ -102,13 +103,20 @@ const openFile = (url) => {
   overflow: hidden;
 }
 
-.preview-image {
-  max-width: 100%;
-  max-height: 250px;
-  border-radius: 10px;
-  object-fit: cover; /* 保持图片的纵横比 */
-  transition: transform 0.3s ease; /* 添加缩放过渡效果 */
+.image_list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  margin: 10rpx 0;
 }
+
+.preview-image {
+  /*width: 90%;*/
+  /*max-width: 300rpx; !* 可选的最大宽度限制 *!*/
+  margin: 5px 0;
+}
+
 
 /*.preview-image:hover {*/
 /*  transform: scale(1.05); !* 鼠标悬停时图片轻微放大 *!*/
@@ -128,6 +136,7 @@ const openFile = (url) => {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
+
 
 /*.custom-button:hover {*/
 /*  background-color: #0056b3;*/

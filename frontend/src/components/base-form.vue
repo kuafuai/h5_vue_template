@@ -4,13 +4,22 @@
   background-color: white;padding: 20px ;box-sizing:border-box" @submit.prevent="onSubmit">
       <slot name="form-items"></slot>
       <uni-forms-item>
-        <button type="primary" @click="onSubmit" class="up">提交</button>
-        <button @click="onResetForm" class="reset">重置</button>
+        <view style="display:flex;flex-direction:row">
+          <button type="primary" @click="onSubmit" class="up">提交</button>
+          <button @click="onResetForm" class="reset">重置</button>
+        </view>
       </uni-forms-item>
     </uni-forms>
   </view>
 </template>
 
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
 import {getCurrentInstance, ref} from "vue"
 
@@ -205,6 +214,23 @@ const onSubmit = () => {
 
 
 <style scoped lang="scss">
+::v-deep uni-button {
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 1);
+  border: 1px solid #dcdfe6;
+  color: rgb(166, 166, 166);
+  font-size: 0.875rem;
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+  height: 100rpx;
+  width: 100%;
+}
+
+::v-deep uni-button::after {
+  border: none
+}
+
 ::v-deep.uni-forms-item__content base-select{
   width: 100%;
 }
@@ -241,6 +267,7 @@ const onSubmit = () => {
 
 ::v-deep .uni-forms-item__content {
   display: flex !important;
+  flex-direction: column;
 }
 
 ::v-deep .uni-popup__wrapper {
@@ -326,6 +353,9 @@ base-upload里面的样式
 .uni-file-picker:hover {
   border-color: #005bb5; /* 鼠标悬停时边框颜色变为深蓝 */
 }
+/*::v-deep .uni-forms-item__content {*/
+/*  display: flex !important;*/
+/*}*/
 
 ::v-deep .uni-file-picker__files {
   align-items: center !important;

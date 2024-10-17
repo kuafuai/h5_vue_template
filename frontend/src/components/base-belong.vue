@@ -1,5 +1,10 @@
 <template>
-  <button @click="handleClick">{{show_value}}</button>
+  <button @click="handleClick">{{show_value}}
+
+    <image src="../static/right.png"
+           style="width:32rpx;position:absolute;right:24rpx;display: flex; justify-content:center; " mode="widthFix">
+    </image></button>
+
 </template>
 
 <script setup>

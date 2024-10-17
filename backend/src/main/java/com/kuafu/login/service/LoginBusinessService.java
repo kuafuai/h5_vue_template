@@ -356,7 +356,12 @@ public class LoginBusinessService {
         IService iService = SpringUtils.getBean(entityName);
         QueryWrapper<Object> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("phone_number", phone);
+        // 查询时忽略 tenant_id
+        if(TenantContextHolder.getEnableTenant()) {
+            CustomTenantHandler.threadLocalSet.get().add(table);
+        }
         Object object = iService.getOne(queryWrapper);
+        CustomTenantHandler.threadLocalSet.get().remove(table);
         if (object != null) {
             return getId(object);
         }

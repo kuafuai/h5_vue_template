@@ -23,7 +23,9 @@ const category_size_list = ref([])
 const fullData = ref([])
 const select_value = ref({}) // 列表的值
 const props = defineProps({
-  category_size: {type: Number, default: 2}
+  category_size: {type: Number, default: 2},
+  relevanceTable:{type:String,default:""},
+  relevanceTableColumn:{type:String,default:""},
 })
 
 for (var i = 0; i < props.category_size; i++) {
@@ -44,8 +46,8 @@ async function getSelectValue(update_index, index) {
   }
   let res = await proxy.$api.category.list({
     parentId: parentId,
-    relevanceTable: "hazard_basic",
-    relevanceTableColumn: "first_menu"
+    relevanceTable: props.relevanceTable,
+    relevanceTableColumn: props.relevanceTableColumn
   })
   console.log(res)
 

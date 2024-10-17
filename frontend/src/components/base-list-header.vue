@@ -14,7 +14,13 @@
     </view>
   </view>
 </template>
-
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
 import {defineProps, ref} from "vue";
 

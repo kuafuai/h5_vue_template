@@ -64,12 +64,13 @@ defineExpose({
   width: 100%;
   //height: 100%;
   //height: 92.3vh;
-  padding: 30px 15px;
+  padding:0.9357rem 0.9357rem;
   box-sizing: border-box;
 
   .all_content {
+    
     ::v-deep .uni-section:first-child {
-      border-radius: 10px 10px 0px 0px !important;
+      border-radius: 10px 10px 0px 0px;
     }
 
     ::v-deep .uni-section:last-child {
@@ -77,24 +78,29 @@ defineExpose({
     }
 
     ::v-deep .uni-section__content-title {
-      font-size: 14px !important;
+      // font-size: 14px !important;
+      font-size: 0.875rem !important;
       color: rgba(56, 56, 56, 1) !important;
     }
 
     ::v-deep .uni-section .uni-section-header__content-sub {
       display: flex !important;
       justify-content: flex-start !important;
-      font-size: 14px !important;
+      font-size: 0.875rem !important;
       color: rgba(166, 166, 166, 1) !important;
     }
 
   }
-
+  .tops{
+    ::v-deep .uni-section:last-child {
+      border-radius: 0 0 0 0 !important;
+    }
+  }
   .all {
     height: 66 rpx;
     line-height: 66 rpx;
     margin-bottom: 10px;
-    font-size: 12px;
+    font-size: 0.875rem !important;
     color: rgba(128, 128, 128, 1)
   }
 }

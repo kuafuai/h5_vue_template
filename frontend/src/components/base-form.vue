@@ -1,6 +1,6 @@
 <template>
   <view class="all">
-    <uni-forms ref="formRef" :modelValue="form" :rules="rules" label-width="auto" style="max-width: 600px;
+    <uni-forms ref="formRef" :modelValue="form" :rules="rules" label-width="auto" style="
   background-color: white;padding: 20px ;box-sizing:border-box" @submit.prevent="onSubmit">
       <slot name="form-items"></slot>
       <uni-forms-item>
@@ -10,15 +10,21 @@
     </uni-forms>
   </view>
 </template>
-
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
 import {getCurrentInstance, ref} from "vue"
-
+import { defineProps, defineEmits, toRefs } from 'vue';
+import { onLoad, onShow } from "@dcloudio/uni-app";
 const {proxy} = getCurrentInstance();
 
 // Importing to define props and emit
-import {defineProps, defineEmits, toRefs} from 'vue';
-import {onLoad} from "@dcloudio/uni-app";
+
 // import {ElMessage} from 'element-plus';
 // Defining props to receive form and rules from parent
 const props = defineProps({
@@ -47,15 +53,29 @@ const props = defineProps({
   params: {
     type: Object,
     required: true
+  },
+  // 缓存哪个字段的值
+  cache_field: {
+    type: Array,
+    required: false,
+    default: []
+  },
+  unique_id: {
+    type: String,
+    required: false,
+    default: ""
   }
 
 });
 const emit = defineEmits(['success', "fail", "message_perfect"]);
-
+// 保留其实的form
+const origin_form=JSON.parse(JSON.stringify(props.form))
 // Defining the reset function
 const onResetForm = () => {
   for (const key in props.form) {
-    if (props.form.hasOwnProperty(key)) {
+    if (origin_form.hasOwnProperty(key)) {
+      props.form[key] = origin_form[key];
+    }else {
       props.form[key] = null;
     }
   }
@@ -70,8 +90,22 @@ const handleSubmit = async () => {
     if (props.model != "add") {
       apiName = "update"
     }
+
+
     let res = await proxy.$api[props.table_module][apiName](props.form);
     console.log(res.data)
+    if (props.cache_field != null && props.cache_field.length > 0) {
+      let cache_value = {}
+      for (var i = 0; i < props.cache_field.length; i++) {
+        var item = props.cache_field[i]
+        cache_value[item] = props.form[item]
+      }
+      console.log("cache_value", cache_value)
+      // 保存到缓存中
+      uni.setStorageSync(props.unique_id, cache_value);
+    }
+
+
     let form_message = await proxy.$api[props.table_module]["get"](res.data);
     console.log(form_message)
 
@@ -96,6 +130,7 @@ const handleSubmit = async () => {
 }
 onLoad(async () => {
   console.log(1212131313)
+
   //   根据查询条件搜索
   if (props.model != "add") {
     // console.log(121212)
@@ -133,6 +168,25 @@ onLoad(async () => {
 
   }
 })
+
+onShow(()=>{
+  console.log("onshow")
+  // 保留之前的数据
+  if (props.cache_field != null && props.cache_field.length > 0) {
+    let cache_form = uni.getStorageSync(props.unique_id)
+    console.log(cache_form)
+    if (cache_form != null) {
+      for (let key in cache_form) {
+        console.log("onshow-for",key)
+          var item = props.form[key]
+          if (item == undefined || item == null || item == '') {
+            props.form[key] = cache_form[key]
+          }
+      }
+    }
+    console.log("执行",props.form)
+  }
+})
 // Defining the submit function
 const onSubmit = () => {
 
@@ -151,9 +205,21 @@ const onSubmit = () => {
 </script>
 
 <style scoped lang="scss">
+::v-deep.uni-forms-item__content base-select{
+width: 100%;
+}
+::v-deep .uni-forms-item__label {
+  width: 100% !important;
+}
+::v-deep .uni-forms{
+width: 100%;
+background: white;
+padding:40rpx;
+box-sizing:border-box
+}
 .all {
   height: 100%;
-  overflow: auto;
+  // overflow: auto;
 }
 
 ::v-deep .uni-forms-item__error {
@@ -201,7 +267,8 @@ const onSubmit = () => {
 
 ::v-deep.uni-easyinput__placeholder-class {
   color: rgba(166, 166, 166, 1);
-  font-size: 14px;
+  // font-size: 14px;
+  font-size:0.875rem;
 }
 
 ::v-deep uni-text {
@@ -216,9 +283,9 @@ const onSubmit = () => {
 .up,
 .reset {
   border-radius: 100px;
-  width: 170px;
-  height: 50px;
-  font-size: 15px;
+  width: 10rem;
+  height: 3.2rem;
+  font-size: 0.9375rem;
   color: rgba(255, 255, 255, 1);
   display: flex;
   align-items: center;

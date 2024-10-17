@@ -384,8 +384,8 @@ const getPhoneNumber = function (e) {
           }
         }).then((res) => {
           console.log("获取手机号之后的结果：", res)
-          if (res.data.code === 0) {
-            phone.value = res.data.data
+          if (res.code === 0) {
+            phone.value = res.data
             login_click();
           }
 

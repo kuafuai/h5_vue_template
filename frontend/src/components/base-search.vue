@@ -99,6 +99,9 @@ async function iconClick() {
   // searchDataValue.value.orderConditions = []
   for (let i = 0; i < searchDataValue.value.other_search_condition.length; i++) {
     let condition = searchDataValue.value.other_search_condition[i];
+    if (condition==undefined){
+      continue
+    }
     var text = condition.replaceAll("'", "\"").replaceAll("?", "\"");
     console.log(text)
     var json = JSON.parse(text);

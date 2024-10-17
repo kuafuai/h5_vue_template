@@ -218,7 +218,7 @@ padding:40rpx;
 box-sizing:border-box
 }
 .all {
-  height: 100%;
+  //height: 100%;
   // overflow: auto;
 }
 

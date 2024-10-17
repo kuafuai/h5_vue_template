@@ -152,8 +152,7 @@ const click_select = () => {
 
 </script>
 
+<!--<style scoped>-->
 <style scoped>
-::v-deep .checklist-text {
-  display: none;
-}
+
 </style>

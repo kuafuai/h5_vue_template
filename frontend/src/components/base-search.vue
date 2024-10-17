@@ -4,7 +4,7 @@
       <base-layout display="flex" y="center" class="m-r-20" style="width: 91%;height:72rpx">
         <uni-easyinput class="uni-mt-5" suffixIcon="search" v-model="searchDataValue[firstSearchData]"
           :placeholder="'请输入' + firstSearchDataComment" @iconClick="iconClick"></uni-easyinput>
-        <button size="mini" class="m-l-10" @click="toggleAdvanced">
+        <button v-if="is_show_advance" size="mini" class="m-l-10" @click="toggleAdvanced">
           高级搜索
           <!--          <a style="margin-left: 8px">-->
           <!--            &lt;!&ndash;            <uni-icons v-if="advanced" type="up"></uni-icons>&ndash;&gt;-->
@@ -59,6 +59,10 @@ export default {
 const {proxy} = getCurrentInstance()
 
 const props = defineProps({
+  is_show_advance: {
+    type: Boolean,
+    default: true
+  },
   searchItems: {type: Array, default: () => []},
   searchData: {
     type: Object, default: () => {

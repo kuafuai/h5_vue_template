@@ -39,8 +39,8 @@ public class WxAppProvider implements AuthenticationProvider {
 
         //2.根据openid查询用户信息
         Long userId = loginBusinessService.getUserIdByOpenId(openid);
+        long relevanceId = loginBusinessService.getUserIdByRelevanceTable(loginVo.getRelevanceTable(), loginVo.getPhone());
         if (userId != null) {
-            long relevanceId = loginBusinessService.getUserIdByRelevanceTable(loginVo.getRelevanceTable(), loginVo.getPhone());
             return new WxAppAuthentication(new LoginUser(userId, String.valueOf(relevanceId), relevanceTable), authentication.getAuthorities());
         } else {
             if (StringUtils.isEmpty(loginVo.getPhone())) {
@@ -48,7 +48,7 @@ public class WxAppProvider implements AuthenticationProvider {
                 throw new BusinessException(ErrorCode.NOT_BIND_DATA_ERROR.getCode(), "您的小程序还未绑定");
             } else {
                 userId = loginBusinessService.getUserIdBySelectKey(loginVo.getPhone());
-                long relevanceId = loginBusinessService.getUserIdByRelevanceTable(loginVo.getRelevanceTable(), loginVo.getPhone());
+//                long relevanceId = loginBusinessService.getUserIdByRelevanceTable(loginVo.getRelevanceTable(), loginVo.getPhone());
                 if (userId != null && userId > 0) {
                     loginBusinessService.updateOpenIdByRelevanceId(relevanceId, openid);
                     return new WxAppAuthentication(new LoginUser(userId, String.valueOf(relevanceId), relevanceTable), authentication.getAuthorities());

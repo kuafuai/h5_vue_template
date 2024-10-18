@@ -1,5 +1,7 @@
 package com.kuafu.login.service;
 
+import com.kuafu.common.util.StringUtils;
+import com.kuafu.web.handler.CustomTenantHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +17,9 @@ public class WechatRegisterService {
 
     @Transactional
     public long wechatRegister(String phone, String relevanceTable) {
-       return loginBusinessService.insertRelevanceInfo(phone, relevanceTable);
+        CustomTenantHandler.threadLocalSet.get().add(StringUtils.toUnderScoreCase(relevanceTable));
+        Long relevanceId = loginBusinessService.insertRelevanceInfo(phone, relevanceTable);
+        CustomTenantHandler.threadLocalSet.get().remove(StringUtils.toUnderScoreCase(relevanceTable));
+        return relevanceId;
     }
 }

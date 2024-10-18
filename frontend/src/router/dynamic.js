@@ -52,7 +52,7 @@ export const dynamicRoutes = [
         path: '/pages/flowable/definition/index',
         meta: {
             title: '流程定义',
-            shownot: false
+            shownot: true
         }
     },
     {
@@ -66,7 +66,7 @@ export const dynamicRoutes = [
         path: '/pages/flowable/todo/index',
         meta: {
             title: '代办任务',
-            shownot: false
+            shownot: true
         }
     }
 ]

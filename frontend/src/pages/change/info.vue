@@ -4,7 +4,8 @@
     <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
       <view class="flex-c-start-start m-b-20 w-full">
         <view class="flex-around-start m-b-20">
-          <fui-text :text='"["+baseInfo.changeType+"] "+baseInfo.changeTitle' type="black" size="36"></fui-text>
+          <fui-text :text='"[" + baseInfo.changeType == "1" ? "ECR":"ECN"+"] "+baseInfo.changeTitle' type="black"
+                    size="36"></fui-text>
         </view>
         <view class="flex-between-start m-b-10 w-full">
           <view style="width: 30%">
@@ -59,8 +60,6 @@
                 <uni-icons type="timer" size="18"></uni-icons>
                 <text>耗时 {{ item.duration }} , 于 {{ item.finishTime }} 完成</text>
               </view>
-
-
             </view>
             <view v-if="item.hasChild" class="m-t-20">
 
@@ -94,6 +93,28 @@
                   </view>
                 </el-timeline-item>
               </el-timeline>
+            </view>
+            <view v-else>
+              <view class="w-full m-y-10 flex-start-start" v-for="(sub,subIndex) in item.subTask" :key="subIndex">
+                <p style="font-weight: 700">{{ sub.taskName }}</p>
+                <view class="m-l-20">
+                  <uni-tag :text='sub.finishTime?"完成":"处理中"' size="small"
+                           :type='sub.finishTime?"success":"warning"'
+                           @click="handle_process(sub)"/>
+                </view>
+
+                <view class="m-l-20" v-if="sub.assigneeName">
+                  <uni-icons type="person" size="18"></uni-icons>
+                  <text>{{ sub.assigneeName }}</text>
+                </view>
+
+                <view class="m-l-20" v-if="sub.duration">
+
+                  <uni-icons type="timer" size="18"></uni-icons>
+                  <text>耗时 {{ sub.duration }} , 于 {{ sub.finishTime }} 完成</text>
+                </view>
+
+              </view>
             </view>
           </el-timeline-item>
         </el-timeline>
@@ -347,7 +368,7 @@ function handle_process(item) {
       submitLastForm.value.instanceId = item.procInsId;
       submitLastForm.value.comment = '';
       submitLastForm.value.checkFileUrl = '';
-      submitLastForm.value.taskName="验收报告";
+      submitLastForm.value.taskName = "验收报告";
       submitLastForm.value.variables = {};
 
       console.log('=====', submitLastForm.value)

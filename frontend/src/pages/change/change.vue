@@ -101,11 +101,11 @@ const baseFormRules = ref({
 const changeTypes = ref([
   {
     text: 'ECR',
-    value: 'ECR'
+    value: 1
   },
   {
     text: 'ECN',
-    value: 'ECN'
+    value: 2
   }
 ])
 

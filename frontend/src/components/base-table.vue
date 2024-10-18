@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view class="overflow-x-scroll">
+    <view>
       <uni-table stripe :type="selection?'selection':''" border emptyText="暂无更多数据"
                  ref="baseTableRef"
                  :loading="isLoading"

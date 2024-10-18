@@ -11,12 +11,19 @@ import com.kuafu.common.domin.ResultUtils;
 import com.kuafu.common.util.JSON;
 import com.kuafu.common.util.StringUtils;
 import com.kuafu.flowable.domain.FlowFormDto;
+import com.kuafu.flowable.domain.FlowProcDefDto;
 import com.kuafu.flowable.domain.FlowTaskVo;
 import com.kuafu.flowable.service.IFlowDefinitionService;
 import com.kuafu.flowable.service.IFlowTaskService;
+import com.kuafu.web.entity.ApproveNode;
 import com.kuafu.web.entity.ChangeManager;
+import com.kuafu.web.entity.ChangeManagerInfo;
+import com.kuafu.web.entity.FormSetting;
 import com.kuafu.web.flowable.ChangeManagerBusinessService;
+import com.kuafu.web.service.IApproveNodeService;
+import com.kuafu.web.service.IChangeManagerInfoService;
 import com.kuafu.web.service.IChangeManagerService;
+import com.kuafu.web.service.IFormSettingService;
 import com.kuafu.web.vo.ChangeManagerPageVO;
 import com.kuafu.web.vo.ChangeManagerVO;
 import io.swagger.annotations.Api;
@@ -25,7 +32,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,12 +43,15 @@ import java.util.Map;
 @Slf4j
 public class ChangeManagerController {
 
-    private final IChangeManagerService changeManagerService;
-
     private final IFlowTaskService flowTaskService;
     private final IFlowDefinitionService flowDefinitionService;
-
     private final ChangeManagerBusinessService changeManagerBusinessService;
+
+    private final IChangeManagerService changeManagerService;
+    private final IChangeManagerInfoService changeManagerInfoService;
+
+    private final IApproveNodeService approveNodeService;
+    private final IFormSettingService formSettingService;
 
     @PostMapping("page")
     @ApiOperation("分页")
@@ -50,6 +62,29 @@ public class ChangeManagerController {
         queryWrapper.orderByDesc(ChangeManager::getChangeId);
 
         return ResultUtils.success(changeManagerService.page(page, queryWrapper));
+    }
+
+    @PostMapping("page-info")
+    @ApiOperation("分页")
+    public BaseResponse page_info(@RequestBody ChangeManagerPageVO pageVO) {
+        IPage<ChangeManager> page = new Page<>(pageVO.getCurrent(), pageVO.getPageSize());
+
+        LambdaQueryWrapper<ChangeManager> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(ChangeManager::getChangeId);
+        page = changeManagerService.page(page, queryWrapper);
+
+        for (ChangeManager changeManager : page.getRecords()) {
+            LambdaQueryWrapper<ChangeManagerInfo> infoQuery = new LambdaQueryWrapper<>();
+            infoQuery.eq(ChangeManagerInfo::getChangeId, changeManager.getChangeId());
+            List<ChangeManagerInfo> listInfo = changeManagerInfoService.list(infoQuery);
+            Map<String, Object> map =
+                    listInfo.stream()
+                            .collect(Collectors.toMap(ChangeManagerInfo::getInfoKey, p -> p));
+
+            changeManager.setInfoMap(map);
+        }
+
+        return ResultUtils.success(page);
     }
 
     @PostMapping("add")
@@ -121,23 +156,32 @@ public class ChangeManagerController {
     }
 
     @GetMapping("flowFormData")
-    public BaseResponse getFlowFormData(String changeType) {
-        String deployId = "";
-        String procDefId = "";
-        if (StringUtils.equalsIgnoreCase(changeType, "ECR")) {
-            deployId = "45001";
-            procDefId = "ECR03:1:45004";
-        } else {
-            deployId = "47501";
-            procDefId = "测试表单05:1:47504";
-        }
-        FlowFormDto formDto = flowTaskService.flowFormData(deployId);
-        Map<String, Object> formJson = JSON.parseObject(formDto.getFormContent(), Map.class);
+    public BaseResponse getFlowFormData(Integer changeType) {
 
+        FormSetting formSetting = formSettingService.getById(changeType);
+        if (formSetting == null) {
+            return ResultUtils.error("请先配置表单");
+        }
+        LambdaQueryWrapper<ApproveNode> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ApproveNode::getApproveNodeName, "审批变更");
+        ApproveNode approveNode = approveNodeService.getOne(queryWrapper);
+        if (approveNode == null) {
+            return ResultUtils.error("请先配置 审批变更 节点");
+        }
+        String strApproveType = approveNode.getApproveType() == 1 ? "Parallel" : "Sequential";
+        String formName = formSetting.getFormName();
+
+        String flowableName = formName + "_" + strApproveType;
+
+        FlowProcDefDto flowProcDefDto = flowDefinitionService.getLastByName(flowableName);
+        if (flowProcDefDto == null) {
+            return ResultUtils.error("请先配置变更流程");
+        }
+        
         Map<String, Object> result = Maps.newHashMap();
-        result.put("deployId", deployId);
-        result.put("procDefId", procDefId);
-        result.put("formJson", formJson);
+        result.put("deployId", flowProcDefDto.getDeploymentId());
+        result.put("procDefId", flowProcDefDto.getId());
+        result.put("formJson", JSON.parseObject(formSetting.getFormContent(), Map.class));
 
         return ResultUtils.success(result);
     }

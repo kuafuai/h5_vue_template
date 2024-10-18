@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -63,6 +64,20 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
             }
         }
         return page;
+    }
+
+    @Override
+    public FlowProcDefDto getLastByName(String name) {
+        LambdaQueryWrapper<FlowProcDefDto> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(FlowProcDefDto::getName, name);
+        queryWrapper.orderByDesc(FlowProcDefDto::getDeploymentTime);
+
+        List<FlowProcDefDto> list = flowDeployMapper.selectList(queryWrapper);
+        if (list != null && !list.isEmpty()) {
+            return list.get(0);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -169,7 +184,7 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
 
         identityService.setAuthenticatedUserId(String.valueOf(SecurityUtils.getUserId()));
         variables.put(ProcessConstants.PROCESS_INITIATOR, SecurityUtils.getUserId());
-        
+
         // 流程发起时 跳过发起人节点
         ProcessInstance processInstance = runtimeService.startProcessInstanceById(procDefId, variables);
         // 给第一步申请人节点设置任务执行人和意见

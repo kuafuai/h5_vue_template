@@ -36,7 +36,7 @@ public class EmployeeTest {
 
     @Test
     public void test2() {
-        flowDefinitionService.importByString("SUB_TASK", "SUB_TASK", getText());
+        flowDefinitionService.importByString("SUB_TASK_Parallel", "SUB_TASK", getText());
     }
 
     @Test
@@ -58,7 +58,7 @@ public class EmployeeTest {
     public String getText() {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<definitions xmlns=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:omgdc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:bioc=\"http://bpmn.io/schema/bpmn/biocolor/1.0\" xmlns:flowable=\"http://flowable.org/bpmn\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://www.flowable.org/processdef\">\n" +
-                "  <process id=\"sub_task\" name=\"提交物流程\">\n" +
+                "  <process id=\"SUB_TASK_Parallel\" name=\"SUB_TASK_Parallel\">\n" +
                 "    <startEvent id=\"start_event\" name=\"开始\">\n" +
                 "      <outgoing>Flow_0wisgij</outgoing>\n" +
                 "    </startEvent>\n" +
@@ -76,7 +76,7 @@ public class EmployeeTest {
                 "      </extensionElements>\n" +
                 "      <incoming>Flow_1nu8qcy</incoming>\n" +
                 "      <outgoing>Flow_1uav5kw</outgoing>\n" +
-                "      <multiInstanceLoopCharacteristics isSequential=\"true\" flowable:collection=\"subUsers\" flowable:elementVariable=\"subUser\">\n" +
+                "      <multiInstanceLoopCharacteristics isSequential=\"false\" flowable:collection=\"subUsers\" flowable:elementVariable=\"subUser\">\n" +
                 "        <completionCondition>${taskBusinessService.completeSubmitNode(execution)}</completionCondition>\n" +
                 "      </multiInstanceLoopCharacteristics>\n" +
                 "    </userTask>\n" +
@@ -122,68 +122,4 @@ public class EmployeeTest {
                 "</definitions>\n";
     }
 
-    public String getText1() {
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<definitions xmlns=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:omgdc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:bioc=\"http://bpmn.io/schema/bpmn/biocolor/1.0\" xmlns:flowable=\"http://flowable.org/bpmn\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://www.flowable.org/processdef\">\n" +
-                "  <process id=\"测试表单07\" name=\"测试表单07\">\n" +
-                "    <startEvent id=\"start_event\" name=\"开始\">\n" +
-                "      <outgoing>Flow_058ch1c</outgoing>\n" +
-                "    </startEvent>\n" +
-                "    <userTask id=\"Activity_1amgijq\" name=\"第一步\" flowable:assignee=\"${INITIATOR}\" flowable:dataType=\"fixed\" flowable:expId=\"1\">\n" +
-                "      <incoming>Flow_058ch1c</incoming>\n" +
-                "      <outgoing>Flow_01kwdwr</outgoing>\n" +
-                "    </userTask>\n" +
-                "    <sequenceFlow id=\"Flow_058ch1c\" sourceRef=\"start_event\" targetRef=\"Activity_1amgijq\" />\n" +
-                "    <userTask id=\"Activity_0hv0fnd\" name=\"第二步\" flowable:formKey=\"2\" flowable:assignee=\"${assignee}\" flowable:dataType=\"fixed\">\n" +
-                "      <extensionElements>\n" +
-                "        <flowable:taskListener expression=\"${taskListener.taskCreate(task,task.eventName)}\" event=\"create\" />\n" +
-                "        <flowable:taskListener expression=\"${taskListener.taskAssignment(task)}\" event=\"assignment\" />\n" +
-                "      </extensionElements>\n" +
-                "      <incoming>Flow_01kwdwr</incoming>\n" +
-                "      <outgoing>Flow_0hq5zpu</outgoing>\n" +
-                "      <multiInstanceLoopCharacteristics isSequential=\"${isSequential == 'true'}\" flowable:collection=\"assigneeList\" flowable:elementVariable=\"assignee\" >\n" +
-                "        <completionCondition>${multiInstanceCompleteTask.completeTaskTo(execution)}</completionCondition>\n" +
-                "      </multiInstanceLoopCharacteristics>\n" +
-                "    </userTask>\n" +
-                "    <sequenceFlow id=\"Flow_01kwdwr\" sourceRef=\"Activity_1amgijq\" targetRef=\"Activity_0hv0fnd\" />\n" +
-                "    <endEvent id=\"Event_0drew3k\">\n" +
-                "      <incoming>Flow_0hq5zpu</incoming>\n" +
-                "    </endEvent>\n" +
-                "    <sequenceFlow id=\"Flow_0hq5zpu\" sourceRef=\"Activity_0hv0fnd\" targetRef=\"Event_0drew3k\" />\n" +
-                "  </process>\n" +
-                "  <bpmndi:BPMNDiagram id=\"BPMNDiagram_flow\">\n" +
-                "    <bpmndi:BPMNPlane id=\"BPMNPlane_flow\" bpmnElement=\"测试表单\">\n" +
-                "      <bpmndi:BPMNShape id=\"BPMNShape_start_event\" bpmnElement=\"start_event\" bioc:stroke=\"\">\n" +
-                "        <omgdc:Bounds x=\"55\" y=\"105\" width=\"30\" height=\"30\" />\n" +
-                "        <bpmndi:BPMNLabel>\n" +
-                "          <omgdc:Bounds x=\"58\" y=\"142\" width=\"22\" height=\"14\" />\n" +
-                "        </bpmndi:BPMNLabel>\n" +
-                "      </bpmndi:BPMNShape>\n" +
-                "      <bpmndi:BPMNShape id=\"Activity_1amgijq_di\" bpmnElement=\"Activity_1amgijq\">\n" +
-                "        <omgdc:Bounds x=\"140\" y=\"80\" width=\"100\" height=\"80\" />\n" +
-                "        <bpmndi:BPMNLabel />\n" +
-                "      </bpmndi:BPMNShape>\n" +
-                "      <bpmndi:BPMNShape id=\"Activity_0hv0fnd_di\" bpmnElement=\"Activity_0hv0fnd\">\n" +
-                "        <omgdc:Bounds x=\"300\" y=\"80\" width=\"100\" height=\"80\" />\n" +
-                "        <bpmndi:BPMNLabel />\n" +
-                "      </bpmndi:BPMNShape>\n" +
-                "      <bpmndi:BPMNShape id=\"Event_0drew3k_di\" bpmnElement=\"Event_0drew3k\">\n" +
-                "        <omgdc:Bounds x=\"462\" y=\"102\" width=\"36\" height=\"36\" />\n" +
-                "      </bpmndi:BPMNShape>\n" +
-                "      <bpmndi:BPMNEdge id=\"Flow_058ch1c_di\" bpmnElement=\"Flow_058ch1c\">\n" +
-                "        <di:waypoint x=\"85\" y=\"120\" />\n" +
-                "        <di:waypoint x=\"140\" y=\"120\" />\n" +
-                "      </bpmndi:BPMNEdge>\n" +
-                "      <bpmndi:BPMNEdge id=\"Flow_01kwdwr_di\" bpmnElement=\"Flow_01kwdwr\">\n" +
-                "        <di:waypoint x=\"240\" y=\"120\" />\n" +
-                "        <di:waypoint x=\"300\" y=\"120\" />\n" +
-                "      </bpmndi:BPMNEdge>\n" +
-                "      <bpmndi:BPMNEdge id=\"Flow_0hq5zpu_di\" bpmnElement=\"Flow_0hq5zpu\">\n" +
-                "        <di:waypoint x=\"400\" y=\"120\" />\n" +
-                "        <di:waypoint x=\"462\" y=\"120\" />\n" +
-                "      </bpmndi:BPMNEdge>\n" +
-                "    </bpmndi:BPMNPlane>\n" +
-                "  </bpmndi:BPMNDiagram>\n" +
-                "</definitions>\n";
-    }
 }

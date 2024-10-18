@@ -10,6 +10,13 @@ export default {
             data: query
         });
     },
+    page_info(query) {
+        return service({
+            url: BASE_API + "/page-info",
+            method: "post",
+            data: query
+        });
+    },
     get(id) {
         return service({
             url: BASE_API + "/get/" + id,

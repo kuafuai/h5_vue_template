@@ -37,6 +37,9 @@ public class QyWxBusinessService {
     @Value("${qywx.corp_secret}")
     private String corpSecret;
 
+    @Value("${qywx.agent_id}")
+    private Integer agentId;
+
     @Resource
     private Cache cache;
     private static final String KEY = "qywx:accesstoken";
@@ -140,6 +143,32 @@ public class QyWxBusinessService {
         }
 
         return true;
+    }
+
+
+    /**
+     * 发送消息
+     *
+     * @param userId
+     * @param title
+     * @param description
+     * @param url
+     */
+    public void sendTextCardMessage(String userId, String title, String description, String url) {
+        // 获取token
+        String token = getAccessToken();
+        QyWxAppMessageTextCardRequest request = new QyWxAppMessageTextCardRequest();
+        request.setAccessToken(token);
+        request.setTouser(userId);
+        request.setAgentid(agentId);
+        request.setMsgtype("textcard");
+        request.setTextcard(TextCard.builder()
+                .description(description)
+                .title(title)
+                .url(url)
+                .build());
+
+        client.sendMessage(request);
     }
 
 

@@ -184,6 +184,7 @@ public class ChangeManagerBusinessService {
     }
 
 
+    @Transactional
     public boolean completeApprove(FlowTaskVo flowTaskVo) {
         if (flowTaskVo.getVariables() == null) {
             flowTaskVo.setVariables(Maps.newHashMap());
@@ -198,6 +199,7 @@ public class ChangeManagerBusinessService {
      * @param flowTaskVo
      * @return
      */
+    @Transactional
     public boolean completeSubmit(FlowTaskVo flowTaskVo) {
         int subTaskNumber = 0;
         if (flowTaskVo.getCheckSubmits() != null && !flowTaskVo.getCheckSubmits().isEmpty()) {
@@ -274,6 +276,13 @@ public class ChangeManagerBusinessService {
         return flowTaskService.complete(flowTaskVo);
     }
 
+    /**
+     * 验收报告
+     *
+     * @param flowTaskVo
+     * @return
+     */
+    @Transactional
     public boolean completeCheckFile(FlowTaskVo flowTaskVo) {
         if (flowTaskVo.getVariables() == null) {
             flowTaskVo.setVariables(Maps.newHashMap());
@@ -304,28 +313,5 @@ public class ChangeManagerBusinessService {
 
         return flowTaskService.complete(flowTaskVo);
     }
-
-
-    private String getDate(long ms) {
-
-        long day = ms / (24 * 60 * 60 * 1000);
-        long hour = (ms / (60 * 60 * 1000) - day * 24);
-        long minute = ((ms / (60 * 1000)) - day * 24 * 60 - hour * 60);
-        long second = (ms / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - minute * 60);
-
-        if (day > 0) {
-            return day + "天" + hour + "小时" + minute + "分钟";
-        }
-        if (hour > 0) {
-            return hour + "小时" + minute + "分钟";
-        }
-        if (minute > 0) {
-            return minute + "分钟";
-        }
-        if (second > 0) {
-            return second + "秒";
-        } else {
-            return 0 + "秒";
-        }
-    }
+    
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service("taskBusinessService")
 @Slf4j
@@ -57,8 +58,8 @@ public class TaskBusinessService {
      * @return
      */
     public boolean completeApproveNode(DelegateExecution execution) {
-        log.info("===={},{}", execution, execution.getVariables());
-        return true;
+        log.info("completeApproveNode===={},{}", execution, execution.getVariables());
+        return false;
     }
 
 
@@ -70,21 +71,27 @@ public class TaskBusinessService {
      */
     public boolean completeSubmitNode(DelegateExecution execution) {
         log.info("completeSubmitNode======>{},{}", execution, execution.getVariables());
-        String procInsId = execution.getProcessInstanceId();
 
-        LambdaQueryWrapper<ChangeManagerSub> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ChangeManagerSub::getSubProcInsId, procInsId);
+        Integer nrOfInstances = (Integer) execution.getVariable("nrOfInstances");
+        Integer nrOfCompletedInstances = (Integer) execution.getVariable("nrOfCompletedInstances");
 
-        List<ChangeManagerSub> subTasks = changeManagerSubService.list(queryWrapper);
+        if (Objects.equals(nrOfCompletedInstances, nrOfInstances)) {
+            String procInsId = execution.getProcessInstanceId();
 
-        log.info("completeSubmitNode====={}", subTasks);
-        if (subTasks != null && !subTasks.isEmpty()) {
-            //完成父级任务
-            ChangeManagerSub changeManagerSub = subTasks.get(0);
-            String taskId = changeManagerSub.getParentTaskId();
-            flowTaskService.complete(taskId);
+            LambdaQueryWrapper<ChangeManagerSub> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(ChangeManagerSub::getSubProcInsId, procInsId);
+
+            List<ChangeManagerSub> subTasks = changeManagerSubService.list(queryWrapper);
+
+            log.info("completeSubmitNode====={}", subTasks);
+            if (subTasks != null && !subTasks.isEmpty()) {
+                //完成父级任务
+                ChangeManagerSub changeManagerSub = subTasks.get(0);
+                String taskId = changeManagerSub.getParentTaskId();
+                flowTaskService.complete(taskId);
+            }
         }
 
-        return true;
+        return false;
     }
 }

@@ -435,7 +435,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         Long userId = SecurityUtils.getUserId();
         //根据发起人，查询启动的实例
         HistoricProcessInstanceQuery historicProcessInstanceQuery = historyService.createHistoricProcessInstanceQuery()
-                .startedBy(userId.toString())
+//                .startedBy(userId.toString())
                 .orderByProcessInstanceStartTime()
                 .desc();
 

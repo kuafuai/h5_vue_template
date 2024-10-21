@@ -1,6 +1,7 @@
 package com.kuafu.flowable.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.kuafu.flowable.constant.FLowStop;
 import com.kuafu.flowable.domain.*;
 import org.flowable.bpmn.model.UserTask;
 
@@ -105,6 +106,8 @@ public interface IFlowTaskService {
      * @return
      */
     void stopProcess(FlowTaskVo flowTaskVo);
+
+    void stopProcess(FlowTaskVo flowTaskVo, FLowStop stop);
 
     /**
      * 撤回流程

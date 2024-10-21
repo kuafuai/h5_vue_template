@@ -137,22 +137,44 @@ public class ChangeManagerController {
         return flag ? ResultUtils.success() : ResultUtils.error("操作失败");
     }
 
+    /**
+     * 上传 验收报告
+     *
+     * @param flowTaskVo
+     * @return
+     */
     @PostMapping(value = "/completeCheckFile")
     public BaseResponse completeCheckFile(@RequestBody FlowTaskVo flowTaskVo) {
         boolean flag = changeManagerBusinessService.completeCheckFile(flowTaskVo);
         return flag ? ResultUtils.success() : ResultUtils.error("操作失败");
     }
 
+    /**
+     * 任务详情
+     *
+     * @param procInsId
+     * @return
+     */
     @GetMapping("changeRecords")
     public BaseResponse getFlowableRecord(String procInsId) {
 
         return ResultUtils.success(changeManagerBusinessService.getChangeFlowRecords(procInsId));
     }
 
+    /**
+     * 我的任务
+     *
+     * @return
+     */
     @GetMapping("myTodo")
     public BaseResponse myTodo() {
 
         return ResultUtils.success(changeManagerBusinessService.getTodoListByCurrentUser());
+    }
+
+    @GetMapping("myStatics")
+    public BaseResponse staticsStatus() {
+        return ResultUtils.success(changeManagerService.queryStatusStatics());
     }
 
     @GetMapping("flowFormData")
@@ -177,7 +199,7 @@ public class ChangeManagerController {
         if (flowProcDefDto == null) {
             return ResultUtils.error("请先配置变更流程");
         }
-        
+
         Map<String, Object> result = Maps.newHashMap();
         result.put("deployId", flowProcDefDto.getDeploymentId());
         result.put("procDefId", flowProcDefDto.getId());
@@ -186,5 +208,28 @@ public class ChangeManagerController {
         return ResultUtils.success(result);
     }
 
+    /**
+     * 取消申请
+     *
+     * @param flowTaskVo
+     * @return
+     */
+    @PostMapping(value = "/stop")
+    public BaseResponse stopChangeManager(@RequestBody FlowTaskVo flowTaskVo) {
+        changeManagerBusinessService.stopProcess(flowTaskVo);
+        return ResultUtils.success();
+    }
+
+    /**
+     * 驳回上一级
+     *
+     * @param flowTaskVo
+     * @return
+     */
+    @PostMapping(value = "/reject")
+    public BaseResponse rejectChangeManager(@RequestBody FlowTaskVo flowTaskVo) {
+        changeManagerBusinessService.rejectProcess(flowTaskVo);
+        return ResultUtils.success();
+    }
 
 }

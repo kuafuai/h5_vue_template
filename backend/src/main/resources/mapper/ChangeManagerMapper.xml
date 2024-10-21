@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuafu.web.mapper.ChangeManagerMapper">
+
+
+    <select id="staticsChangeStatus" resultType="java.util.Map">
+        select change_status, count(*) as number
+        from change_manager
+        <where>
+            <if test="personId>0">
+                and change_person = #{personId}
+            </if>
+        </where>
+        group by change_status
+    </select>
+</mapper>

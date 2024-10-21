@@ -12,7 +12,14 @@
           <fui-text text="数据统计"></fui-text>
         </view>
         <view class="w-full h-full">
-          <button>22</button>
+          <view v-for="(item,index) in staticsList" :key="index" class="flex-c-center-center m-y-40">
+            <fui-text :text="item.number" :color="setColor(item.change_status)" :size="60" :fontWeight="900"
+                      class="m-b-10"></fui-text>
+            <fui-text v-if="item.change_status === 1" text="审批中" :size="40"></fui-text>
+            <fui-text v-if="item.change_status === 2" text="已通过" :size="40"></fui-text>
+            <fui-text v-if="item.change_status === 3" text="已驳回" :size="40"></fui-text>
+            <fui-text v-if="item.change_status === 0" text="已关闭" :size="40"></fui-text>
+          </view>
         </view>
         <view class="w-full flex-center-start">
           <fui-button width="80%" height="40px" size="26" @click="handle_change">+ 发起变更申请</fui-button>
@@ -73,6 +80,7 @@ function handle_change_task(item) {
 }
 
 const todoList = ref([]);
+const staticsList = ref([]);
 
 async function getMyTodo() {
   uni.showLoading({
@@ -83,7 +91,26 @@ async function getMyTodo() {
   if (res.code === 0) {
     todoList.value = res.data;
   }
+
+  let resStatics = await proxy.$api.change_manager.myStatics();
+  if (resStatics.code === 0) {
+    staticsList.value = resStatics.data;
+  }
+
+
   uni.hideLoading();
+}
+
+function setColor(val) {
+  if (val === 2) {
+    return "#2bc418";
+  } else if (val === 1) {
+    return "#0f74e8";
+  } else if (val === 3) {
+    return "#e58276";
+  } else {
+    return "#646060";
+  }
 }
 
 onMounted(() => {

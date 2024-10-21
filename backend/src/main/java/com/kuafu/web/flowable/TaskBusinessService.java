@@ -5,8 +5,10 @@ import com.google.common.collect.Lists;
 import com.kuafu.common.util.StringUtils;
 import com.kuafu.flowable.service.IFlowTaskService;
 import com.kuafu.web.entity.ApproveNode;
+import com.kuafu.web.entity.ChangeManager;
 import com.kuafu.web.entity.ChangeManagerSub;
 import com.kuafu.web.service.IApproveNodeService;
+import com.kuafu.web.service.IChangeManagerService;
 import com.kuafu.web.service.IChangeManagerSubService;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service("taskBusinessService")
@@ -29,6 +32,9 @@ public class TaskBusinessService {
 
     @Autowired
     private IFlowTaskService flowTaskService;
+
+    @Autowired
+    private IChangeManagerService changeManagerService;
 
 
     /**
@@ -59,9 +65,51 @@ public class TaskBusinessService {
      */
     public boolean completeApproveNode(DelegateExecution execution) {
         log.info("completeApproveNode===={},{}", execution, execution.getVariables());
-        return false;
+
+        Integer nrOfInstances = (Integer) execution.getVariable("nrOfInstances");
+        Integer nrOfCompletedInstances = (Integer) execution.getVariable("nrOfCompletedInstances");
+
+        return Objects.equals(nrOfCompletedInstances, nrOfInstances);
     }
 
+    /**
+     * 上传提交物节点 完成 判断
+     *
+     * @param execution
+     * @return
+     */
+    public boolean completeSettingSubmitNode(DelegateExecution execution) {
+        log.info("completeSettingSubmitNode===={},{}", execution, execution.getVariables());
+
+        Integer nrOfInstances = (Integer) execution.getVariable("nrOfInstances");
+        Integer nrOfCompletedInstances = (Integer) execution.getVariable("nrOfCompletedInstances");
+
+        return Objects.equals(nrOfCompletedInstances, nrOfInstances);
+    }
+
+    /**
+     * 流程结束
+     *
+     * @param execution
+     */
+    public void flowableEnd(DelegateExecution execution) {
+        String procInsId = execution.getProcessInstanceId();
+        
+        log.info("flowableEnd========{}, {}, {}", procInsId, execution, execution.getVariables());
+
+        LambdaQueryWrapper<ChangeManager> parentQuery = new LambdaQueryWrapper<>();
+        parentQuery.eq(ChangeManager::getFlowableInstanceId, procInsId);
+        ChangeManager parentManager = changeManagerService.getOne(parentQuery);
+        if (parentManager != null) {
+            Map<String, Object> vars = execution.getVariables();
+            if (vars.containsKey("STOP_FLOWABLE_TYPE")) {
+                parentManager.setChangeStatus(3);
+            } else {
+                parentManager.setChangeStatus(2);
+            }
+            changeManagerService.saveOrUpdate(parentManager);
+        }
+    }
 
     /**
      * 提交物 完成判断
@@ -90,6 +138,8 @@ public class TaskBusinessService {
                 String taskId = changeManagerSub.getParentTaskId();
                 flowTaskService.complete(taskId);
             }
+
+            return true;
         }
 
         return false;

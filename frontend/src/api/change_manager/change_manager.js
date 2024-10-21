@@ -90,5 +90,25 @@ export default {
             url: BASE_API + "/myTodo",
             method: "get"
         });
+    },
+    myStatics(){
+        return service({
+            url: BASE_API + "/myStatics",
+            method: "get"
+        });
+    },
+    stopProcess(data){
+        return service({
+            url: BASE_API + "/stop",
+            method: "post",
+            data: data
+        });
+    },
+    rejectProcess(data){
+        return service({
+            url: BASE_API + "/reject",
+            method: "post",
+            data: data
+        });
     }
 };

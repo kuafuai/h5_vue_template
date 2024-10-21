@@ -36,6 +36,8 @@ public class QyWxWebProvider implements AuthenticationProvider {
             qyWxUserId = "JiangFeiZhiHangHeYi";
         } else if (StringUtils.equalsIgnoreCase(loginVo.getCode(), "2222")) {
             qyWxUserId = "WuXinwuxin";
+        } else if (StringUtils.equalsIgnoreCase(loginVo.getCode(), "3333")) {
+            qyWxUserId = "leon";
         } else {
             qyWxUserId = qyWxWebService.getUserByCode(loginVo.getCode());
         }

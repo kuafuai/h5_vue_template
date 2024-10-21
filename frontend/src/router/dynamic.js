@@ -52,7 +52,7 @@ export const dynamicRoutes = [
         path: '/pages/flowable/definition/index',
         meta: {
             title: '流程定义',
-            shownot: true
+            shownot: false
         }
     },
     {

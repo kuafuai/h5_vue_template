@@ -22,6 +22,7 @@ public class ChangeManagerVO {
     private String changePerson;
     private String changePersonName;
     private String flowableInstanceId;
+    private Integer changeStatus;
 
     private String deployId;
     private String procDefId;

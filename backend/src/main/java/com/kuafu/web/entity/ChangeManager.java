@@ -32,6 +32,8 @@ public class ChangeManager {
     private String changePersonName;
     private String flowableInstanceId;
 
+    private Integer changeStatus;
+
     @TableField(exist = false)
     private Map<String, Object> infoMap;
 }

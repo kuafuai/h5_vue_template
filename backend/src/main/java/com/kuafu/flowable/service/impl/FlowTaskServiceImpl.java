@@ -1,6 +1,7 @@
 package com.kuafu.flowable.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
@@ -8,6 +9,7 @@ import com.kuafu.common.exception.BusinessException;
 import com.kuafu.common.login.SecurityUtils;
 import com.kuafu.common.util.JSON;
 import com.kuafu.common.util.StringUtils;
+import com.kuafu.flowable.constant.FLowStop;
 import com.kuafu.flowable.constant.FlowComment;
 import com.kuafu.flowable.constant.ProcessConstants;
 import com.kuafu.flowable.domain.*;
@@ -550,6 +552,36 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
     }
 
     @Override
+    public void stopProcess(FlowTaskVo flowTaskVo, FLowStop stop) {
+        List<Task> task = taskService.createTaskQuery().processInstanceId(flowTaskVo.getInstanceId()).list();
+        if (CollectionUtils.isEmpty(task)) {
+            throw new BusinessException("流程未启动或已执行完成，取消申请失败");
+        }
+        // 获取当前流程实例
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(flowTaskVo.getInstanceId())
+                .singleResult();
+        BpmnModel bpmnModel = repositoryService.getBpmnModel(processInstance.getProcessDefinitionId());
+        if (Objects.nonNull(bpmnModel)) {
+            Process process = bpmnModel.getMainProcess();
+            List<EndEvent> endNodes = process.findFlowElementsOfType(EndEvent.class, false);
+            if (CollectionUtils.isNotEmpty(endNodes)) {
+
+                // 获取当前流程最后一个节点
+                String endId = endNodes.get(0).getId();
+                List<Execution> executions = runtimeService.createExecutionQuery()
+                        .parentId(processInstance.getProcessInstanceId()).list();
+                List<String> executionIds = new ArrayList<>();
+                executions.forEach(execution -> executionIds.add(execution.getId()));
+                // 变更流程为已结束状态
+                runtimeService.createChangeActivityStateBuilder()
+                        .processVariable("STOP_FLOWABLE_TYPE", stop)
+                        .moveExecutionsToSingleActivityId(executionIds, endId).changeState();
+            }
+        }
+    }
+
+    @Override
     public void revokeProcess(FlowTaskVo flowTaskVo) {
 
     }
@@ -867,7 +899,6 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                     }
                 });
                 hisFlowList.add(flowTask);
-
             }
         }
 

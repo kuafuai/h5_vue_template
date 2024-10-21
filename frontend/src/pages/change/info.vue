@@ -73,10 +73,19 @@
                   <view class="w-full flex-start-start">
                     <p style="font-weight: 700">{{ subItem.taskName }}</p>
 
-                    <view class="m-l-20">
+                    <view class="m-l-20" v-if=" subItem.comment!=null && subItem.comment.type == 3">
+                      <uni-tag v-show="subItem.comment.type == 3" text="驳回" type="error" size="small" />
+                    </view>
+
+                    <view v-else class="m-l-20">
+
                       <uni-tag :text='subItem.finishTime?"完成":"处理中"' size="small"
                                :type='subItem.finishTime?"success":"warning"'
-                               @click="handle_process_sub_task(subItem, item.taskName)"/>
+                               @click="handle_process_sub_task(subItem, item.taskName)">
+                      </uni-tag>
+
+                      <!--                      <uni-tag v-show="subItem.comment.type == 3" text="驳回" type="error" />-->
+
                     </view>
 
                     <view class="m-l-20" v-if="subItem.assigneeName">
@@ -132,7 +141,17 @@
         </uni-forms-item>
       </uni-forms>
       <view class="flex-center-center">
-        <button type="primary" size="mini" @click="proxy.$refs.approvePopup.close();">取 消</button>
+        <button style="color:#ffffff;backgroundColor:#e87658;borderColor:#cb6455"
+                v-if="approveForm.show_type === 1"
+                size="mini" @click="submitApproveStopForm">驳回关闭
+        </button>
+        <button style="color:#ffffff;backgroundColor:#e87658;borderColor:#cb6455"
+                v-if="approveForm.show_type === 2"
+                size="mini" @click="submitApproveRejectForm">驳回
+        </button>
+        <button style="color:#ffffff;backgroundColor:#989d98;borderColor:#6b736b" size="mini"
+                @click="proxy.$refs.approvePopup.close();">取 消
+        </button>
         <button type="primary" size="mini" @click="submitApproveForm">确 定</button>
       </view>
     </view>
@@ -342,6 +361,7 @@ function handle_process(item) {
       approveForm.value.procInsId = allParams.value.procInsId;
       approveForm.value.instanceId = allParams.value.procInsId;
       approveForm.value.comment = '';
+      approveForm.value.show_type = 1;
       proxy.$refs.approvePopup.open();
 
     } else if (item.taskName === '指定输出提交物') {
@@ -393,6 +413,7 @@ function handle_process_sub_task(item, parentTaskName) {
         approveForm.value.procInsId = item.procInsId;
         approveForm.value.instanceId = item.procInsId;
         approveForm.value.comment = '';
+        approveForm.value.show_type = 2;
         proxy.$refs.approvePopup.open();
         // console.log('=====', approveForm.value)
 
@@ -508,6 +529,36 @@ async function submitLastFormAction() {
     handle_load_records();
   }
 
+}
+
+async function submitApproveStopForm() {
+  uni.showLoading({
+    title: '处理中'
+  });
+
+  let res = await proxy.$api.change_manager.stopProcess(approveForm.value);
+
+  uni.hideLoading();
+
+  if (res.code === 0) {
+    proxy.$refs.approvePopup.close();
+    proxy.$navigate('/pages/change/index', true);
+  }
+}
+
+async function submitApproveRejectForm() {
+  uni.showLoading({
+    title: '处理中'
+  });
+
+  let res = await proxy.$api.change_manager.rejectProcess(approveForm.value);
+
+  uni.hideLoading();
+
+  if (res.code === 0) {
+    proxy.$refs.approvePopup.close();
+    handle_load_records();
+  }
 }
 
 

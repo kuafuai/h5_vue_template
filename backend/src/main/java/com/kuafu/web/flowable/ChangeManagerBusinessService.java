@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 import com.kuafu.common.login.SecurityUtils;
 import com.kuafu.common.util.DateUtils;
 import com.kuafu.common.util.StringUtils;
+import com.kuafu.flowable.constant.FLowStop;
 import com.kuafu.flowable.domain.FlowTaskDto;
 import com.kuafu.flowable.domain.FlowTaskVo;
 import com.kuafu.flowable.service.IFlowDefinitionService;
@@ -82,6 +83,7 @@ public class ChangeManagerBusinessService {
                         .changeId(changeManager.getChangeId())
                         .procInsId(procInsId)
                         .infoKey(entry.getKey())
+                        .taskId("")
                         .infoValue(entry.getValue().toString())
                         .build();
 
@@ -263,7 +265,7 @@ public class ChangeManagerBusinessService {
                 ChangeManagerInfo info = ChangeManagerInfo.builder()
                         .changeId(parentManager.getChangeId())
                         .procInsId(parentManager.getFlowableInstanceId())
-
+                        .taskId(flowTaskVo.getTaskId())
                         .infoKey(entry.getKey())
                         .infoValue(entry.getValue().toString())
                         .build();
@@ -301,7 +303,7 @@ public class ChangeManagerBusinessService {
                 ChangeManagerInfo info = ChangeManagerInfo.builder()
                         .changeId(parentManager.getChangeId())
                         .procInsId(parentManager.getFlowableInstanceId())
-
+                        .taskId(flowTaskVo.getTaskId())
                         .infoKey(entry.getKey())
                         .infoValue(entry.getValue().toString())
                         .build();
@@ -313,5 +315,18 @@ public class ChangeManagerBusinessService {
 
         return flowTaskService.complete(flowTaskVo);
     }
-    
+
+
+    /**
+     * 取消 流程
+     *
+     * @param flowTaskVo
+     */
+    public void stopProcess(FlowTaskVo flowTaskVo) {
+        flowTaskService.stopProcess(flowTaskVo, FLowStop.reject);
+    }
+
+    public void rejectProcess(FlowTaskVo flowTaskVo) {
+        flowTaskService.taskReject(flowTaskVo);
+    }
 }

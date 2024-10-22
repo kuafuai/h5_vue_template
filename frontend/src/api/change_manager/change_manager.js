@@ -57,6 +57,13 @@ export default {
             params: query
         });
     },
+    changeRecordsAll(query){
+        return service({
+            url: BASE_API + "/changeRecordsAll",
+            method: "get",
+            params: query
+        });
+    },
     completeApprove(data) {
         return service({
             url: BASE_API + "/completeApprove",

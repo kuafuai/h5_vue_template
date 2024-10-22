@@ -4,8 +4,10 @@
     <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
       <view class="flex-c-start-start m-b-20 w-full">
         <view class="flex-around-start m-b-20">
-          <fui-text :text='"[" + baseInfo.changeType == "1" ? "ECR":"ECN"+"] "+baseInfo.changeTitle' type="black"
-                    size="36"></fui-text>
+          <fui-text :text='baseInfo.changeType === 1 ? "[ECR]":"[ECN]"+" "+baseInfo.changeTitle' type="black"
+                    size="36">
+
+          </fui-text>
         </view>
         <view class="flex-between-start m-b-10 w-full">
           <view style="width: 30%">
@@ -36,97 +38,223 @@
         </view>
       </view>
       <view class=" m-20 w-full">
-        <el-timeline style="max-width: 800px">
-          <el-timeline-item
-              v-for="(item,index ) in flowRecordList"
-              :key="index"
-              :color="setColor(item.finishTime)"
-          >
-            <view class="w-full flex-start-start">
-              <p style="font-weight: 700">{{ item.taskName }}</p>
-              <view class="m-l-20">
-                <uni-tag :text='item.finishTime?"完成":"处理中"' size="small"
-                         :type='item.finishTime?"success":"warning"'
-                         @click="handle_process(item)"/>
-              </view>
-
-              <view class="m-l-20" v-if="item.assigneeName">
-                <uni-icons type="person" size="18"></uni-icons>
-                <text>{{ item.assigneeName }}</text>
-              </view>
-
-              <view class="m-l-20" v-if="item.duration">
-
-                <uni-icons type="timer" size="18"></uni-icons>
-                <text>耗时 {{ item.duration }} , 于 {{ item.finishTime }} 完成</text>
-              </view>
-            </view>
-            <view v-if="item.hasChild" class="m-t-20">
-
-              <el-timeline style="max-width: 800px"
-                           v-for="(sub,subIndex ) in item.subTask"
-                           :key="subIndex"
+        <el-tabs tab-position="top" v-model="activeName" @tab-click="handleClick">
+          <el-tab-pane label="变更流程" name="1">
+            <el-timeline style="max-width: 800px; margin-top: 20px;">
+              <el-timeline-item
+                  v-for="(item,index ) in flowRecordList"
+                  :key="index"
+                  :color="setColor(item.finishTime)"
               >
-                <el-timeline-item v-for="(subItem, ssIndex) in sub.subTask"
-                                  :key="ssIndex"
-                                  :color="setColor(subItem.finishTime)">
-                  <view class="w-full flex-start-start">
-                    <p style="font-weight: 700">{{ subItem.taskName }}</p>
+                <view class="w-full flex-start-start">
+                  <p style="font-weight: 700">{{ item.taskName }}</p>
+                  <view class="m-l-20">
+                    <uni-tag :text='item.finishTime?"完成":"处理中"' size="small"
+                             :type='item.finishTime?"success":"warning"'
+                             @click="handle_process(item)"/>
+                  </view>
 
-                    <view class="m-l-20" v-if=" subItem.comment!=null && subItem.comment.type == 3">
-                      <uni-tag v-show="subItem.comment.type == 3" text="驳回" type="error" size="small" />
+                  <view class="m-l-20" v-if="item.assigneeName">
+                    <uni-icons type="person" size="18"></uni-icons>
+                    <text>{{ item.assigneeName }}</text>
+                  </view>
+
+                  <view class="m-l-20" v-if="item.duration">
+
+                    <uni-icons type="timer" size="18"></uni-icons>
+                    <text>耗时 {{ item.duration }} , 于 {{ item.finishTime }} 完成</text>
+                  </view>
+                </view>
+                <view v-if="item.hasChild" class="m-t-40">
+
+                  <el-timeline style="max-width: 800px; margin-top: 20px;"
+                               v-for="(sub,subIndex ) in item.subTask"
+                               :key="subIndex">
+                    <el-timeline-item v-for="(subItem, ssIndex) in sub.subTask"
+                                      :key="ssIndex"
+                                      :color="setColor(subItem.finishTime)" class="pass-node">
+
+                      <view class="w-full flex-start-start">
+                        <p style="font-weight: 700">{{ subItem.taskName }}</p>
+                        <view class="m-l-20" v-if=" subItem.comment!=null && subItem.comment.type == 3">
+                          <uni-tag v-show="subItem.comment.type == 3" text="驳回" type="error" size="small"/>
+                        </view>
+
+                        <view v-else class="m-l-20">
+                          <uni-tag :text='subItem.finishTime?"完成":"处理中"' size="small"
+                                   :type='subItem.finishTime?"success":"warning"'
+                                   @click="handle_process_sub_task(subItem, item.taskName)">
+                          </uni-tag>
+                        </view>
+
+                        <view class="m-l-20" v-if="subItem.assigneeName">
+                          <uni-icons type="person" size="18"></uni-icons>
+                          <text>{{ subItem.assigneeName }}</text>
+                        </view>
+
+                        <view class="m-l-20" v-if="subItem.duration">
+                          <uni-icons type="timer" size="18"></uni-icons>
+                          <text>耗时 {{ subItem.duration }} , 于 {{ subItem.finishTime }} 完成</text>
+                        </view>
+                      </view>
+
+                    </el-timeline-item>
+                  </el-timeline>
+
+                </view>
+                <view v-else>
+                  <view class="w-full m-y-10 flex-start-start" v-for="(sub,subIndex) in item.subTask" :key="subIndex">
+                    <p style="font-weight: 700">{{ sub.taskName }}</p>
+                    <view class="m-l-20">
+                      <uni-tag :text='sub.finishTime?"完成":"处理中"' size="small"
+                               :type='sub.finishTime?"success":"warning"'
+                               @click="handle_process(sub)"/>
                     </view>
 
-                    <view v-else class="m-l-20">
-
-                      <uni-tag :text='subItem.finishTime?"完成":"处理中"' size="small"
-                               :type='subItem.finishTime?"success":"warning"'
-                               @click="handle_process_sub_task(subItem, item.taskName)">
-                      </uni-tag>
-
-                      <!--                      <uni-tag v-show="subItem.comment.type == 3" text="驳回" type="error" />-->
-
-                    </view>
-
-                    <view class="m-l-20" v-if="subItem.assigneeName">
+                    <view class="m-l-20" v-if="sub.assigneeName">
                       <uni-icons type="person" size="18"></uni-icons>
-                      <text>{{ subItem.assigneeName }}</text>
+                      <text>{{ sub.assigneeName }}</text>
                     </view>
 
-                    <view class="m-l-20" v-if="subItem.duration">
+                    <view class="m-l-20" v-if="sub.duration">
 
                       <uni-icons type="timer" size="18"></uni-icons>
-                      <text>耗时 {{ subItem.duration }} , 于 {{ subItem.finishTime }} 完成</text>
+                      <text>耗时 {{ sub.duration }} , 于 {{ sub.finishTime }} 完成</text>
                     </view>
 
                   </view>
-                </el-timeline-item>
-              </el-timeline>
-            </view>
-            <view v-else>
-              <view class="w-full m-y-10 flex-start-start" v-for="(sub,subIndex) in item.subTask" :key="subIndex">
-                <p style="font-weight: 700">{{ sub.taskName }}</p>
-                <view class="m-l-20">
-                  <uni-tag :text='sub.finishTime?"完成":"处理中"' size="small"
-                           :type='sub.finishTime?"success":"warning"'
-                           @click="handle_process(sub)"/>
+                </view>
+              </el-timeline-item>
+            </el-timeline>
+          </el-tab-pane>
+
+          <el-tab-pane label="流程日志" name="2">
+            <el-timeline style="max-width: 600px; margin-top: 20px">
+              <el-timeline-item
+                  v-for="(item,index ) in flowRecordAllList"
+                  :key="index"
+                  :color="setColor(item.finishTime)"
+              >
+                <p style="font-weight: 700">{{ item.taskName }}</p>
+
+                <el-card v-if="item.createTime" :body-style="{ padding: '10px' }">
+                  <el-descriptions class="margin-top" :column="1" size="small" border>
+                    <el-descriptions-item v-if="item.assigneeName" label-class-name="my-label">
+                      <template #label>办理人</template>
+                      {{ item.assigneeName }}
+                    </el-descriptions-item>
+                    <el-descriptions-item v-if="item.createTime">
+                      <template #label>接收时间</template>
+                      {{ item.createTime }}
+                    </el-descriptions-item>
+                    <el-descriptions-item v-if="item.finishTime" label-class-name="my-label">
+                      <template #label><i class="el-icon-date"></i>处理时间</template>
+                      {{ item.finishTime }}
+                    </el-descriptions-item>
+                    <el-descriptions-item v-if="item.duration" label-class-name="my-label">
+                      <template #label><i class="el-icon-time"></i>耗时</template>
+                      {{ item.duration }}
+                    </el-descriptions-item>
+                    <el-descriptions-item v-if="item.comment" label-class-name="my-label">
+                      <template #label><i class="el-icon-tickets"></i>处理意见</template>
+                      {{ item.comment.comment }}
+                    </el-descriptions-item>
+                    <el-descriptions-item v-if="item.infoValue">
+                      <template #label>提交的文件</template>
+                      <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(item.infoValue)' :href="f" target="_blank">
+                        下载文件{{i+1}}
+                      </el-link>
+                    </el-descriptions-item>
+                  </el-descriptions>
+                </el-card>
+
+                <view v-if="item.hasChild">
+                  <el-timeline style="max-width: 600px; margin-top: 20px;"
+                               v-for="(sub,subIndex ) in item.subTask"
+                               :key="subIndex">
+
+                    <el-timeline-item v-for="(subItem, ssIndex) in sub.subTask"
+                                      :key="ssIndex"
+                                      :color="setColor(subItem.finishTime)" class="pass-node">
+
+                      <p style="font-weight: 700">{{ subItem.taskName }}</p>
+
+                      <el-card :body-style="{ padding: '10px' }">
+
+                        <el-descriptions class="margin-top" :column="1" size="small" border>
+                          <el-descriptions-item v-if="subItem.assigneeName" label-class-name="my-label">
+                            <template #label>办理人</template>
+                            {{ subItem.assigneeName }}
+                          </el-descriptions-item>
+                          <el-descriptions-item v-if="subItem.createTime">
+                            <template #label>接收时间</template>
+                            {{ subItem.createTime }}
+                          </el-descriptions-item>
+                          <el-descriptions-item v-if="subItem.finishTime" label-class-name="my-label">
+                            <template #label><i class="el-icon-date"></i>处理时间</template>
+                            {{ subItem.finishTime }}
+                          </el-descriptions-item>
+                          <el-descriptions-item v-if="subItem.duration" label-class-name="my-label">
+                            <template #label><i class="el-icon-time"></i>耗时</template>
+                            {{ subItem.duration }}
+                          </el-descriptions-item>
+                          <el-descriptions-item v-if="subItem.comment">
+                            <template #label><i class="el-icon-tickets"></i>处理意见</template>
+                            <el-tag v-if='subItem.comment.type === "3"' type="danger" class="m-r-10">驳回</el-tag>
+                            <el-text :type='subItem.comment.type === "3"? "danger": "info" '>
+                              {{ subItem.comment.comment }}
+                            </el-text>
+                          </el-descriptions-item>
+                          <el-descriptions-item v-if="subItem.infoValue">
+                            <template #label>提交的文件</template>
+                            <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(subItem.infoValue)' :href="f" target="_blank">
+                              下载文件{{i+1}}
+                            </el-link>
+                          </el-descriptions-item>
+                        </el-descriptions>
+                      </el-card>
+
+                    </el-timeline-item>
+
+                  </el-timeline>
+                </view>
+                <view v-else>
+                  <el-card v-for="(sub,subIndex) in item.subTask" :key="subIndex">
+                    <el-descriptions class="margin-top" :column="1" size="small" border>
+                      <el-descriptions-item v-if="sub.assigneeName" label-class-name="my-label">
+                        <template #label>办理人</template>
+                        {{ sub.assigneeName }}
+                      </el-descriptions-item>
+                      <el-descriptions-item v-if="sub.createTime">
+                        <template #label>接收时间</template>
+                        {{ sub.createTime }}
+                      </el-descriptions-item>
+                      <el-descriptions-item v-if="sub.finishTime" label-class-name="my-label">
+                        <template #label>处理时间</template>
+                        {{ sub.finishTime }}
+                      </el-descriptions-item>
+                      <el-descriptions-item v-if="sub.duration" label-class-name="my-label">
+                        <template #label>耗时</template>
+                        {{ sub.duration }}
+                      </el-descriptions-item>
+                      <el-descriptions-item v-if="sub.comment" label-class-name="my-label">
+                        <template #label>处理意见</template>
+                        {{ sub.comment.comment }}
+                      </el-descriptions-item>
+                      <el-descriptions-item v-if="sub.infoValue">
+                        <template #label>提交的文件</template>
+                        <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(sub.infoValue)' :href="f" target="_blank">
+                          下载文件{{i+1}}
+                        </el-link>
+                      </el-descriptions-item>
+                    </el-descriptions>
+                  </el-card>
                 </view>
 
-                <view class="m-l-20" v-if="sub.assigneeName">
-                  <uni-icons type="person" size="18"></uni-icons>
-                  <text>{{ sub.assigneeName }}</text>
-                </view>
-
-                <view class="m-l-20" v-if="sub.duration">
-
-                  <uni-icons type="timer" size="18"></uni-icons>
-                  <text>耗时 {{ sub.duration }} , 于 {{ sub.finishTime }} 完成</text>
-                </view>
-
-              </view>
-            </view>
-          </el-timeline-item>
-        </el-timeline>
+              </el-timeline-item>
+            </el-timeline>
+          </el-tab-pane>
+        </el-tabs>
       </view>
     </base-layout>
   </base-wrapper>
@@ -228,7 +356,7 @@
 
       <uni-forms ref="refTaskForm" style="max-width: 100%" :modelValue="submitUploadForm" label-position="top">
         <uni-forms-item label="上传提交物">
-          <base-upload v-model="submitUploadForm.fileUrl"/>
+          <base-upload v-model="submitUploadForm.fileUrl" :limit="3"/>
         </uni-forms-item>
         <uni-forms-item label="处理意见">
           <uni-easyinput type="textarea" v-model="submitUploadForm.comment" placeholder="请输入处理意见"/>
@@ -248,7 +376,7 @@
 
       <uni-forms ref="refTaskForm" style="max-width: 100%" :modelValue="submitLastForm" label-position="top">
         <uni-forms-item label="上传提交物">
-          <base-upload v-model="submitLastForm.checkFileUrl"/>
+          <base-upload v-model="submitLastForm.checkFileUrl" :limit="3"/>
         </uni-forms-item>
         <uni-forms-item label="处理意见">
           <uni-easyinput type="textarea" v-model="submitLastForm.comment" placeholder="请输入处理意见"/>
@@ -268,7 +396,7 @@
 import {onShow} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance();
-
+const activeName = ref('1')
 const allParams = ref({});
 
 const pages = getCurrentPages();
@@ -561,6 +689,28 @@ async function submitApproveRejectForm() {
   }
 }
 
+const flowRecordAllList = ref([])
+
+async function handleClick(tab, event) {
+
+  if (tab.props.name === '2') {
+    let params = {
+      procInsId: allParams.value.procInsId
+    }
+    uni.showLoading({
+      title: '加载中'
+    });
+    let flowRes = await proxy.$api.change_manager.changeRecordsAll(params);
+    if (flowRes.code === 0) {
+      flowRecordAllList.value = flowRes.data;
+    }
+    uni.hideLoading();
+  }
+}
+
+function file_split(val){
+  return val.split(",");
+}
 
 onShow(() => {
   const pages = getCurrentPages();
@@ -603,6 +753,19 @@ onShow(() => {
 
 ::v-deep .uni-file-picker__files {
   align-items: center !important;
+}
+
+::v-deep .pass-node .el-timeline-item__tail {
+  border-color: #cacbc9;
+  display: block !important;
+}
+
+::v-deep .pass-node:last-child .el-timeline-item__tail {
+  display: none !important;
+}
+
+.reject {
+  background-color: red !important;
 }
 
 </style>

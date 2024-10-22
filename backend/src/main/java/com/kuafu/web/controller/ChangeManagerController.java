@@ -79,7 +79,7 @@ public class ChangeManagerController {
             List<ChangeManagerInfo> listInfo = changeManagerInfoService.list(infoQuery);
             Map<String, Object> map =
                     listInfo.stream()
-                            .collect(Collectors.toMap(ChangeManagerInfo::getInfoKey, p -> p));
+                            .collect(Collectors.toMap(ChangeManagerInfo::getInfoKey, p -> p, (oldValue, newValue) -> newValue));
 
             changeManager.setInfoMap(map);
         }
@@ -158,7 +158,13 @@ public class ChangeManagerController {
     @GetMapping("changeRecords")
     public BaseResponse getFlowableRecord(String procInsId) {
 
-        return ResultUtils.success(changeManagerBusinessService.getChangeFlowRecords(procInsId));
+        return ResultUtils.success(changeManagerBusinessService.getChangeFlowRecords(procInsId, false));
+    }
+
+    @GetMapping("changeRecordsAll")
+    public BaseResponse getFlowableRecordAll(String procInsId) {
+
+        return ResultUtils.success(changeManagerBusinessService.getChangeFlowRecords(procInsId, true));
     }
 
     /**

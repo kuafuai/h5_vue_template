@@ -95,7 +95,7 @@ public class ChangeManagerBusinessService {
         return flag;
     }
 
-    public List<FlowTaskDto> getChangeFlowRecords(String procInsId) {
+    public List<FlowTaskDto> getChangeFlowRecords(String procInsId, boolean search_all) {
         if (StringUtils.isNotEmpty(procInsId)) {
 
             Map<String, FlowTaskDto> taskMap = Maps.newLinkedHashMap();
@@ -108,11 +108,30 @@ public class ChangeManagerBusinessService {
                     .stream()
                     .collect(Collectors.toMap(ChangeManagerSub::getParentTaskId, ChangeManagerSub::getSubProcInsId));
 
+            // 查询提交的详情
+            Map<String, ChangeManagerInfo> changeManagerInfoMap = Maps.newHashMap();
+            if (search_all) {
+                LambdaQueryWrapper<ChangeManagerInfo> infoQueryWrapper = new LambdaQueryWrapper<>();
+                infoQueryWrapper.eq(ChangeManagerInfo::getProcInsId, procInsId);
+                List<ChangeManagerInfo> infoList = changeManagerInfoService.list(infoQueryWrapper);
+                changeManagerInfoMap = infoList.stream()
+                        .filter(p -> StringUtils.isNotEmpty(p.getTaskId()))
+                        .collect(Collectors.toMap(ChangeManagerInfo::getTaskId, p -> p));
+            }
+
+
             List<FlowTaskDto> parentList = flowTaskService.getFlowRecordByInsId(procInsId);
 
             for (FlowTaskDto taskDto : parentList) {
                 String taskName = taskDto.getTaskName();
                 String taskId = taskDto.getTaskId();
+
+                if (search_all) {
+                    if (changeManagerInfoMap.containsKey(taskId)) {
+                        taskDto.setInfoValue(changeManagerInfoMap.get(taskId).getInfoValue());
+                    }
+                }
+
                 if (subTaskInfoMap.containsKey(taskId)) {
                     //子任务
                     FlowTaskDto parentTaskDto;
@@ -130,6 +149,15 @@ public class ChangeManagerBusinessService {
 
                     String subProcInsId = subTaskInfoMap.get(taskId);
                     List<FlowTaskDto> subList = flowTaskService.getFlowRecordByInsId(subProcInsId);
+                    if (search_all) {
+                        for (FlowTaskDto subChild : subList) {
+                            String subTaskId = subChild.getTaskId();
+                            if (changeManagerInfoMap.containsKey(subTaskId)) {
+                                subChild.setInfoValue(changeManagerInfoMap.get(subTaskId).getInfoValue());
+                            }
+                        }
+                    }
+
                     taskDto.getSubTask().addAll(subList);
 
                     parentTaskDto.getSubTask().add(taskDto);

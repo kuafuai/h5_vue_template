@@ -52,7 +52,7 @@ public class EmployeeTest {
 
     @Test
     public void test_flow() {
-        log.info("{}", JSON.toJSONString(changeManagerBusinessService.getChangeFlowRecords("12622")));
+        log.info("{}", JSON.toJSONString(changeManagerBusinessService.getChangeFlowRecords("12622", false)));
     }
 
     public String getText() {

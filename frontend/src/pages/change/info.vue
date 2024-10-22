@@ -29,7 +29,8 @@
             <fui-text :text="baseInfo.changeProjectName"></fui-text>
           </view>
           <view style="width: 30%">
-            <fui-text text="项目阶段:"></fui-text>
+            <fui-text text="项目阶段："></fui-text>
+            <fui-text :text="baseInfo.changeProjectStage"></fui-text>
           </view>
           <view style="width: 30%">
             <fui-text text="断点时间："></fui-text>
@@ -161,8 +162,9 @@
                     </el-descriptions-item>
                     <el-descriptions-item v-if="item.infoValue">
                       <template #label>提交的文件</template>
-                      <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(item.infoValue)' :href="f" target="_blank">
-                        下载文件{{i+1}}
+                      <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(item.infoValue)' :href="f"
+                               target="_blank">
+                        下载文件{{ i + 1 }}
                       </el-link>
                     </el-descriptions-item>
                   </el-descriptions>
@@ -207,8 +209,9 @@
                           </el-descriptions-item>
                           <el-descriptions-item v-if="subItem.infoValue">
                             <template #label>提交的文件</template>
-                            <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(subItem.infoValue)' :href="f" target="_blank">
-                              下载文件{{i+1}}
+                            <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(subItem.infoValue)'
+                                     :href="f" target="_blank">
+                              下载文件{{ i + 1 }}
                             </el-link>
                           </el-descriptions-item>
                         </el-descriptions>
@@ -243,8 +246,9 @@
                       </el-descriptions-item>
                       <el-descriptions-item v-if="sub.infoValue">
                         <template #label>提交的文件</template>
-                        <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(sub.infoValue)' :href="f" target="_blank">
-                          下载文件{{i+1}}
+                        <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(sub.infoValue)' :href="f"
+                                 target="_blank">
+                          下载文件{{ i + 1 }}
                         </el-link>
                       </el-descriptions-item>
                     </el-descriptions>
@@ -259,12 +263,18 @@
     </base-layout>
   </base-wrapper>
 
-  <uni-popup ref="approvePopup" style="width: 200px"
-             borderRadius="10px 10px 10px 10px"
-             background-color="#fff">
+  <uni-popup ref="approvePopup" style="width: 200px" borderRadius="10px 10px 10px 10px" background-color="#fff">
     <view class="m-10 w-full">
-      <uni-forms ref="refTaskForm" style="max-width: 100%" :modelValue="approveForm" label-position="top">
-        <uni-forms-item label="处理意见">
+      <uni-forms ref="refApproveForm" style="max-width: 100%" :modelValue="approveForm" label-position="top"
+                 :rules="{
+                    comment: {
+                      rules: [{
+                        required: true,
+                        errorMessage: '处理意见不能为空'
+                      }]
+                    }
+                 }">
+        <uni-forms-item label="处理意见" required name="comment">
           <uni-easyinput type="textarea" v-model="approveForm.comment" placeholder="请输入处理意见"/>
         </uni-forms-item>
       </uni-forms>
@@ -275,19 +285,18 @@
         </button>
         <button style="color:#ffffff;backgroundColor:#e87658;borderColor:#cb6455"
                 v-if="approveForm.show_type === 2"
-                size="mini" @click="submitApproveRejectForm">驳回
+                size="mini" @click="submitApproveRejectForm">驳 回
         </button>
         <button style="color:#ffffff;backgroundColor:#989d98;borderColor:#6b736b" size="mini"
                 @click="proxy.$refs.approvePopup.close();">取 消
         </button>
-        <button type="primary" size="mini" @click="submitApproveForm">确 定</button>
+        <button type="primary" size="mini" @click="submitApproveForm">同 意</button>
       </view>
     </view>
+
   </uni-popup>
 
-  <uni-popup ref="submitPopup"
-             borderRadius="10px 10px 10px 10px"
-             background-color="#fff">
+  <uni-popup ref="submitPopup" borderRadius="10px 10px 10px 10px" background-color="#fff">
     <view class="m-10 w-full">
       <view>
         <fui-text text='正在查看的环节：指定输出物提交人' type="black" size="30"></fui-text>
@@ -302,17 +311,32 @@
         <uni-tag text='处理中' size="small" type='warning'/>
       </view>
       <view class="m-t-20">
-        <uni-forms ref="refTaskForm" style="max-width: 100%" :modelValue="submitForm" label-position="top">
-          <uni-forms-item label="提交物">
+        <uni-forms ref="refSubmitForm" style="max-width: 100%" :modelValue="submitForm" label-position="top"
+                   :rules="{
+                    comment: {
+                      rules: [{
+                        required: true,
+                        errorMessage: '处理意见不能为空'
+                      }]
+                    },
+                    checkSubmits: {
+                      rules: [{
+                        required: true,
+                        errorMessage: '提交物不能为空'
+                      }]
+                    }
+                 }">
+          <uni-forms-item label="提交物" required name="checkSubmits">
             <el-checkbox-group v-model="submitForm.checkSubmits">
               <div class="flex-wrap">
-                <div class="flex m-x-10" style="width: 200px"
+                <div class="flex-start-center m-x-10" style="width: 200px"
                      v-for="(item,index ) in submitListRecord"
                      :key="index">
                   <el-checkbox :label="item.submissionName" :value="item.submissionName"/>
-                  <view v-show="submitForm.checkSubmits.includes(item.submissionName)">
-                    <el-text style="font-size: 10px" size="small"
-                             v-if="alreadySubmitPerson.hasOwnProperty(item.submissionName)">
+                  <view class="m-l-6" v-show="submitForm.checkSubmits.includes(item.submissionName)">
+                    <el-text style="font-size: 12px; font-weight: 600; cursor: pointer;"
+                             v-if="alreadySubmitPerson.hasOwnProperty(item.submissionName)"
+                             @click="chooseSubmitPerson(item.submissionName)">
                       {{ alreadySubmitPerson[item.submissionName].text }}
                     </el-text>
                     <el-button v-else
@@ -325,7 +349,7 @@
               </div>
             </el-checkbox-group>
           </uni-forms-item>
-          <uni-forms-item label="处理意见">
+          <uni-forms-item label="处理意见" required name="comment">
             <uni-easyinput type="textarea" v-model="submitForm.comment" placeholder="请输入处理意见"/>
           </uni-forms-item>
         </uni-forms>
@@ -337,9 +361,7 @@
     </view>
   </uni-popup>
 
-  <uni-popup ref="submitPersonPopup"
-             borderRadius="10px 10px 10px 10px"
-             background-color="#fff">
+  <uni-popup ref="submitPersonPopup" borderRadius="10px 10px 10px 10px" background-color="#fff">
     <el-radio-group class="m-20" v-model="submitCheckForm.choosePerson">
       <el-radio v-for="(item,index ) in submitPersons"
                 :key="index" :value="item.value"> {{ item.label }}
@@ -354,11 +376,26 @@
              background-color="#fff">
     <view class="m-10 w-full">
 
-      <uni-forms ref="refTaskForm" style="max-width: 100%" :modelValue="submitUploadForm" label-position="top">
-        <uni-forms-item label="上传提交物">
+      <uni-forms ref="refSubmitUploadForm" style="max-width: 100%" label-width="100px" :modelValue="submitUploadForm"
+                 label-position="top"
+                 :rules="{
+                    comment: {
+                      rules: [{
+                        required: true,
+                        errorMessage: '处理意见不能为空'
+                      }]
+                    },
+                    fileUrl: {
+                      rules: [{
+                        required: true,
+                        errorMessage: '提交物不能为空'
+                      }]
+                    }
+                 }">
+        <uni-forms-item label="上传提交物" required name="fileUrl">
           <base-upload v-model="submitUploadForm.fileUrl" :limit="3"/>
         </uni-forms-item>
-        <uni-forms-item label="处理意见">
+        <uni-forms-item label="处理意见" required name="comment">
           <uni-easyinput type="textarea" v-model="submitUploadForm.comment" placeholder="请输入处理意见"/>
         </uni-forms-item>
       </uni-forms>
@@ -374,11 +411,26 @@
              background-color="#fff">
     <view class="m-10 w-full">
 
-      <uni-forms ref="refTaskForm" style="max-width: 100%" :modelValue="submitLastForm" label-position="top">
-        <uni-forms-item label="上传提交物">
+      <uni-forms ref="refSubmitLastForm" style="max-width: 100%" :modelValue="submitLastForm" label-width="100px"
+                 label-position="top"
+                 :rules="{
+                    comment: {
+                      rules: [{
+                        required: true,
+                        errorMessage: '处理意见不能为空'
+                      }]
+                    },
+                    checkFileUrl: {
+                      rules: [{
+                        required: true,
+                        errorMessage: '提交物不能为空'
+                      }]
+                    }
+                 }">
+        <uni-forms-item label="上传提交物" required name="checkFileUrl">
           <base-upload v-model="submitLastForm.checkFileUrl" :limit="3"/>
         </uni-forms-item>
-        <uni-forms-item label="处理意见">
+        <uni-forms-item label="处理意见" required name="comment">
           <uni-easyinput type="textarea" v-model="submitLastForm.comment" placeholder="请输入处理意见"/>
         </uni-forms-item>
       </uni-forms>
@@ -561,39 +613,41 @@ function handle_process_sub_task(item, parentTaskName) {
 }
 
 async function submitApproveForm() {
+  proxy.$refs.refApproveForm.validate().then(async (r) => {
+    uni.showLoading({
+      title: '处理中'
+    });
 
-  uni.showLoading({
-    title: '处理中'
+    let res = await proxy.$api.change_manager.completeApprove(approveForm.value);
+
+    uni.hideLoading();
+
+    if (res.code === 0) {
+      proxy.$refs.approvePopup.close();
+      handle_load_records();
+    }
   });
-
-  let res = await proxy.$api.change_manager.completeApprove(approveForm.value);
-
-  uni.hideLoading();
-
-  if (res.code === 0) {
-    proxy.$refs.approvePopup.close();
-    handle_load_records();
-  }
 }
 
 async function submitSubmitForm() {
-  submitForm.value.choosePerson = {...alreadySubmitPerson.value}
-  console.log('====', submitForm.value)
+  proxy.$refs.refSubmitForm.validate().then(async (r) => {
+    submitForm.value.choosePerson = {...alreadySubmitPerson.value}
+    console.log('====', submitForm.value)
 
-  uni.showLoading({
-    title: '处理中'
+    uni.showLoading({
+      title: '处理中'
+    });
+
+    let res = await proxy.$api.change_manager.completeSubmit(submitForm.value)
+    console.log(res);
+
+    uni.hideLoading();
+
+    if (res.code === 0) {
+      proxy.$refs.submitPopup.close();
+      handle_load_records();
+    }
   });
-
-  let res = await proxy.$api.change_manager.completeSubmit(submitForm.value)
-  console.log(res);
-
-  uni.hideLoading();
-
-  if (res.code === 0) {
-    proxy.$refs.submitPopup.close();
-    handle_load_records();
-  }
-
 }
 
 function chooseSubmitPerson(submissionName) {
@@ -621,72 +675,82 @@ function submitSubmitPersonForm() {
 
 
 async function submitSubmitUploadForm() {
-  submitUploadForm.value.variables[submitUploadForm.value.taskName] = submitUploadForm.value.fileUrl;
-  console.log(submitUploadForm.value)
+  proxy.$refs.refSubmitUploadForm.validate().then(async (r) => {
+    submitUploadForm.value.variables[submitUploadForm.value.taskName] = submitUploadForm.value.fileUrl;
+    console.log(submitUploadForm.value)
 
-  uni.showLoading({
-    title: '处理中'
+    uni.showLoading({
+      title: '处理中'
+    });
+
+    let res = await proxy.$api.change_manager.completeSubmitUpload(submitUploadForm.value)
+
+    uni.hideLoading();
+
+    if (res.code === 0) {
+      proxy.$refs.submitUploadPopup.close();
+      handle_load_records();
+    }
   });
 
-  let res = await proxy.$api.change_manager.completeSubmitUpload(submitUploadForm.value)
-
-  uni.hideLoading();
-
-  if (res.code === 0) {
-    proxy.$refs.submitUploadPopup.close();
-    handle_load_records();
-  }
-
-  console.log(res);
 }
 
 
 async function submitLastFormAction() {
-  submitLastForm.value.variables[submitLastForm.value.taskName] = submitLastForm.value.checkFileUrl;
-  console.log(submitLastForm.value)
 
-  uni.showLoading({
-    title: '处理中'
+  proxy.$refs.refSubmitLastForm.validate().then(async (r) => {
+    submitLastForm.value.variables[submitLastForm.value.taskName] = submitLastForm.value.checkFileUrl;
+    console.log(submitLastForm.value)
+
+    uni.showLoading({
+      title: '处理中'
+    });
+
+    let res = await proxy.$api.change_manager.completeCheckFile(submitLastForm.value)
+    uni.hideLoading();
+
+    if (res.code === 0) {
+      proxy.$refs.submitLastPopup.close();
+      handle_load_records();
+    }
   });
-
-  let res = await proxy.$api.change_manager.completeCheckFile(submitLastForm.value)
-  uni.hideLoading();
-
-  if (res.code === 0) {
-    proxy.$refs.submitLastPopup.close();
-    handle_load_records();
-  }
-
 }
 
 async function submitApproveStopForm() {
-  uni.showLoading({
-    title: '处理中'
+
+  proxy.$refs.refApproveForm.validate().then(async (r) => {
+    uni.showLoading({
+      title: '处理中'
+    });
+
+    let res = await proxy.$api.change_manager.stopProcess(approveForm.value);
+
+    uni.hideLoading();
+
+    if (res.code === 0) {
+      proxy.$refs.approvePopup.close();
+      proxy.$navigate('/pages/change/index', true);
+    }
   });
-
-  let res = await proxy.$api.change_manager.stopProcess(approveForm.value);
-
-  uni.hideLoading();
-
-  if (res.code === 0) {
-    proxy.$refs.approvePopup.close();
-    proxy.$navigate('/pages/change/index', true);
-  }
 }
 
 async function submitApproveRejectForm() {
-  uni.showLoading({
-    title: '处理中'
+  proxy.$refs.refApproveForm.validate().then(async (r) => {
+
+    uni.showLoading({
+      title: '处理中'
+    });
+
+    let res = await proxy.$api.change_manager.rejectProcess(approveForm.value);
+
+    uni.hideLoading();
+
+    if (res.code === 0) {
+      proxy.$refs.approvePopup.close();
+      handle_load_records();
+    }
+
   });
-
-  let res = await proxy.$api.change_manager.rejectProcess(approveForm.value);
-
-  uni.hideLoading();
-
-  if (res.code === 0) {
-    proxy.$refs.approvePopup.close();
-    handle_load_records();
-  }
 }
 
 const flowRecordAllList = ref([])
@@ -708,7 +772,7 @@ async function handleClick(tab, event) {
   }
 }
 
-function file_split(val){
+function file_split(val) {
   return val.split(",");
 }
 

@@ -20,6 +20,7 @@ public class ChangeManagerPageVO extends PageRequest {
     private String changeCustomer;
     private String changeProjectName;
     private String changeProductName;
+    private String changeProjectStage;
     private Date changeStartTime;
     private Date changeEndTime;
     private String changePerson;

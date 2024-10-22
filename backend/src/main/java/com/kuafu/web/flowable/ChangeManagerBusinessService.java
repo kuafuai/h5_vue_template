@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -72,6 +73,7 @@ public class ChangeManagerBusinessService {
                 .changeEndTime(changeManagerVO.getChangeEndTime())
                 .changePerson(currentUserInfo.getUserInfoId().toString())
                 .changePersonName(currentUserInfo.getUserName())
+                .changeProjectStage(changeManagerVO.getChangeProjectStage())
                 .flowableInstanceId(procInsId)
                 .build();
 
@@ -79,12 +81,14 @@ public class ChangeManagerBusinessService {
         List<ChangeManagerInfo> infoList = Lists.newArrayList();
         for (Map.Entry<String, Object> entry : changeManagerVO.getVariables().entrySet()) {
             if (!StringUtils.equalsIgnoreCase(entry.getKey(), "formJson")) {
+                Object value = entry.getValue();
+
                 ChangeManagerInfo info = ChangeManagerInfo.builder()
                         .changeId(changeManager.getChangeId())
                         .procInsId(procInsId)
                         .infoKey(entry.getKey())
                         .taskId("")
-                        .infoValue(entry.getValue().toString())
+                        .infoValue(Objects.nonNull(value) ? value.toString() : "")
                         .build();
 
                 infoList.add(info);

@@ -26,6 +26,10 @@
               <uni-easyinput v-model="baseFormData.changeProductName" placeholder="请输入产品名称"/>
             </uni-forms-item>
 
+            <uni-forms-item label="项目阶段" required name="changeProjectStage">
+              <uni-easyinput v-model="baseFormData.changeProjectStage" placeholder="请输入项目阶段"/>
+            </uni-forms-item>
+
             <uni-forms-item label="断点时间" required name="changeEndTime">
               <uni-datetime-picker type="datetime" v-model="baseFormData.changeEndTime"
                                    :format="'yyyy-MM-dd HH:mm:ss'" :value-format="'yyyy-MM-dd HH:mm:ss'"/>
@@ -87,6 +91,12 @@ const baseFormRules = ref({
     rules: [{
       required: true,
       errorMessage: '产品名称不能为空'
+    }]
+  },
+  changeProjectStage: {
+    rules: [{
+      required: true,
+      errorMessage: '项目阶段不能为空'
     }]
   },
   changeEndTime: {

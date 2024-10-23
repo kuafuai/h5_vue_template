@@ -4,6 +4,7 @@ package com.kuafu.web.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kuafu.common.domin.BaseResponse;
 import com.kuafu.common.domin.ErrorCode;
@@ -21,6 +22,7 @@ import com.kuafu.web.flowable.ChangeManagerBusinessService;
 import com.kuafu.web.service.*;
 import com.kuafu.web.vo.ChangeManagerPageVO;
 import com.kuafu.web.vo.ChangeManagerVO;
+import com.kuafu.web.vo.ChangeShowKeyVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +51,7 @@ public class ChangeManagerController {
     private final IFormSettingService formSettingService;
 
     private final IChangeTakeRecordAllService changeTakeRecordAllService;
+    private final IChangeShowKeyService changeShowKeyService;
 
     @PostMapping("page")
     @ApiOperation("分页")
@@ -111,6 +114,44 @@ public class ChangeManagerController {
         ChangeManager entity = this.changeManagerService.getById(id);
         return entity != null ? ResultUtils.success(entity) : ResultUtils.error(ErrorCode.OPERATION_ERROR);
     }
+
+
+    @GetMapping("get/showKey")
+    public BaseResponse getShowKey() {
+        LambdaQueryWrapper<ChangeShowKey> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ChangeShowKey::getUserId, SecurityUtils.getUserId());
+
+        List<ChangeShowKey> list = changeShowKeyService.list(queryWrapper);
+        List<String> showKey = list.stream().map(ChangeShowKey::getShowKey).collect(Collectors.toList());
+
+        Map<String, Object> result = Maps.newHashMap();
+        result.put("showKey", list);
+        result.put("selectKey", showKey);
+
+        return ResultUtils.success(result);
+    }
+
+    @PostMapping("saveShowKey")
+    public BaseResponse saveShowKey(@RequestBody ChangeShowKeyVO showKeyVO) {
+
+        if (showKeyVO.getShowKeys() != null && !showKeyVO.getShowKeys().isEmpty()) {
+            LambdaQueryWrapper<ChangeShowKey> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(ChangeShowKey::getUserId, SecurityUtils.getUserId());
+            changeShowKeyService.remove(queryWrapper);
+            List<ChangeShowKey> list = Lists.newArrayList();
+            for (String key : showKeyVO.getShowKeys()) {
+                list.add(ChangeShowKey.builder()
+                        .userId(SecurityUtils.getUserId().intValue())
+                        .showKey(key)
+                        .showWidth("100")
+                        .build());
+            }
+            changeShowKeyService.saveBatch(list);
+        }
+
+        return ResultUtils.success();
+    }
+
 
     /**
      * 完成 审批变更 节点

@@ -124,5 +124,18 @@ export default {
             method: "post",
             data: data
         });
+    },
+    saveShowKey(data){
+        return service({
+            url: BASE_API + "/saveShowKey",
+            method: "post",
+            data: data
+        });
+    },
+    getMyShowKeys(){
+        return service({
+            url: BASE_API + "/get/showKey",
+            method: "get"
+        });
     }
 };

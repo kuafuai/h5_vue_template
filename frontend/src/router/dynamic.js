@@ -21,6 +21,13 @@ export const dynamicRoutes = [
         }
     },
     {
+        path: '/pages/change/myTake',
+        meta: {
+            title: '参与的变更',
+            shownot: false
+        }
+    },
+    {
         path: '/pages/submission/index',
         meta: {
             title: '提交物管理',
@@ -52,14 +59,14 @@ export const dynamicRoutes = [
         path: '/pages/flowable/definition/index',
         meta: {
             title: '流程定义',
-            shownot: false
+            shownot: true
         }
     },
     {
         path: '/pages/flowable/myProcess/index',
         meta: {
             title: '我的流程',
-            shownot: false
+            shownot: true
         }
     },
     {

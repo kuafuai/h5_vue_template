@@ -7,14 +7,8 @@ import com.kuafu.common.util.StringUtils;
 import com.kuafu.flowable.domain.FlowProcDefDto;
 import com.kuafu.flowable.service.IFlowDefinitionService;
 import com.kuafu.qywx.service.QyWxBusinessService;
-import com.kuafu.web.entity.ChangeManager;
-import com.kuafu.web.entity.ChangeManagerSub;
-import com.kuafu.web.entity.SubmissionMaterial;
-import com.kuafu.web.entity.UserInfo;
-import com.kuafu.web.service.IChangeManagerService;
-import com.kuafu.web.service.IChangeManagerSubService;
-import com.kuafu.web.service.ISubmissionMaterialService;
-import com.kuafu.web.service.IUserInfoService;
+import com.kuafu.web.entity.*;
+import com.kuafu.web.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.task.service.delegate.DelegateTask;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +39,9 @@ public class TaskListener {
 
     @Autowired
     private QyWxBusinessService qyWxBusinessService;
+
+    @Autowired
+    private IChangeTakeRecordService changeTakeRecordService;
 
     /**
      * 任务创建
@@ -89,6 +86,37 @@ public class TaskListener {
             }
 
             qyWxBusinessService.sendTextCardMessage(userId, title, description, url);
+
+            LambdaQueryWrapper<ChangeTakeRecord> recordQuery = new LambdaQueryWrapper<>();
+            if (parentManager != null) {
+                recordQuery.eq(ChangeTakeRecord::getChangeId, parentManager.getChangeId());
+                recordQuery.eq(ChangeTakeRecord::getUserId, userInfo.getUserInfoId());
+
+                long count = changeTakeRecordService.count(recordQuery);
+                if (count == 0) {
+                    ChangeTakeRecord record = ChangeTakeRecord.builder()
+                            .changeId(parentManager.getChangeId())
+                            .procInsId(parentManager.getFlowableInstanceId())
+                            .userId(userInfo.getUserInfoId().intValue())
+                            .build();
+
+                    changeTakeRecordService.save(record);
+                }
+            } else {
+                recordQuery.eq(ChangeTakeRecord::getUserId, userInfo.getUserInfoId());
+                recordQuery.eq(ChangeTakeRecord::getProcInsId, procInsId);
+                long count = changeTakeRecordService.count(recordQuery);
+                if (count == 0) {
+                    ChangeTakeRecord record = ChangeTakeRecord.builder()
+                            .changeId(0)
+                            .procInsId(procInsId)
+                            .userId(userInfo.getUserInfoId().intValue())
+                            .build();
+
+                    changeTakeRecordService.save(record);
+                }
+            }
+
         } catch (Exception e) {
             log.error("{}", e);
         }

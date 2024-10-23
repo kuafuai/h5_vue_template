@@ -10,6 +10,13 @@ export default {
             data: query
         });
     },
+    myTake(query) {
+        return service({
+            url: BASE_API + "/myTake",
+            method: "post",
+            data: query
+        });
+    },
     page_info(query) {
         return service({
             url: BASE_API + "/page-info",

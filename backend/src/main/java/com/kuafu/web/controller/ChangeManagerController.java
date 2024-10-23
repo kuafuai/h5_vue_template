@@ -8,6 +8,7 @@ import com.google.common.collect.Maps;
 import com.kuafu.common.domin.BaseResponse;
 import com.kuafu.common.domin.ErrorCode;
 import com.kuafu.common.domin.ResultUtils;
+import com.kuafu.common.login.SecurityUtils;
 import com.kuafu.common.util.JSON;
 import com.kuafu.common.util.StringUtils;
 import com.kuafu.flowable.domain.FlowFormDto;
@@ -15,15 +16,9 @@ import com.kuafu.flowable.domain.FlowProcDefDto;
 import com.kuafu.flowable.domain.FlowTaskVo;
 import com.kuafu.flowable.service.IFlowDefinitionService;
 import com.kuafu.flowable.service.IFlowTaskService;
-import com.kuafu.web.entity.ApproveNode;
-import com.kuafu.web.entity.ChangeManager;
-import com.kuafu.web.entity.ChangeManagerInfo;
-import com.kuafu.web.entity.FormSetting;
+import com.kuafu.web.entity.*;
 import com.kuafu.web.flowable.ChangeManagerBusinessService;
-import com.kuafu.web.service.IApproveNodeService;
-import com.kuafu.web.service.IChangeManagerInfoService;
-import com.kuafu.web.service.IChangeManagerService;
-import com.kuafu.web.service.IFormSettingService;
+import com.kuafu.web.service.*;
 import com.kuafu.web.vo.ChangeManagerPageVO;
 import com.kuafu.web.vo.ChangeManagerVO;
 import io.swagger.annotations.Api;
@@ -53,6 +48,8 @@ public class ChangeManagerController {
     private final IApproveNodeService approveNodeService;
     private final IFormSettingService formSettingService;
 
+    private final IChangeTakeRecordAllService changeTakeRecordAllService;
+
     @PostMapping("page")
     @ApiOperation("分页")
     public BaseResponse page(@RequestBody ChangeManagerPageVO pageVO) {
@@ -62,6 +59,20 @@ public class ChangeManagerController {
         queryWrapper.orderByDesc(ChangeManager::getChangeId);
 
         return ResultUtils.success(changeManagerService.page(page, queryWrapper));
+    }
+
+    @PostMapping("myTake")
+    @ApiOperation("分页")
+    public BaseResponse myTake(@RequestBody ChangeManagerPageVO pageVO) {
+        IPage<ChangeTakeRecordAll> page = new Page<>(pageVO.getCurrent(), pageVO.getPageSize());
+
+        LambdaQueryWrapper<ChangeTakeRecordAll> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ChangeTakeRecordAll::getUserId, SecurityUtils.getUserId());
+        queryWrapper.ne(ChangeTakeRecordAll::getChangePerson, SecurityUtils.getUserId());
+
+        queryWrapper.orderByDesc(ChangeTakeRecordAll::getChangeId);
+
+        return ResultUtils.success(changeTakeRecordAllService.page(page, queryWrapper));
     }
 
     @PostMapping("page-info")

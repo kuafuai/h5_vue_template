@@ -17,9 +17,13 @@ public class ChangeTakeRecordAll {
     private Integer changeId;
 
     private String changeType;
+    @TableField(value="cm.change_title")
     private String changeTitle;
+    @TableField(value="cm.change_customer")
     private String changeCustomer;
+    @TableField(value="cm.change_project_name")
     private String changeProjectName;
+
     private String changeProductName;
     private String changeProjectStage;
     private Date changeStartTime;

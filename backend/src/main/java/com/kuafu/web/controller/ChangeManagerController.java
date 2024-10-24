@@ -59,6 +59,16 @@ public class ChangeManagerController {
         IPage<ChangeManager> page = new Page<>(pageVO.getCurrent(), pageVO.getPageSize());
 
         LambdaQueryWrapper<ChangeManager> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotEmpty(pageVO.getChangeTitle())) {
+            queryWrapper.like(ChangeManager::getChangeTitle, pageVO.getChangeTitle());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeCustomer())) {
+            queryWrapper.like(ChangeManager::getChangeCustomer, pageVO.getChangeCustomer());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeProjectName())) {
+            queryWrapper.like(ChangeManager::getChangeProjectName, pageVO.getChangeProjectName());
+        }
+
         queryWrapper.orderByDesc(ChangeManager::getChangeId);
 
         return ResultUtils.success(changeManagerService.page(page, queryWrapper));
@@ -70,6 +80,18 @@ public class ChangeManagerController {
         IPage<ChangeTakeRecordAll> page = new Page<>(pageVO.getCurrent(), pageVO.getPageSize());
 
         LambdaQueryWrapper<ChangeTakeRecordAll> queryWrapper = new LambdaQueryWrapper<>();
+
+        if (StringUtils.isNotEmpty(pageVO.getChangeTitle())) {
+            queryWrapper.like(ChangeTakeRecordAll::getChangeTitle, pageVO.getChangeTitle());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeCustomer())) {
+            queryWrapper.like(ChangeTakeRecordAll::getChangeCustomer, pageVO.getChangeCustomer());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeProjectName())) {
+            queryWrapper.like(ChangeTakeRecordAll::getChangeProjectName, pageVO.getChangeProjectName());
+        }
+
+
         queryWrapper.eq(ChangeTakeRecordAll::getUserId, SecurityUtils.getUserId());
         queryWrapper.ne(ChangeTakeRecordAll::getChangePerson, SecurityUtils.getUserId());
 
@@ -84,6 +106,15 @@ public class ChangeManagerController {
         IPage<ChangeManager> page = new Page<>(pageVO.getCurrent(), pageVO.getPageSize());
 
         LambdaQueryWrapper<ChangeManager> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotEmpty(pageVO.getChangeTitle())) {
+            queryWrapper.like(ChangeManager::getChangeTitle, pageVO.getChangeTitle());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeCustomer())) {
+            queryWrapper.like(ChangeManager::getChangeCustomer, pageVO.getChangeCustomer());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeProjectName())) {
+            queryWrapper.like(ChangeManager::getChangeProjectName, pageVO.getChangeProjectName());
+        }
         queryWrapper.orderByDesc(ChangeManager::getChangeId);
         page = changeManagerService.page(page, queryWrapper);
 

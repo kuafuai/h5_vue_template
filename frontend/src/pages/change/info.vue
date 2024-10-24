@@ -1,7 +1,7 @@
 <template>
   <base-wrapper>
     <base-list-header nickname="变更详情" description="变更详情"></base-list-header>
-    <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
+    <base-layout class="m-t-20 p-t-20 overflow-y-scroll" display="flex" direction="c">
       <view class="flex-c-start-start m-b-20 w-full">
         <view class="flex-around-start m-b-20">
           <fui-text :text='baseInfo.changeType === 1 ? "[ECR]":"[ECN]"+" "+baseInfo.changeTitle' type="black"

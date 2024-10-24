@@ -5,10 +5,11 @@
     <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
       <base-search firstSearchData="userName" :searchData="base_search"
                    firstSearchPlaceholder="请输入要搜索的人员名称"
+                   :showMoreSearch="false"
                    @refreshTableData="search_click"
       ></base-search>
 
-      <view class="w-full m-b-20">
+      <view class="w-full m-y-20">
         <base-table ref="refTableUserInfo" class="m-r-20" :columns="[
             { prop: 'name', label: '人员姓名', width: '40' },
             { prop: 'name', label: '所属部门', width: '100' },

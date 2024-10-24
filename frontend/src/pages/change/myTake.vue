@@ -3,10 +3,19 @@
     <base-list-header nickname="我参与的变更" description="我参与的变更"></base-list-header>
     <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
       <view class="w-full flex-between-start">
-        <base-search firstSearchData="approveNodeName" :searchData="base_search"
-                     firstSearchPlaceholder="请输入要搜索的环节名称"
+        <base-search firstSearchData="changeTitle" :searchData="base_search"
+                     firstSearchPlaceholder="请输入要搜索的变更标题"
                      @refreshTableData="search_click"
-        ></base-search>
+        >
+          <template #collapse>
+            <uni-forms-item style="width: 300px" class="m-x-10" label="客户名称:" name="changeCustomer">
+              <uni-easyinput  type="text" v-model="base_search.changeCustomer" placeholder="请输入客户名称"/>
+            </uni-forms-item>
+            <uni-forms-item style="width: 300px" class="m-x-10" label="项目名称:" name="changeProjectName">
+              <uni-easyinput type="text" v-model="base_search.changeProjectName" placeholder="请输入项目名称"/>
+            </uni-forms-item>
+          </template>
+        </base-search>
       </view>
       <view class="m-b-20 overflow-x-scroll" :style="{width: table_width+'px'}">
         <base-table ref="refTableUserInfo" class="m-r-20" api="change_manager.myTake" :columns="[

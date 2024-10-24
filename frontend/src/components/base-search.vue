@@ -4,7 +4,7 @@
       <base-layout display="flex" y="center" class="m-r-20" style="width: 400px;">
         <uni-easyinput class="uni-mt-5" suffixIcon="search" v-model="props.searchData[firstSearchData]"
                        :placeholder="firstSearchPlaceholder" @iconClick="iconClick" @confirm="iconClick"></uni-easyinput>
-        <view class="m-l-10" style="width: 120px;">
+        <view v-if="showMoreSearch" class="m-l-10" style="width: 120px;">
           <fui-button radius="96rpx" size="25" btnSize="small" @click="toggleAdvanced">
             高级筛选
             <a style="margin-left: 8px;">
@@ -15,15 +15,17 @@
         </view>
       </base-layout>
     </base-layout>
-    <base-layout :w_full="true">
+    <base-layout v-if="showMoreSearch">
       <uni-collapse accordion>
         <uni-collapse-item :open="advanced" titleBorder="none">
-          <uni-forms :inline="true" :modelValue="props.searchData" class="m-20">
-            <slot name="collapse">
-            </slot>
+          <uni-forms style="max-width: 100%" :modelValue="props.searchData" class="m-20" label-width="80px">
+            <view class="flex-wrap">
+              <slot name="collapse">
+              </slot>
+            </view>
 
             <uni-forms-item>
-              <button size="mini" style="float: right;" @click="iconClick">
+              <button size="mini" style="float: right;" type="primary" @click="iconClick">
                 搜索
               </button>
             </uni-forms-item>
@@ -44,6 +46,7 @@ const props = defineProps({
   },
   firstSearchData: {type: String},
   firstSearchPlaceholder: {type: String},
+  showMoreSearch: {type: Boolean, default: true},
 });
 const advanced = ref(false);
 

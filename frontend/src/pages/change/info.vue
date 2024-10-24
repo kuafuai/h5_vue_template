@@ -162,7 +162,8 @@
                     </el-descriptions-item>
                     <el-descriptions-item v-if="item.infoValue">
                       <template #label>提交的文件</template>
-                      <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(item.infoValue)' @click="handle_download(f)">
+                      <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(item.infoValue)'
+                               @click="handle_download(f)">
                         下载文件{{ i + 1 }}
                       </el-link>
                     </el-descriptions-item>
@@ -488,7 +489,6 @@ onMounted(async () => {
     baseInfo.value = baseRes.data;
   }
   handle_load_records();
-  console.log(allParams.value)
 });
 
 async function handle_load_records() {
@@ -768,6 +768,8 @@ async function handleClick(tab, event) {
       flowRecordAllList.value = flowRes.data;
     }
     uni.hideLoading();
+  } else {
+    handle_load_records();
   }
 }
 
@@ -775,7 +777,7 @@ function file_split(val) {
   return val.split(",");
 }
 
-function handle_download(fileName){
+function handle_download(fileName) {
   console.log(fileName);
   proxy.$download.name(fileName);
 }

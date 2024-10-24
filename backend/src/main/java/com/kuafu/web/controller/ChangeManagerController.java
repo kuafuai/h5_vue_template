@@ -143,7 +143,7 @@ public class ChangeManagerController {
                 list.add(ChangeShowKey.builder()
                         .userId(SecurityUtils.getUserId().intValue())
                         .showKey(key)
-                        .showWidth("100")
+                        .showWidth("150")
                         .build());
             }
             changeShowKeyService.saveBatch(list);

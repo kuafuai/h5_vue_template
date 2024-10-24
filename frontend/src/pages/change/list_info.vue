@@ -241,11 +241,13 @@ function submitShowKeyForm() {
     uni.showLoading({
       title: '处理中'
     });
+    showKeyForm.value.showKeys.sort();
     let res = await proxy.$api.change_manager.saveShowKey(showKeyForm.value)
     uni.hideLoading();
     proxy.$refs.submitPopup.close();
     if (res.code === 0) {
-      getShowKeySetting();
+      //getShowKeySetting();
+      proxy.$router.go(0);
     }
   });
 }
@@ -259,7 +261,7 @@ async function getShowKeySetting() {
       const result = res.data.selectKey.reduce((obj, item) => {
         // 如果包含 "-"，只保留第一个部分
         const key = item.split('-')[0];
-        obj[key] = "";
+        obj[key.substring(4)] = "";
         return obj;
       }, {});
 
@@ -274,8 +276,8 @@ async function getShowKeySetting() {
         const keys = item.showKey.split('-');
         // 转换成列
         const columns = keys.map(key => ({
-          prop: key,        // 每个分割部分作为 prop
-          label: key,       // 每个分割部分作为 label
+          prop: key.substring(4),        // 每个分割部分作为 prop
+          label: key.substring(4),       // 每个分割部分作为 label
           width: item.showWidth // 使用 showWidth 作为 width
         }));
         return columns;
@@ -312,31 +314,31 @@ onShow(() => {
 })
 
 const allShowKeys = ref([
-  {label: "ECN编号(客户)", value: "ECN编号(客户)"},
-  {label: "主机厂(客户)", value: "主机厂(客户)"},
-  {label: "ECR编号(内部)", value: "ECR编号(内部)"},
-  {label: "ECR批准", value: "ECR批准"},
-  {label: "ECN编号(内部)", value: "ECN编号(内部)"},
-  {label: "项目名称", value: "项目名称"},
-  {label: "项目阶段", value: "项目阶段"},
-  {label: "零件编号", value: "零件编号"},
-  {label: "产品名称", value: "产品名称"},
-  {label: "变更前", value: "变更前"},
-  {label: "变更后", value: "变更后"},
-  {label: "项目负责人", value: "项目负责人"},
-  {label: "发行日期", value: "发行日期"},
-  {label: "断点日期", value: "断点日期"},
-  {label: "3D图纸", value: "3D图纸-关闭时间"},
-  {label: "2D图纸", value: "2D图纸-关闭时间"},
-  {label: "特殊特性清单", value: "特殊特性清单-关闭时间"},
-  {label: "DFEMA", value: "DFEMA-关闭时间"},
-  {label: "PFC", value: "PFC-关闭时间"},
-  {label: "PFEMA", value: "PFEMA-关闭时间"},
-  {label: "CP", value: "CP-关闭时间"},
-  {label: "作业指导书", value: "作业指导书-关闭时间"},
-  {label: "检验指导书", value: "检验指导书-关闭"},
-  {label: "验收单", value: "验收单"},
-  {label: "备注", value: "备注"}
+  {label: "ECN编号(客户)", value: "(01)ECN编号(客户)"},
+  {label: "主机厂(客户)", value: "(02)主机厂(客户)"},
+  {label: "ECR编号(内部)", value: "(03)ECR编号(内部)"},
+  {label: "ECR批准", value: "(04)ECR批准"},
+  {label: "ECN编号(内部)", value: "(05)ECN编号(内部)"},
+  {label: "项目名称", value: "(06)项目名称"},
+  {label: "项目阶段", value: "(07)项目阶段"},
+  {label: "零件编号", value: "(08)零件编号"},
+  {label: "产品名称", value: "(09)产品名称"},
+  {label: "变更前", value: "(10)变更前"},
+  {label: "变更后", value: "(11)变更后"},
+  {label: "项目负责人", value: "(12)项目负责人"},
+  {label: "发行日期", value: "(13)发行日期"},
+  {label: "断点日期", value: "(14)断点日期"},
+  {label: "3D图纸", value: "(15)3D图纸-(00)关闭时间"},
+  {label: "2D图纸", value: "(16)2D图纸-(00)关闭时间"},
+  {label: "特殊特性清单", value: "(17)特殊特性清单-(00)关闭时间"},
+  {label: "DFEMA", value: "(18)DFEMA-(00)关闭时间"},
+  {label: "PFC", value: "(19)PFC-(00)关闭时间"},
+  {label: "PFEMA", value: "(20)PFEMA-(00)关闭时间"},
+  {label: "CP", value: "(21)CP-(00)关闭时间"},
+  {label: "作业指导书", value: "(22)作业指导书-(00)关闭时间"},
+  {label: "检验指导书", value: "(23)检验指导书-(00)关闭时间"},
+  {label: "验收单", value: "(24)验收单"},
+  {label: "备注", value: "(25)备注"}
 ]);
 
 const allShowMapKeys = ref({

@@ -162,8 +162,7 @@
                     </el-descriptions-item>
                     <el-descriptions-item v-if="item.infoValue">
                       <template #label>提交的文件</template>
-                      <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(item.infoValue)' :href="f"
-                               target="_blank">
+                      <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(item.infoValue)' @click="handle_download(f)">
                         下载文件{{ i + 1 }}
                       </el-link>
                     </el-descriptions-item>
@@ -210,7 +209,7 @@
                           <el-descriptions-item v-if="subItem.infoValue">
                             <template #label>提交的文件</template>
                             <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(subItem.infoValue)'
-                                     :href="f" target="_blank">
+                                     @click="handle_download(f)">
                               下载文件{{ i + 1 }}
                             </el-link>
                           </el-descriptions-item>
@@ -775,6 +774,12 @@ async function handleClick(tab, event) {
 function file_split(val) {
   return val.split(",");
 }
+
+function handle_download(fileName){
+  console.log(fileName);
+  proxy.$download.name(fileName);
+}
+
 
 onShow(() => {
   const pages = getCurrentPages();

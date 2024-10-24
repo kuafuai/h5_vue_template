@@ -61,6 +61,7 @@
         "@dcloudio/uni-ui": "^1.5.6",
         "ai-form": "^0.9.8",
         "axios": "^1.7.3",
+        "file-saver": "2.0.5",
         "echarts": "^5.5.1",
         "element-plus": "^2.8.4",
         "firstui-uni": "^2.4.0",

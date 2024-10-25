@@ -16,10 +16,16 @@
       <view class="h-full w-full text-left m-l-10 noMargin">
         <template v-for="(item, index) in dynamicRoutes" :key="item.path">
           <navigator
-              v-if="!item.meta.shownot"
+              v-if="item.meta.allShow  || (!item.meta.shownot &&
+                (
+                    (item.meta.adminShow && (userInfo.admin || userInfo.adminReadOnly))
+                    ||
+                    (item.meta.changeShow && userInfo.changePerson)
+                )
+              )"
               :url="item.path"
               open-type="navigate"
-              @click="() => { closeDrawer(); setActiveIndex(index); }"
+              @click="() => { setActiveIndex(index); }"
               :class="activeIndex === index ? 'active-navigator' : ''"
           >
             <text class="active_text">{{ item.meta.title }}</text>
@@ -40,21 +46,17 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
 import {dynamicRoutes} from '@/router/dynamic';
-
 
 const {proxy} = getCurrentInstance();
 const left_title = import.meta.env.VITE_APP_NAME;
 
 const activeIndex = ref(null); // 默认高亮第一项
 
+const userInfo = ref({});
+
 const setActiveIndex = (index) => {
   activeIndex.value = index; // 设置当前高亮项
-};
-
-const closeDrawer = () => {
-  console.log("Drawer closed"); // 示例日志
 };
 
 onMounted(() => {
@@ -63,7 +65,13 @@ onMounted(() => {
       if (page.path.includes(route)) {
         setActiveIndex(index)
       }
-    })
+    });
+
+    let strUserInfo = uni.getStorageSync("userInfo") || null;
+    if (strUserInfo != null) {
+      userInfo.value = JSON.parse(strUserInfo);
+    }
+
   });
 });
 
@@ -78,6 +86,7 @@ uni-navigator {
   height: 3rem;
   transition: background 0.3s, color 0.3s; /* 添加过渡效果 */
 }
+
 .navigator-hover {
   opacity: 1 !important;
 }

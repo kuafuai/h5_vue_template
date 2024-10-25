@@ -13,7 +13,7 @@
 
       <uni-forms-item name="phone">
         <view class="icon-input-container">
-          <uni-easyinput placeholder="请输入用户名" v-model="form.phone" class="input-field" />
+          <uni-easyinput placeholder="请输入用户名" v-model="form.phone" class="input-field"/>
           <view class="icon">
             <img src="../static/peo.png" style="width:13px;height:13px;" alt="">
           </view>
@@ -21,7 +21,7 @@
       </uni-forms-item>
       <uni-forms-item name="password">
         <view class="icon-input-container">
-          <uni-easyinput placeholder="请输入密码" type="password" v-model="form.password" class="input-field" />
+          <uni-easyinput placeholder="请输入密码" type="password" v-model="form.password" class="input-field"/>
           <view class="icon">
             <img src="../static/pass.png" style="width:13px;height:13px;" alt="">
           </view>
@@ -35,7 +35,7 @@
     </uni-forms>
     <!-- <h5>默认账户密码：admin / 123456</h5> -->
     <h5 v-show="is_register" @click="to_page" style="color: rgba(93, 95, 239, 1);font-size: 13px;font-weight:450">
-      <text style="color:rgba(52, 57, 101, 1);font-weight:450">没有账号? </text>
+      <text style="color:rgba(52, 57, 101, 1);font-weight:450">没有账号?</text>
       现在去注册
     </h5>
     <view>
@@ -55,7 +55,7 @@
       <!-- 手机号输入框 -->
       <uni-forms-item name="phone">
         <view class="icon-input-container">
-          <uni-easyinput v-model="form_sms.phone" placeholder="请输入手机号" type="number" maxlength="11" />
+          <uni-easyinput v-model="form_sms.phone" placeholder="请输入手机号" type="number" maxlength="11"/>
           <view class="icon">
             <img src="../static/phone.png" style="width:11px;height:16px; margin-top:3px" alt="">
           </view>
@@ -66,7 +66,7 @@
 
       <uni-forms-item name="code">
         <view class="code-input-container">
-          <uni-easyinput style="width:50px;" v-model="form_sms.code" placeholder="请输入验证码" />
+          <uni-easyinput style="width:50px;" v-model="form_sms.code" placeholder="请输入验证码"/>
           <view class="icon">
             <img src="../static/safe.png" style="width:22px;height:24px; margin-bottom:2px" alt="">
           </view>
@@ -84,7 +84,7 @@
     </uni-forms>
 
     <h5 v-show="is_register" @click="to_page" style="color: rgba(93, 95, 239, 1);font-size: 13px;font-weight:450">
-      <text style="color:rgba(52, 57, 101, 1);font-weight:450">没有账号? </text>
+      <text style="color:rgba(52, 57, 101, 1);font-weight:450">没有账号?</text>
       现在去注册
     </h5>
   </view>
@@ -100,17 +100,17 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, ref } from "vue";
+import {getCurrentInstance, ref} from "vue";
 
-const { proxy } = getCurrentInstance();
+const {proxy} = getCurrentInstance();
 const emit = defineEmits(["loginSuccess", "loginFail"]);
 
 const props = defineProps({
-  login_type: { type: String, default: null },
-  show_title: { type: String, default: "登陆" },
-  relevanceTable: { type: String, required: true, },
-  is_register: { type: String, required: false, },
-  register_page: { type: String, required: false, default: "" }
+  login_type: {type: String, default: null},
+  show_title: {type: String, default: "登陆"},
+  relevanceTable: {type: String, required: true,},
+  is_register: {type: String, required: false,},
+  register_page: {type: String, required: false, default: ""}
 });
 const to_page = () => {
   proxy.$navigate(props.register_page)
@@ -210,8 +210,8 @@ const rules = ref({
   },
   password: {
     rules: [
-      { required: true, errorMessage: '请输入密码' },
-      { minLength: 3, maxLength: 18, errorMessage: '密码长度3-18位' }
+      {required: true, errorMessage: '请输入密码'},
+      {minLength: 3, maxLength: 18, errorMessage: '密码长度3-18位'}
     ]
   }
 });
@@ -267,7 +267,7 @@ const submitForm_sms = () => {
       login_error(err);
     });
   }).catch(error => {
-    uni.showToast({ title: '请填写正确的信息', icon: 'none' });
+    uni.showToast({title: '请填写正确的信息', icon: 'none'});
 
   });
 };
@@ -277,7 +277,7 @@ function login_error(err) {
   emit("loginFail");
 }
 
-const login_success = (res) => {
+const login_success = async (res) => {
   uni.showToast({
     title: "登录成功",
     icon: "success",
@@ -285,6 +285,13 @@ const login_success = (res) => {
   });
 
   localStorage.setItem("h5_token", res.data);
+
+  let resUserInfo = await proxy.$api.login.getUserInfo();
+  if (resUserInfo.code === 0) {
+    const item = resUserInfo.data;
+    uni.setStorageSync("userInfo", JSON.stringify(item));
+  }
+
   proxy.$api.login.getLoginUser().then((res) => {
     const item = res.data;
     uni.setStorageSync("currentUser", JSON.stringify(item));
@@ -296,15 +303,14 @@ const login_success = (res) => {
 
 const query = proxy.$route.query;
 
-if(props.login_type == 'qywx_h5'){
-  console.log(query)
-  if(query.code!=null && query.code!= ''){
+if (props.login_type == 'qywx_h5') {
+  if (query.code != null && query.code != '') {
     let qywx_form = {...query};
     qywx_form.relevanceTable = props.relevanceTable;
-    proxy.$api.login.loginQyWxWeb(qywx_form).then((res)=> {
+    proxy.$api.login.loginQyWxWeb(qywx_form).then((res) => {
       login_success(res);
     });
-  }else{
+  } else {
     login_qywx_click();
   }
 }
@@ -314,7 +320,7 @@ function login_click() {
   window.location.href = url;
 }
 
-function login_qywx_click(){
+function login_qywx_click() {
   let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodeURIComponent(callback)}&response_type=code&scope=snsapi_base&state=codeflying&agentid=${agentId}#wechat_redirect`;
   window.location.href = url;
 }
@@ -388,6 +394,7 @@ function login_qywx_click(){
     margin-bottom: 8px !important;
   }
 }
+
 h5 {
   color: #888;
   margin-top: 20px;
@@ -412,7 +419,6 @@ h5 {
     color: rgb(93, 95, 239);
     margin-bottom: 20px;
   }
-
 
 
   .demo-form {

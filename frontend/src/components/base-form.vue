@@ -170,7 +170,6 @@ const onSubmit = () => {
   width: 100%;
   display: flex;
   flex-direction: column !important;
-
 }
 
 ::v-deep .uni-forms-item__content {

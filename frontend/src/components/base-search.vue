@@ -69,4 +69,7 @@ function iconClick() {
 ::v-deep .uni-collapse-item__title {
   display: none !important;
 }
+::v-deep .content{
+  width: 97%;
+}
 </style>

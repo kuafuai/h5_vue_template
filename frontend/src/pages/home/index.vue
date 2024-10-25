@@ -25,7 +25,7 @@
           <fui-button width="80%" height="40px" size="26" @click="handle_change">+ 发起变更申请</fui-button>
         </view>
       </view>
-      <view class="flex-column overflow-x-scroll"
+      <view v-if="todoList.length>0" class="flex-column overflow-x-scroll"
             style="width: 60%; height: 100%; background-color: #FFFFFF; border-radius: 10px">
         <view style="height: 110px" v-for="(item,index) in todoList" :key="index">
           <uni-card>
@@ -57,6 +57,13 @@
         </view>
 
       </view>
+      <view v-else class="flex-column overflow-x-scroll"
+            style="width: 60%; height: 100%; background-color: #FFFFFF; border-radius: 10px">
+        <view class="nodata">
+          <img src="@/static/noData.png" style="width:12.5rem;height:auto" alt=""/>
+          <view class="noText">暂无数据～</view>
+        </view>
+      </view>
 
       <view style="width: 5%"></view>
     </base-layout>
@@ -87,7 +94,7 @@ async function getMyTodo() {
     title: '加载中'
   });
   let res = await proxy.$api.change_manager.myTodo();
-  console.log(res);
+
   if (res.code === 0) {
     todoList.value = res.data;
   }
@@ -96,7 +103,6 @@ async function getMyTodo() {
   if (resStatics.code === 0) {
     staticsList.value = resStatics.data;
   }
-
 
   uni.hideLoading();
 }
@@ -129,4 +135,20 @@ onShow(() => {
 ::v-deep .uni-left-window {
   height: 100%;
 }
+
+.nodata {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 37%;
+  font-size: 20px;
+  font-weight: 500;
+  color: rgba(144, 150, 178, 1);
+
+  .noText {
+    margin-top: 18.8px;
+    font-size: 0.875rem;
+  }
+}
+
 </style>

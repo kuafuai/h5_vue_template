@@ -39,8 +39,6 @@ import java.util.stream.Collectors;
 @Api(tags = {"变更管理"})
 @Slf4j
 public class ChangeManagerController {
-
-    private final IFlowTaskService flowTaskService;
     private final IFlowDefinitionService flowDefinitionService;
     private final ChangeManagerBusinessService changeManagerBusinessService;
 
@@ -53,9 +51,16 @@ public class ChangeManagerController {
     private final IChangeTakeRecordAllService changeTakeRecordAllService;
     private final IChangeShowKeyService changeShowKeyService;
 
+    private final IUserInfoService userInfoService;
+
     @PostMapping("page")
     @ApiOperation("分页")
     public BaseResponse page(@RequestBody ChangeManagerPageVO pageVO) {
+        UserInfo userInfo = userInfoService.getById(SecurityUtils.getUserId());
+        if ((userInfo.getAdmin() == null || !userInfo.getAdmin()) && (userInfo.getAdminReadOnly() == null || !userInfo.getAdminReadOnly()) && (userInfo.getChangePerson() == null || !userInfo.getChangePerson())) {
+            return ResultUtils.error("您暂无权限，请联系管理员，设置权限");
+        }
+
         IPage<ChangeManager> page = new Page<>(pageVO.getCurrent(), pageVO.getPageSize());
 
         LambdaQueryWrapper<ChangeManager> queryWrapper = new LambdaQueryWrapper<>();
@@ -67,6 +72,10 @@ public class ChangeManagerController {
         }
         if (StringUtils.isNotEmpty(pageVO.getChangeProjectName())) {
             queryWrapper.like(ChangeManager::getChangeProjectName, pageVO.getChangeProjectName());
+        }
+        if (userInfo.getChangePerson() != null && userInfo.getChangePerson()) {
+            //如果是 发起变更人
+            queryWrapper.eq(ChangeManager::getChangePerson, SecurityUtils.getUserId());
         }
 
         queryWrapper.orderByDesc(ChangeManager::getChangeId);
@@ -103,6 +112,12 @@ public class ChangeManagerController {
     @PostMapping("page-info")
     @ApiOperation("分页")
     public BaseResponse page_info(@RequestBody ChangeManagerPageVO pageVO) {
+
+        UserInfo userInfo = userInfoService.getById(SecurityUtils.getUserId());
+        if ((userInfo.getAdmin() == null || !userInfo.getAdmin()) && (userInfo.getAdminReadOnly() == null || !userInfo.getAdminReadOnly()) && (userInfo.getChangePerson() == null || !userInfo.getChangePerson())) {
+            return ResultUtils.error("您暂无权限，请联系管理员，设置权限");
+        }
+
         IPage<ChangeManager> page = new Page<>(pageVO.getCurrent(), pageVO.getPageSize());
 
         LambdaQueryWrapper<ChangeManager> queryWrapper = new LambdaQueryWrapper<>();
@@ -115,6 +130,12 @@ public class ChangeManagerController {
         if (StringUtils.isNotEmpty(pageVO.getChangeProjectName())) {
             queryWrapper.like(ChangeManager::getChangeProjectName, pageVO.getChangeProjectName());
         }
+
+        if (userInfo.getChangePerson() != null && userInfo.getChangePerson()) {
+            //如果是 发起变更人
+            queryWrapper.eq(ChangeManager::getChangePerson, SecurityUtils.getUserId());
+        }
+
         queryWrapper.orderByDesc(ChangeManager::getChangeId);
         page = changeManagerService.page(page, queryWrapper);
 
@@ -122,9 +143,7 @@ public class ChangeManagerController {
             LambdaQueryWrapper<ChangeManagerInfo> infoQuery = new LambdaQueryWrapper<>();
             infoQuery.eq(ChangeManagerInfo::getChangeId, changeManager.getChangeId());
             List<ChangeManagerInfo> listInfo = changeManagerInfoService.list(infoQuery);
-            Map<String, Object> map =
-                    listInfo.stream()
-                            .collect(Collectors.toMap(ChangeManagerInfo::getInfoKey, p -> p, (oldValue, newValue) -> newValue));
+            Map<String, Object> map = listInfo.stream().collect(Collectors.toMap(ChangeManagerInfo::getInfoKey, p -> p, (oldValue, newValue) -> newValue));
 
             changeManager.setInfoMap(map);
         }
@@ -135,8 +154,13 @@ public class ChangeManagerController {
     @PostMapping("add")
     @ApiOperation("新增")
     public BaseResponse add(@RequestBody ChangeManagerVO vo) {
-        boolean flag = changeManagerBusinessService.processAddChangeManager(vo);
-        return flag ? ResultUtils.success() : ResultUtils.error("发起变更失败");
+        UserInfo userInfo = userInfoService.getById(SecurityUtils.getUserId());
+        if (userInfo.getChangePerson() != null && userInfo.getChangePerson()) {
+            boolean flag = changeManagerBusinessService.processAddChangeManager(vo);
+            return flag ? ResultUtils.success() : ResultUtils.error("发起变更失败");
+        } else {
+            return ResultUtils.error("您没有发起变更的权限！");
+        }
     }
 
     @GetMapping("get/{id}")
@@ -171,11 +195,7 @@ public class ChangeManagerController {
             changeShowKeyService.remove(queryWrapper);
             List<ChangeShowKey> list = Lists.newArrayList();
             for (String key : showKeyVO.getShowKeys()) {
-                list.add(ChangeShowKey.builder()
-                        .userId(SecurityUtils.getUserId().intValue())
-                        .showKey(key)
-                        .showWidth("150")
-                        .build());
+                list.add(ChangeShowKey.builder().userId(SecurityUtils.getUserId().intValue()).showKey(key).showWidth("150").build());
             }
             changeShowKeyService.saveBatch(list);
         }
@@ -263,7 +283,27 @@ public class ChangeManagerController {
 
     @GetMapping("myStatics")
     public BaseResponse staticsStatus() {
-        return ResultUtils.success(changeManagerService.queryStatusStatics());
+        List<Map<String, Object>> map = changeManagerService.queryStatusStatics();
+
+        if (map != null && map.isEmpty()) {
+            Map<String, Object> map1 = Maps.newHashMap();
+            map1.put("change_status", 1);
+            map1.put("number", 0);
+            map.add(map1);
+
+
+            Map<String, Object> map2 = Maps.newHashMap();
+            map2.put("change_status", 2);
+            map2.put("number", 0);
+            map.add(map2);
+
+            Map<String, Object> map3 = Maps.newHashMap();
+            map3.put("change_status", 3);
+            map3.put("number", 0);
+            map.add(map3);
+        }
+
+        return ResultUtils.success(map);
     }
 
     @GetMapping("flowFormData")

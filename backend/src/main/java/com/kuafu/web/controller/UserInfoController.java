@@ -9,6 +9,7 @@ import com.kuafu.common.domin.ResultUtils;
 import com.kuafu.common.util.StringUtils;
 import com.kuafu.login.domain.SelectVo;
 import com.kuafu.web.entity.UserInfo;
+import com.kuafu.web.flowable.ChangeManagerBusinessService;
 import com.kuafu.web.service.IUserInfoService;
 import com.kuafu.web.vo.UserInfoPageVO;
 import com.kuafu.web.vo.UserInfoVO;
@@ -26,6 +27,8 @@ import java.util.stream.Collectors;
 @Api(tags = {"人员"})
 public class UserInfoController {
     private final IUserInfoService userInfoService;
+
+    private final ChangeManagerBusinessService changeManagerBusinessService;
 
 
     @PostMapping("page")
@@ -68,6 +71,21 @@ public class UserInfoController {
                 .build();
         boolean flag = this.userInfoService.saveOrUpdate(entity);
         return flag ? ResultUtils.success(entity.getUserInfoId()) : ResultUtils.error(ErrorCode.OPERATION_ERROR);
+    }
+
+
+    @PostMapping("assign")
+    public BaseResponse assignTask(@RequestBody UserInfoVO vo) {
+        if (vo.getUserInfoId() == null || vo.getAssigner() == null) {
+            return ResultUtils.error("参数有误！");
+        }
+        if (vo.getUserInfoId().equals(vo.getAssigner())) {
+            return ResultUtils.error("交接的人不能是同一人");
+        }
+
+        changeManagerBusinessService.assignTask(vo.getUserInfoId().toString(), vo.getAssigner().toString());
+
+        return ResultUtils.success();
     }
 
 

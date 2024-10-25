@@ -361,4 +361,18 @@ public class ChangeManagerBusinessService {
     public void rejectProcess(FlowTaskVo flowTaskVo) {
         flowTaskService.taskReject(flowTaskVo);
     }
+
+
+    public void assignTask(String sourceUserId, String targetUserId) {
+        List<FlowTaskDto> todoList = flowTaskService.todoAllListByUserId(sourceUserId);
+
+        for (FlowTaskDto flowTaskDto : todoList) {
+
+            FlowTaskVo taskVo = new FlowTaskVo();
+            taskVo.setTaskId(flowTaskDto.getTaskId());
+            taskVo.setAssignee(targetUserId);
+
+            flowTaskService.assignTask(taskVo);
+        }
+    }
 }

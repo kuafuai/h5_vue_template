@@ -657,7 +657,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 .active()
                 .includeProcessVariables()
                 //.taskCandidateGroupIn(sysUser.getRoles().stream().map(role -> role.getRoleId().toString()).collect(Collectors.toList()))
-                .taskCandidateOrAssigned(String.valueOf(SecurityUtils.getUserId()))
+                .taskCandidateOrAssigned(userId)
                 .orderByTaskCreateTime()
                 .desc();
 
@@ -698,6 +698,30 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 flowTask.setStartUserId(historicProcessInstance.getStartUserId());
                 flowTask.setStartUserName(userInfo.getUserName());
             }
+            flowList.add(flowTask);
+        }
+
+        return flowList;
+    }
+
+
+    @Override
+    public List<FlowTaskDto> todoAllListByUserId(String userId) {
+        TaskQuery taskQuery = taskService.createTaskQuery()
+                .active()
+                .includeProcessVariables()
+                //.taskCandidateGroupIn(sysUser.getRoles().stream().map(role -> role.getRoleId().toString()).collect(Collectors.toList()))
+                .taskCandidateOrAssigned(userId)
+                .orderByTaskCreateTime()
+                .desc();
+
+        List<Task> taskList = taskQuery.list();
+        List<FlowTaskDto> flowList = new ArrayList<>();
+
+        for (Task task : taskList) {
+            FlowTaskDto flowTask = new FlowTaskDto();
+            flowTask.setTaskId(task.getId());
+
             flowList.add(flowTask);
         }
 

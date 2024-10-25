@@ -135,6 +135,8 @@ public interface IFlowTaskService {
 
     List<FlowTaskDto> todoListByUserId(String userId);
 
+    List<FlowTaskDto> todoAllListByUserId(String userId);
+
     /**
      * 已办任务列表
      *

@@ -93,7 +93,6 @@ uni-navigator {
 
 .active_text {
   margin-left: 10px;
-  //color: rgb(158, 158, 158);
   padding-left: 3rem;
 }
 

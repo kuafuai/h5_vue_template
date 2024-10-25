@@ -9,7 +9,7 @@
         >
           <template #collapse>
             <uni-forms-item style="width: 300px" class="m-x-10" label="客户名称:" name="changeCustomer">
-              <uni-easyinput  type="text" v-model="base_search.changeCustomer" placeholder="请输入客户名称"/>
+              <uni-easyinput type="text" v-model="base_search.changeCustomer" placeholder="请输入客户名称"/>
             </uni-forms-item>
             <uni-forms-item style="width: 300px" class="m-x-10" label="项目名称:" name="changeProjectName">
               <uni-easyinput type="text" v-model="base_search.changeProjectName" placeholder="请输入项目名称"/>
@@ -84,6 +84,11 @@ function search_click(item) {
 function jump_edit(item) {
   let url = '/pages/change/info?changeId=' + item.changeId + "&procInsId=" + item.flowableInstanceId;
   proxy.$navigate(url)
+}
+
+function handle_task_info(item) {
+  let url = '/pages/change/info?changeId=' + item.changeId + "&procInsId=" + item.flowableInstanceId;
+  proxy.$navigate(url);
 }
 
 

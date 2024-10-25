@@ -2,8 +2,8 @@
   <base-wrapper>
     <base-list-header nickname="变更列表" description="变更列表明细"></base-list-header>
     <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
-      <view class="w-full flex-between-start">
-        <view style="width: 200px" class="flex-start-center">
+      <view class="w-full flex-between-start" style="position: relative;">
+        <view style="width: 200px;position: absolute;" class="flex-start-center">
           <fui-button btnSize="small" @click="handle_change" radius="96rpx" class="m-r-10">发起变更</fui-button>
           <fui-button btnSize="small" @click="handle_show_key" type="purple" radius="96rpx">设置展示字段</fui-button>
         </view>
@@ -13,7 +13,7 @@
         >
           <template #collapse>
             <uni-forms-item style="width: 300px" class="m-x-10" label="客户名称:" name="changeCustomer">
-              <uni-easyinput  type="text" v-model="base_search.changeCustomer" placeholder="请输入客户名称"/>
+              <uni-easyinput type="text" v-model="base_search.changeCustomer" placeholder="请输入客户名称"/>
             </uni-forms-item>
             <uni-forms-item style="width: 300px" class="m-x-10" label="项目名称:" name="changeProjectName">
               <uni-easyinput type="text" v-model="base_search.changeProjectName" placeholder="请输入项目名称"/>
@@ -305,11 +305,11 @@ async function getShowKeySetting() {
 const table_width = ref(800);
 
 onResize(() => {
-  table_width.value = window.innerWidth - 300;
+  table_width.value = window.innerWidth - 300 - 12;
 })
 
 onMounted(() => {
-  table_width.value = window.innerWidth - 300;
+  table_width.value = window.innerWidth - 300 - 12;
 
   getShowKeySetting();
 

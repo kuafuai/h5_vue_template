@@ -4,15 +4,16 @@
     <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
       <view class="w-full flex-between-start">
         <view style="width: 200px">
-          <fui-button btnSize="small" @click="handle_add_approve" radius="96rpx">新建审批人</fui-button>
+          <fui-button v-if="false" btnSize="small" @click="handle_add_approve" radius="96rpx">新建审批人</fui-button>
         </view>
         <base-search firstSearchData="approveNodeName" :searchData="base_search"
                      firstSearchPlaceholder="请输入要搜索的环节名称"
+                     :showMoreSearch="false"
                      @refreshTableData="search_click"
         ></base-search>
       </view>
 
-      <view class="w-full m-b-20">
+      <view class="w-full m-y-20">
         <base-table ref="refTableUserInfo" class="m-r-20" api="approvenode.page" :columns="[
             { prop: 'name', label: '环节名称', width: '20' },
             { prop: 'name', label: '审批方式', width: '40' },

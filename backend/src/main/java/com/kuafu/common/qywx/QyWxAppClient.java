@@ -45,4 +45,10 @@ public class QyWxAppClient extends AbstractClient {
             return Lists.newArrayList();
         }
     }
+
+    public QyWxAppMessageResponse sendMessage(QyWxAppMessageRequest request) {
+        String value = this.internalRequest("https://qyapi.weixin.qq.com/cgi-bin/message/send", "POST", request);
+
+        return JSON.parseObject(value, QyWxAppMessageResponse.class);
+    }
 }

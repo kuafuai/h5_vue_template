@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuafu.web.mapper.ChangeTakeRecordAllMapper">
+
+    <select id="selectList" resultType="com.kuafu.web.entity.ChangeTakeRecordAll">
+        select cm.*, tr.user_id
+        from change_take_record tr
+                 left join change_manager cm on tr.proc_ins_id = cm.flowable_instance_id
+
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectPage" resultType="com.kuafu.web.entity.ChangeTakeRecordAll">
+        select cm.*, tr.user_id
+        from change_take_record tr
+                 left join change_manager cm on tr.proc_ins_id = cm.flowable_instance_id
+
+        ${ew.customSqlSegment}
+    </select>
+
+</mapper>

@@ -71,6 +71,12 @@
       }
     },
     {
+      "path": "pages/change/myTake",
+      "style": {
+        "leftWindow": true
+      }
+    },
+    {
       "path": "pages/change/change",
       "style": {
         "leftWindow": true

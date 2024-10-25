@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -22,7 +24,9 @@ public class ChangeManagerInfo {
     private Integer changeId;
 
     private String procInsId;
+    private String taskId;
     private String infoKey;
     private String infoValue;
 
+    private Date createTime;
 }

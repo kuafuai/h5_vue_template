@@ -9,7 +9,7 @@
       <view class="w-full m-b-20">
         <base-table ref="refTableUserInfo" class="m-r-20" api="flowable_definition.page" :columns="[
             { prop: 'name', label: '流程编号', width: '100' },
-            { prop: 'name', label: '流程标识', width: '150' },
+            { prop: 'name', label: '流程标识', width: '250' },
             { prop: 'name', label: '流程分类', width: '100' },
             { prop: 'name', label: '流程名称', width: '-' },
             { prop: 'name', label: '业务表单', width: '140' },

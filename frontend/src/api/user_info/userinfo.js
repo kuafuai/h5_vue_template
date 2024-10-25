@@ -36,6 +36,13 @@ export default {
             method: "delete"
         });
     },
+    assignTask(data){
+        return service({
+            url: BASE_API + "/assign",
+            method: "post",
+            data: data
+        });
+    },
     select_list(){
         return service({
             url: BASE_API + "/get/select_list",

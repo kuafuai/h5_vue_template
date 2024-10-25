@@ -33,7 +33,7 @@ public class QyWxTest {
         QyWxAppClient client = new QyWxAppClient();
 
         List<QyWxAppDepartment> departmentList = client.getDepartments(QyWxAppDepartmentRequest.builder()
-                .accessToken("XRH8a-lUkshFdWoi9eujXzsUg6QdXJgJvwz-JvdNBnr-sw_ipzquuuvcfsjYEaiUoJ66qRlBE8Wd3Q4JxXPEOtlnwvO7Ymo8CPpX_FvIyUyfz-7Wzi4qrP4uujfQzk12aBDy9vr4VSFUvAXG5jaQlnp5_0QE2qIxjuzn0faeIBXEb6pNRDONPWBMuiQbVRgtAXUPS22Ai8Ydm7kwG_7TqQ")
+                .accessToken("Gx7DPkd8cXUfBkFPoduAoog5Ke5dCwL7gy20CswAv219JeQXWP9Yc0IGJxuaYhf4dfeSue0-_B1DOiTM6P9k0wkUUgbSIL_ncUqkV7_7Pu0-mHdk7XcoouTScBj0v7EkDzCPq9GOdF2bMGtqMHtE0TrFw9z16A08eMOjQj-fstpanyIqw5whMu6UnMduGLn_svn39gbY1TS0jzpC1bhMrA")
                 .build());
 
         log.info("{}", departmentList);
@@ -44,7 +44,7 @@ public class QyWxTest {
         QyWxAppClient client = new QyWxAppClient();
 
         List<QyWxAppUser> users = client.getUsers(QyWxAppUserRequest.builder()
-                .accessToken("XRH8a-lUkshFdWoi9eujXzsUg6QdXJgJvwz-JvdNBnr-sw_ipzquuuvcfsjYEaiUoJ66qRlBE8Wd3Q4JxXPEOtlnwvO7Ymo8CPpX_FvIyUyfz-7Wzi4qrP4uujfQzk12aBDy9vr4VSFUvAXG5jaQlnp5_0QE2qIxjuzn0faeIBXEb6pNRDONPWBMuiQbVRgtAXUPS22Ai8Ydm7kwG_7TqQ")
+                .accessToken("Gx7DPkd8cXUfBkFPoduAoog5Ke5dCwL7gy20CswAv219JeQXWP9Yc0IGJxuaYhf4dfeSue0-_B1DOiTM6P9k0wkUUgbSIL_ncUqkV7_7Pu0-mHdk7XcoouTScBj0v7EkDzCPq9GOdF2bMGtqMHtE0TrFw9z16A08eMOjQj-fstpanyIqw5whMu6UnMduGLn_svn39gbY1TS0jzpC1bhMrA")
                 .departmentId(1)
                 .build());
 
@@ -52,10 +52,29 @@ public class QyWxTest {
     }
 
     @Test
+    public void send_message() {
+        //JiangFeiZhiHangHeYi
+        QyWxAppClient client = new QyWxAppClient();
+
+        QyWxAppMessageTextCardRequest request = new QyWxAppMessageTextCardRequest();
+        request.setAccessToken("Gx7DPkd8cXUfBkFPoduAoog5Ke5dCwL7gy20CswAv219JeQXWP9Yc0IGJxuaYhf4dfeSue0-_B1DOiTM6P9k0wkUUgbSIL_ncUqkV7_7Pu0-mHdk7XcoouTScBj0v7EkDzCPq9GOdF2bMGtqMHtE0TrFw9z16A08eMOjQj-fstpanyIqw5whMu6UnMduGLn_svn39gbY1TS0jzpC1bhMrA");
+        request.setTouser("JiangFeiZhiHangHeYi");
+        request.setAgentid(1000017);
+        request.setMsgtype("textcard");
+        request.setTextcard(TextCard.builder()
+                .description("描述111")
+                .title("任务1111")
+                .url("https://www.baidu.com")
+                .build());
+
+        client.sendMessage(request);
+    }
+
+    @Test
     public void test_code() {
         QyWxAppClient client = new QyWxAppClient();
         QyWxAppCode2UserResponse response = client.getUserByCode(QyWxAppCode2UserRequest.builder()
-                .accessToken("XRH8a-lUkshFdWoi9eujXzsUg6QdXJgJvwz-JvdNBnr-sw_ipzquuuvcfsjYEaiUoJ66qRlBE8Wd3Q4JxXPEOtlnwvO7Ymo8CPpX_FvIyUyfz-7Wzi4qrP4uujfQzk12aBDy9vr4VSFUvAXG5jaQlnp5_0QE2qIxjuzn0faeIBXEb6pNRDONPWBMuiQbVRgtAXUPS22Ai8Ydm7kwG_7TqQ")
+                .accessToken("Gx7DPkd8cXUfBkFPoduAoog5Ke5dCwL7gy20CswAv219JeQXWP9Yc0IGJxuaYhf4dfeSue0-_B1DOiTM6P9k0wkUUgbSIL_ncUqkV7_7Pu0-mHdk7XcoouTScBj0v7EkDzCPq9GOdF2bMGtqMHtE0TrFw9z16A08eMOjQj-fstpanyIqw5whMu6UnMduGLn_svn39gbY1TS0jzpC1bhMrA")
                 .code("bBJKIYejFb7DQg63skj9qSYk1ul1sd31rmSOgWPmbv0")
                 .build());
 

@@ -32,6 +32,7 @@ public class FlowProcDefDto {
 
     private int suspensionState;
 
+    @TableField(value="rd.deploy_time_")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date deploymentTime;
 }

@@ -2,24 +2,31 @@ package com.kuafu.common.controller;
 
 import com.google.common.collect.Maps;
 import com.kuafu.common.config.AppConfig;
+import com.kuafu.common.config.ResourcesConfig;
+import com.kuafu.common.constant.Constants;
 import com.kuafu.common.domin.BaseResponse;
 import com.kuafu.common.domin.ResultUtils;
 import com.kuafu.common.file.FileUploadUtils;
 import com.kuafu.common.file.FileUtils;
 import com.kuafu.common.util.ServletUtils;
 import com.kuafu.common.util.StringUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/common")
+@Slf4j
 public class CommonController {
 
     private static final String FILE_DELIMETER = ",";
@@ -86,6 +93,29 @@ public class CommonController {
 //            return getDomain(request).replace(ServletUtils.getRequest().getContextPath(),"") + "/" + processBackedUrl(backendUrl);
         }
         return getDomain(request);
+    }
+
+    @GetMapping("/download")
+    public void fileDownload(String fileName, HttpServletResponse response, HttpServletRequest request) {
+        try {
+            if (!FileUtils.checkAllowDownload(fileName)) {
+                throw new Exception(StringUtils.format("文件名称({})非法，不允许下载。 ", fileName));
+            }
+            String realFileName = System.currentTimeMillis() + fileName.substring(fileName.indexOf("_") + 1);
+            String filePath;
+            if (StringUtils.startsWith(fileName, Constants.RESOURCE_PREFIX)) {
+                filePath = AppConfig.getProfile() + StringUtils.replace(fileName, Constants.RESOURCE_PREFIX, "");
+            } else {
+                filePath = AppConfig.getDownloadPath() + fileName;
+            }
+            
+            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            FileUtils.setAttachmentResponseHeader(response, realFileName);
+            FileUtils.writeBytes(filePath, response.getOutputStream());
+
+        } catch (Exception e) {
+            log.error("下载文件失败", e);
+        }
     }
 
 

@@ -1,6 +1,7 @@
 package com.kuafu.flowable.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.kuafu.flowable.constant.FLowStop;
 import com.kuafu.flowable.domain.*;
 import org.flowable.bpmn.model.UserTask;
 
@@ -106,6 +107,8 @@ public interface IFlowTaskService {
      */
     void stopProcess(FlowTaskVo flowTaskVo);
 
+    void stopProcess(FlowTaskVo flowTaskVo, FLowStop stop);
+
     /**
      * 撤回流程
      *
@@ -131,6 +134,8 @@ public interface IFlowTaskService {
     Page<FlowTaskDto> todoList(FlowQueryVo queryVo);
 
     List<FlowTaskDto> todoListByUserId(String userId);
+
+    List<FlowTaskDto> todoAllListByUserId(String userId);
 
     /**
      * 已办任务列表

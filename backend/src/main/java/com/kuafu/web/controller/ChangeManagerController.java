@@ -4,28 +4,34 @@ package com.kuafu.web.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kuafu.common.domin.BaseResponse;
 import com.kuafu.common.domin.ErrorCode;
 import com.kuafu.common.domin.ResultUtils;
+import com.kuafu.common.login.SecurityUtils;
 import com.kuafu.common.util.JSON;
 import com.kuafu.common.util.StringUtils;
 import com.kuafu.flowable.domain.FlowFormDto;
+import com.kuafu.flowable.domain.FlowProcDefDto;
 import com.kuafu.flowable.domain.FlowTaskVo;
 import com.kuafu.flowable.service.IFlowDefinitionService;
 import com.kuafu.flowable.service.IFlowTaskService;
-import com.kuafu.web.entity.ChangeManager;
+import com.kuafu.web.entity.*;
 import com.kuafu.web.flowable.ChangeManagerBusinessService;
-import com.kuafu.web.service.IChangeManagerService;
+import com.kuafu.web.service.*;
 import com.kuafu.web.vo.ChangeManagerPageVO;
 import com.kuafu.web.vo.ChangeManagerVO;
+import com.kuafu.web.vo.ChangeShowKeyVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,30 +39,128 @@ import java.util.Map;
 @Api(tags = {"变更管理"})
 @Slf4j
 public class ChangeManagerController {
+    private final IFlowDefinitionService flowDefinitionService;
+    private final ChangeManagerBusinessService changeManagerBusinessService;
 
     private final IChangeManagerService changeManagerService;
+    private final IChangeManagerInfoService changeManagerInfoService;
 
-    private final IFlowTaskService flowTaskService;
-    private final IFlowDefinitionService flowDefinitionService;
+    private final IApproveNodeService approveNodeService;
+    private final IFormSettingService formSettingService;
 
-    private final ChangeManagerBusinessService changeManagerBusinessService;
+    private final IChangeTakeRecordAllService changeTakeRecordAllService;
+    private final IChangeShowKeyService changeShowKeyService;
+
+    private final IUserInfoService userInfoService;
 
     @PostMapping("page")
     @ApiOperation("分页")
     public BaseResponse page(@RequestBody ChangeManagerPageVO pageVO) {
+        UserInfo userInfo = userInfoService.getById(SecurityUtils.getUserId());
+        if ((userInfo.getAdmin() == null || !userInfo.getAdmin()) && (userInfo.getAdminReadOnly() == null || !userInfo.getAdminReadOnly()) && (userInfo.getChangePerson() == null || !userInfo.getChangePerson())) {
+            return ResultUtils.error("您暂无权限，请联系管理员，设置权限");
+        }
+
         IPage<ChangeManager> page = new Page<>(pageVO.getCurrent(), pageVO.getPageSize());
 
         LambdaQueryWrapper<ChangeManager> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotEmpty(pageVO.getChangeTitle())) {
+            queryWrapper.like(ChangeManager::getChangeTitle, pageVO.getChangeTitle());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeCustomer())) {
+            queryWrapper.like(ChangeManager::getChangeCustomer, pageVO.getChangeCustomer());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeProjectName())) {
+            queryWrapper.like(ChangeManager::getChangeProjectName, pageVO.getChangeProjectName());
+        }
+        if (userInfo.getChangePerson() != null && userInfo.getChangePerson()) {
+            //如果是 发起变更人
+            queryWrapper.eq(ChangeManager::getChangePerson, SecurityUtils.getUserId());
+        }
+
         queryWrapper.orderByDesc(ChangeManager::getChangeId);
 
         return ResultUtils.success(changeManagerService.page(page, queryWrapper));
     }
 
+    @PostMapping("myTake")
+    @ApiOperation("分页")
+    public BaseResponse myTake(@RequestBody ChangeManagerPageVO pageVO) {
+        IPage<ChangeTakeRecordAll> page = new Page<>(pageVO.getCurrent(), pageVO.getPageSize());
+
+        LambdaQueryWrapper<ChangeTakeRecordAll> queryWrapper = new LambdaQueryWrapper<>();
+
+        if (StringUtils.isNotEmpty(pageVO.getChangeTitle())) {
+            queryWrapper.like(ChangeTakeRecordAll::getChangeTitle, pageVO.getChangeTitle());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeCustomer())) {
+            queryWrapper.like(ChangeTakeRecordAll::getChangeCustomer, pageVO.getChangeCustomer());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeProjectName())) {
+            queryWrapper.like(ChangeTakeRecordAll::getChangeProjectName, pageVO.getChangeProjectName());
+        }
+
+
+        queryWrapper.eq(ChangeTakeRecordAll::getUserId, SecurityUtils.getUserId());
+        queryWrapper.ne(ChangeTakeRecordAll::getChangePerson, SecurityUtils.getUserId());
+
+        queryWrapper.orderByDesc(ChangeTakeRecordAll::getChangeId);
+
+        return ResultUtils.success(changeTakeRecordAllService.page(page, queryWrapper));
+    }
+
+    @PostMapping("page-info")
+    @ApiOperation("分页")
+    public BaseResponse page_info(@RequestBody ChangeManagerPageVO pageVO) {
+
+        UserInfo userInfo = userInfoService.getById(SecurityUtils.getUserId());
+        if ((userInfo.getAdmin() == null || !userInfo.getAdmin()) && (userInfo.getAdminReadOnly() == null || !userInfo.getAdminReadOnly()) && (userInfo.getChangePerson() == null || !userInfo.getChangePerson())) {
+            return ResultUtils.error("您暂无权限，请联系管理员，设置权限");
+        }
+
+        IPage<ChangeManager> page = new Page<>(pageVO.getCurrent(), pageVO.getPageSize());
+
+        LambdaQueryWrapper<ChangeManager> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotEmpty(pageVO.getChangeTitle())) {
+            queryWrapper.like(ChangeManager::getChangeTitle, pageVO.getChangeTitle());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeCustomer())) {
+            queryWrapper.like(ChangeManager::getChangeCustomer, pageVO.getChangeCustomer());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeProjectName())) {
+            queryWrapper.like(ChangeManager::getChangeProjectName, pageVO.getChangeProjectName());
+        }
+
+        if (userInfo.getChangePerson() != null && userInfo.getChangePerson()) {
+            //如果是 发起变更人
+            queryWrapper.eq(ChangeManager::getChangePerson, SecurityUtils.getUserId());
+        }
+
+        queryWrapper.orderByDesc(ChangeManager::getChangeId);
+        page = changeManagerService.page(page, queryWrapper);
+
+        for (ChangeManager changeManager : page.getRecords()) {
+            LambdaQueryWrapper<ChangeManagerInfo> infoQuery = new LambdaQueryWrapper<>();
+            infoQuery.eq(ChangeManagerInfo::getChangeId, changeManager.getChangeId());
+            List<ChangeManagerInfo> listInfo = changeManagerInfoService.list(infoQuery);
+            Map<String, Object> map = listInfo.stream().collect(Collectors.toMap(ChangeManagerInfo::getInfoKey, p -> p, (oldValue, newValue) -> newValue));
+
+            changeManager.setInfoMap(map);
+        }
+
+        return ResultUtils.success(page);
+    }
+
     @PostMapping("add")
     @ApiOperation("新增")
     public BaseResponse add(@RequestBody ChangeManagerVO vo) {
-        boolean flag = changeManagerBusinessService.processAddChangeManager(vo);
-        return flag ? ResultUtils.success() : ResultUtils.error("发起变更失败");
+        UserInfo userInfo = userInfoService.getById(SecurityUtils.getUserId());
+        if (userInfo.getChangePerson() != null && userInfo.getChangePerson()) {
+            boolean flag = changeManagerBusinessService.processAddChangeManager(vo);
+            return flag ? ResultUtils.success() : ResultUtils.error("发起变更失败");
+        } else {
+            return ResultUtils.error("您没有发起变更的权限！");
+        }
     }
 
     @GetMapping("get/{id}")
@@ -65,6 +169,40 @@ public class ChangeManagerController {
         ChangeManager entity = this.changeManagerService.getById(id);
         return entity != null ? ResultUtils.success(entity) : ResultUtils.error(ErrorCode.OPERATION_ERROR);
     }
+
+
+    @GetMapping("get/showKey")
+    public BaseResponse getShowKey() {
+        LambdaQueryWrapper<ChangeShowKey> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ChangeShowKey::getUserId, SecurityUtils.getUserId());
+
+        List<ChangeShowKey> list = changeShowKeyService.list(queryWrapper);
+        List<String> showKey = list.stream().map(ChangeShowKey::getShowKey).collect(Collectors.toList());
+
+        Map<String, Object> result = Maps.newHashMap();
+        result.put("showKey", list);
+        result.put("selectKey", showKey);
+
+        return ResultUtils.success(result);
+    }
+
+    @PostMapping("saveShowKey")
+    public BaseResponse saveShowKey(@RequestBody ChangeShowKeyVO showKeyVO) {
+
+        if (showKeyVO.getShowKeys() != null && !showKeyVO.getShowKeys().isEmpty()) {
+            LambdaQueryWrapper<ChangeShowKey> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(ChangeShowKey::getUserId, SecurityUtils.getUserId());
+            changeShowKeyService.remove(queryWrapper);
+            List<ChangeShowKey> list = Lists.newArrayList();
+            for (String key : showKeyVO.getShowKeys()) {
+                list.add(ChangeShowKey.builder().userId(SecurityUtils.getUserId().intValue()).showKey(key).showWidth("150").build());
+            }
+            changeShowKeyService.saveBatch(list);
+        }
+
+        return ResultUtils.success();
+    }
+
 
     /**
      * 完成 审批变更 节点
@@ -102,45 +240,125 @@ public class ChangeManagerController {
         return flag ? ResultUtils.success() : ResultUtils.error("操作失败");
     }
 
+    /**
+     * 上传 验收报告
+     *
+     * @param flowTaskVo
+     * @return
+     */
     @PostMapping(value = "/completeCheckFile")
     public BaseResponse completeCheckFile(@RequestBody FlowTaskVo flowTaskVo) {
         boolean flag = changeManagerBusinessService.completeCheckFile(flowTaskVo);
         return flag ? ResultUtils.success() : ResultUtils.error("操作失败");
     }
 
+    /**
+     * 任务详情
+     *
+     * @param procInsId
+     * @return
+     */
     @GetMapping("changeRecords")
     public BaseResponse getFlowableRecord(String procInsId) {
 
-        return ResultUtils.success(changeManagerBusinessService.getChangeFlowRecords(procInsId));
+        return ResultUtils.success(changeManagerBusinessService.getChangeFlowRecords(procInsId, false));
     }
 
+    @GetMapping("changeRecordsAll")
+    public BaseResponse getFlowableRecordAll(String procInsId) {
+
+        return ResultUtils.success(changeManagerBusinessService.getChangeFlowRecords(procInsId, true));
+    }
+
+    /**
+     * 我的任务
+     *
+     * @return
+     */
     @GetMapping("myTodo")
     public BaseResponse myTodo() {
 
         return ResultUtils.success(changeManagerBusinessService.getTodoListByCurrentUser());
     }
 
-    @GetMapping("flowFormData")
-    public BaseResponse getFlowFormData(String changeType) {
-        String deployId = "";
-        String procDefId = "";
-        if (StringUtils.equalsIgnoreCase(changeType, "ECR")) {
-            deployId = "45001";
-            procDefId = "ECR03:1:45004";
-        } else {
-            deployId = "47501";
-            procDefId = "测试表单05:1:47504";
+    @GetMapping("myStatics")
+    public BaseResponse staticsStatus() {
+        List<Map<String, Object>> map = changeManagerService.queryStatusStatics();
+
+        if (map != null && map.isEmpty()) {
+            Map<String, Object> map1 = Maps.newHashMap();
+            map1.put("change_status", 1);
+            map1.put("number", 0);
+            map.add(map1);
+
+
+            Map<String, Object> map2 = Maps.newHashMap();
+            map2.put("change_status", 2);
+            map2.put("number", 0);
+            map.add(map2);
+
+            Map<String, Object> map3 = Maps.newHashMap();
+            map3.put("change_status", 3);
+            map3.put("number", 0);
+            map.add(map3);
         }
-        FlowFormDto formDto = flowTaskService.flowFormData(deployId);
-        Map<String, Object> formJson = JSON.parseObject(formDto.getFormContent(), Map.class);
+
+        return ResultUtils.success(map);
+    }
+
+    @GetMapping("flowFormData")
+    public BaseResponse getFlowFormData(Integer changeType) {
+
+        FormSetting formSetting = formSettingService.getById(changeType);
+        if (formSetting == null) {
+            return ResultUtils.error("请先配置表单");
+        }
+        LambdaQueryWrapper<ApproveNode> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ApproveNode::getApproveNodeName, "审批变更");
+        ApproveNode approveNode = approveNodeService.getOne(queryWrapper);
+        if (approveNode == null) {
+            return ResultUtils.error("请先配置 审批变更 节点");
+        }
+        String strApproveType = approveNode.getApproveType() == 1 ? "Parallel" : "Sequential";
+        String formName = formSetting.getFormName();
+
+        String flowableName = formName + "_" + strApproveType;
+
+        FlowProcDefDto flowProcDefDto = flowDefinitionService.getLastByName(flowableName);
+        if (flowProcDefDto == null) {
+            return ResultUtils.error("请先配置变更流程");
+        }
 
         Map<String, Object> result = Maps.newHashMap();
-        result.put("deployId", deployId);
-        result.put("procDefId", procDefId);
-        result.put("formJson", formJson);
+        result.put("deployId", flowProcDefDto.getDeploymentId());
+        result.put("procDefId", flowProcDefDto.getId());
+        result.put("formJson", JSON.parseObject(formSetting.getFormContent(), Map.class));
 
         return ResultUtils.success(result);
     }
 
+    /**
+     * 取消申请
+     *
+     * @param flowTaskVo
+     * @return
+     */
+    @PostMapping(value = "/stop")
+    public BaseResponse stopChangeManager(@RequestBody FlowTaskVo flowTaskVo) {
+        changeManagerBusinessService.stopProcess(flowTaskVo);
+        return ResultUtils.success();
+    }
+
+    /**
+     * 驳回上一级
+     *
+     * @param flowTaskVo
+     * @return
+     */
+    @PostMapping(value = "/reject")
+    public BaseResponse rejectChangeManager(@RequestBody FlowTaskVo flowTaskVo) {
+        changeManagerBusinessService.rejectProcess(flowTaskVo);
+        return ResultUtils.success();
+    }
 
 }

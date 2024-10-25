@@ -19,4 +19,6 @@ public class UserInfoVO {
     private Boolean admin;
     private Boolean adminReadOnly;
     private Boolean changePerson;
+
+    private Long assigner;
 }

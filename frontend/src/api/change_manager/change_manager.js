@@ -10,6 +10,20 @@ export default {
             data: query
         });
     },
+    myTake(query) {
+        return service({
+            url: BASE_API + "/myTake",
+            method: "post",
+            data: query
+        });
+    },
+    page_info(query) {
+        return service({
+            url: BASE_API + "/page-info",
+            method: "post",
+            data: query
+        });
+    },
     get(id) {
         return service({
             url: BASE_API + "/get/" + id,
@@ -50,6 +64,13 @@ export default {
             params: query
         });
     },
+    changeRecordsAll(query){
+        return service({
+            url: BASE_API + "/changeRecordsAll",
+            method: "get",
+            params: query
+        });
+    },
     completeApprove(data) {
         return service({
             url: BASE_API + "/completeApprove",
@@ -81,6 +102,39 @@ export default {
     myTodo(){
         return service({
             url: BASE_API + "/myTodo",
+            method: "get"
+        });
+    },
+    myStatics(){
+        return service({
+            url: BASE_API + "/myStatics",
+            method: "get"
+        });
+    },
+    stopProcess(data){
+        return service({
+            url: BASE_API + "/stop",
+            method: "post",
+            data: data
+        });
+    },
+    rejectProcess(data){
+        return service({
+            url: BASE_API + "/reject",
+            method: "post",
+            data: data
+        });
+    },
+    saveShowKey(data){
+        return service({
+            url: BASE_API + "/saveShowKey",
+            method: "post",
+            data: data
+        });
+    },
+    getMyShowKeys(){
+        return service({
+            url: BASE_API + "/get/showKey",
             method: "get"
         });
     }

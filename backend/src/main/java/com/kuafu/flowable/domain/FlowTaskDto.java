@@ -77,4 +77,6 @@ public class FlowTaskDto implements Serializable {
 
     private String changeId;
     private String changeTitle;
+
+    private String infoValue;
 }

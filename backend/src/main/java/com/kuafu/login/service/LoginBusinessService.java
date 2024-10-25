@@ -50,9 +50,8 @@ public class LoginBusinessService {
 
     public Object getCurrentUser() {
 //      获取的是关联对象的详细记录
-        IService iService = SpringUtils.getBean(LoginRelevanceConfig.getLoginRelevanceTable());
         final LoginUser loginUser = SecurityUtils.getLoginUser();
-
+        IService iService = SpringUtils.getBean(loginUser.getRelevanceTable());
         return iService.getById(loginUser.getRelevanceId());
     }
 

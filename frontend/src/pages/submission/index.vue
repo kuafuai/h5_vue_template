@@ -8,11 +8,12 @@
         </view>
         <base-search firstSearchData="submissionName" :searchData="base_search"
                      firstSearchPlaceholder="请输入要搜索的提交物名称"
+                     :showMoreSearch="false"
                      @refreshTableData="search_click"
         ></base-search>
       </view>
 
-      <view class="w-full m-b-20">
+      <view class="w-full m-y-20">
         <base-table ref="refTableUserInfo" class="m-r-20" api="submission_material.page" :columns="[
             { prop: 'name', label: '提交物名称', width: '20' },
             { prop: 'name', label: '审批方式', width: '40' },

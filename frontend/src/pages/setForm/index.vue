@@ -40,6 +40,10 @@ const designerConfig = ref({
   toolbarMaxWidth: 420,
   toolbarMinWidth: 400,  //设计器工具按钮栏最小宽度（单位像素）
   formHeader: false,
+  formTemplates: false,
+  importJsonButton: false,
+  exportJsonButton: false,
+  previewFormButton: false,
 })
 
 const allParams = ref({})

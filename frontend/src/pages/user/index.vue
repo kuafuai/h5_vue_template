@@ -1,7 +1,9 @@
 <template>
   <base-wrapper>
-    <base-list-header nickname="人员管理" description="企业微信人员列表，可以设置人员权限"></base-list-header>
-
+    <!-- <base-list-header nickname="人员管理" description="企业微信人员列表，可以设置人员权限"></base-list-header> -->
+    <view style="width:100%;background:white;padding:25px 15px;color:#6569F7;font-weight:600;font-size:18px">
+      人员管理
+    </view>
     <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
       <base-search firstSearchData="userName" :searchData="base_search"
                    firstSearchPlaceholder="请输入要搜索的人员名称"

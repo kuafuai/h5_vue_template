@@ -10,7 +10,9 @@ import com.kuafu.common.domin.BaseResponse;
 import com.kuafu.common.domin.ErrorCode;
 import com.kuafu.common.domin.ResultUtils;
 import com.kuafu.common.login.SecurityUtils;
+import com.kuafu.common.util.ExcelUtils;
 import com.kuafu.common.util.JSON;
+import com.kuafu.common.util.ServletUtils;
 import com.kuafu.common.util.StringUtils;
 import com.kuafu.flowable.domain.FlowFormDto;
 import com.kuafu.flowable.domain.FlowProcDefDto;
@@ -29,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -359,6 +362,47 @@ public class ChangeManagerController {
     public BaseResponse rejectChangeManager(@RequestBody FlowTaskVo flowTaskVo) {
         changeManagerBusinessService.rejectProcess(flowTaskVo);
         return ResultUtils.success();
+    }
+
+
+    @PostMapping("/info/export")
+    public void export(HttpServletResponse response, ChangeManagerPageVO pageVO) {
+        UserInfo userInfo = userInfoService.getById(SecurityUtils.getUserId());
+        if ((userInfo.getAdmin() == null || !userInfo.getAdmin()) &&
+                (userInfo.getAdminReadOnly() == null || !userInfo.getAdminReadOnly()) &&
+                (userInfo.getChangePerson() == null || !userInfo.getChangePerson())) {
+            ServletUtils.renderString(response, JSON.toJSONString(ResultUtils.error("您暂无权限，请联系管理员，设置权限")));
+        } else {
+
+            LambdaQueryWrapper<ChangeManager> queryWrapper = new LambdaQueryWrapper<>();
+            if (StringUtils.isNotEmpty(pageVO.getChangeTitle())) {
+                queryWrapper.like(ChangeManager::getChangeTitle, pageVO.getChangeTitle());
+            }
+            if (StringUtils.isNotEmpty(pageVO.getChangeCustomer())) {
+                queryWrapper.like(ChangeManager::getChangeCustomer, pageVO.getChangeCustomer());
+            }
+            if (StringUtils.isNotEmpty(pageVO.getChangeProjectName())) {
+                queryWrapper.like(ChangeManager::getChangeProjectName, pageVO.getChangeProjectName());
+            }
+
+            if (userInfo.getChangePerson() != null && userInfo.getChangePerson()) {
+                //如果是 发起变更人
+                queryWrapper.eq(ChangeManager::getChangePerson, SecurityUtils.getUserId());
+            }
+
+            List<ChangeManager> list = changeManagerService.list(queryWrapper);
+            for (ChangeManager changeManager : list) {
+                LambdaQueryWrapper<ChangeManagerInfo> infoQuery = new LambdaQueryWrapper<>();
+                infoQuery.eq(ChangeManagerInfo::getChangeId, changeManager.getChangeId());
+                List<ChangeManagerInfo> listInfo = changeManagerInfoService.list(infoQuery);
+                Map<String, Object> map = listInfo.stream().collect(Collectors.toMap(ChangeManagerInfo::getInfoKey, p -> p, (oldValue, newValue) -> newValue));
+
+                changeManager.setInfoMap(map);
+            }
+
+            ExcelUtils.export(list, response);
+
+        }
     }
 
 }

@@ -31,4 +31,11 @@ uni-left-window{
     width: 99%;
     height: 95%;
 }
+::v-deep .right-toolbar-con{
+    width: 100% !important;
+    text-align: right !important;
+}
+::v-deep .right-toolbar{
+  max-width: 200px !important;
+}
 </style>

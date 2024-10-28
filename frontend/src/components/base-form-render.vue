@@ -36,4 +36,8 @@ const submitForm = () => {
 ::v-deep .no-widget-hint{
     display: none;
 }
+::v-deep .right-toolbar-con{
+    width: 100% !important;
+    text-align: right !important;
+}
 </style>

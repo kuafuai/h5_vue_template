@@ -18,13 +18,13 @@
     <base-layout v-if="showMoreSearch">
       <uni-collapse accordion>
         <uni-collapse-item :open="advanced" titleBorder="none">
-          <uni-forms style="max-width: 100%" :modelValue="props.searchData" class="m-20" label-width="80px">
+          <uni-forms style="max-width: 100%;position: relative;" :modelValue="props.searchData" class="m-20" label-width="80px">
             <view class="flex-wrap">
               <slot name="collapse">
               </slot>
             </view>
 
-            <uni-forms-item>
+            <uni-forms-item style="position: absolute;top:0;right:-100px;">
               <button size="mini" style="float: right;" type="primary" @click="iconClick">
                 搜索
               </button>
@@ -69,6 +69,7 @@ function iconClick() {
 ::v-deep .uni-collapse-item__title {
   display: none !important;
 }
+
 ::v-deep .content{
   width: 97%;
 }

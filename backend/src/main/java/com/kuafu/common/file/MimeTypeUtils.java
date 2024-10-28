@@ -30,7 +30,8 @@ public class MimeTypeUtils {
             // 视频格式
             "mp4", "avi", "rmvb",
             // pdf
-            "pdf"};
+            "pdf",
+            "dwg"};
 
     public static String getExtension(String prefix) {
         switch (prefix) {

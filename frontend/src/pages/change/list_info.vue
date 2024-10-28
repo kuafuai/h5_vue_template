@@ -1,11 +1,17 @@
 <template>
   <base-wrapper>
-    <base-list-header nickname="变更列表" description="变更列表明细"></base-list-header>
+    <!-- <base-list-header nickname="变更列表" description="变更列表明细"></base-list-header> -->
+    <view style="width:100%;background:white;padding:25px 15px;color:#6569F7;font-weight:600;font-size:18px">
+      变更明细
+    </view>
     <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
-      <view class="w-full flex-between-start">
-        <view style="width: 200px" class="flex-start-center">
+      <view class="w-full flex-between-start" style="position: relative;">
+        <view style="width: 200px;position: absolute;" class="flex-start-center">
           <fui-button btnSize="small" @click="handle_change" radius="96rpx" class="m-r-10">发起变更</fui-button>
-          <fui-button btnSize="small" @click="handle_show_key" type="purple" radius="96rpx">设置展示字段</fui-button>
+          <fui-button btnSize="small" @click="handle_show_key" type="purple" radius="96rpx" class="m-r-10">
+            设置展示字段
+          </fui-button>
+          <fui-button btnSize="small" @click="handle_export" type="success" radius="96rpx">导 出</fui-button>
         </view>
         <base-search firstSearchData="changeTitle" :searchData="base_search"
                      firstSearchPlaceholder="请输入要搜索的变更标题"
@@ -13,7 +19,7 @@
         >
           <template #collapse>
             <uni-forms-item style="width: 300px" class="m-x-10" label="客户名称:" name="changeCustomer">
-              <uni-easyinput  type="text" v-model="base_search.changeCustomer" placeholder="请输入客户名称"/>
+              <uni-easyinput type="text" v-model="base_search.changeCustomer" placeholder="请输入客户名称"/>
             </uni-forms-item>
             <uni-forms-item style="width: 300px" class="m-x-10" label="项目名称:" name="changeProjectName">
               <uni-easyinput type="text" v-model="base_search.changeProjectName" placeholder="请输入项目名称"/>
@@ -53,7 +59,7 @@
             </uni-td>
 
             <uni-td v-if=" '项目阶段' in showKeyMapColumns" align="center">
-              <fui-text :text="default_value" :size="28"></fui-text>
+              <fui-text :text="item.changeProjectStage" :size="28"></fui-text>
             </uni-td>
 
             <uni-td v-if=" '零件编号' in showKeyMapColumns" align="center">
@@ -176,7 +182,8 @@
             </uni-td>
 
             <uni-td v-if=" '验收单' in showKeyMapColumns" align="center">
-              <fui-text :text="default_value" :size="28"></fui-text>
+              <uni-icons v-if="'验收报告' in item.infoMap" type="smallcircle-filled" size="20"></uni-icons>
+              <uni-icons v-else type="circle" size="20"></uni-icons>
             </uni-td>
 
             <uni-td v-if=" '备注' in showKeyMapColumns" align="center">
@@ -302,14 +309,19 @@ async function getShowKeySetting() {
   }
 }
 
+function handle_export() {
+  proxy.$download.download("/changeManager/info/export", {...base_search.value}, `变更明细_${new Date().getTime()}.xlsx`)
+}
+
+
 const table_width = ref(800);
 
 onResize(() => {
-  table_width.value = window.innerWidth - 300;
+  table_width.value = window.innerWidth - 300 - 12;
 })
 
 onMounted(() => {
-  table_width.value = window.innerWidth - 300;
+  table_width.value = window.innerWidth - 300 - 12;
 
   getShowKeySetting();
 

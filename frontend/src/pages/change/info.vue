@@ -1,6 +1,9 @@
 <template>
   <base-wrapper>
-    <base-list-header nickname="变更详情" description="变更详情"></base-list-header>
+    <!-- <base-list-header nickname="变更详情" description="变更详情"></base-list-header> -->
+    <view style="width:100%;background:white;padding:25px 15px;color:#6569F7;font-weight:600;font-size:18px">
+      变更详情
+    </view>
     <base-layout class="m-t-20 p-t-20 overflow-y-scroll" display="flex" direction="c">
       <view class="flex-c-start-start m-b-20 w-full">
         <view class="flex-around-start m-b-20">
@@ -333,17 +336,41 @@
                      v-for="(item,index ) in submitListRecord"
                      :key="index">
                   <el-checkbox :label="item.submissionName" :value="item.submissionName"/>
-                  <view class="m-l-6" v-show="submitForm.checkSubmits.includes(item.submissionName)">
-                    <el-text style="font-size: 12px; font-weight: 600; cursor: pointer;"
-                             v-if="alreadySubmitPerson.hasOwnProperty(item.submissionName)"
-                             @click="chooseSubmitPerson(item.submissionName)">
-                      {{ alreadySubmitPerson[item.submissionName].text }}
-                    </el-text>
-                    <el-button v-else
-                               type="warning" size="small" link
-                               @click="chooseSubmitPerson(item.submissionName)">请设置提交人
-                    </el-button>
-                  </view>
+                  <view class="m-l-6" style="
+  width: 100%; 
+  height: 100%; 
+  display: block flex; 
+  align-items: center; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;"
+  v-show="submitForm.checkSubmits.includes(item.submissionName)"
+>
+  <el-text 
+    style="
+      font-size: 12px; 
+      flex:none;
+      font-weight: 600; 
+      cursor: pointer; 
+      display: inline-block; 
+      width: 200px;"
+    v-if="alreadySubmitPerson.hasOwnProperty(item.submissionName)"
+    @click="chooseSubmitPerson(item.submissionName)"
+  >
+    {{ alreadySubmitPerson[item.submissionName].text }}
+  </el-text>
+  
+  <el-button 
+    v-else 
+    type="warning" 
+    size="small" 
+    link 
+    @click="chooseSubmitPerson(item.submissionName)"
+  >
+    请设置提交人
+  </el-button>
+</view>
+
 
                 </div>
               </div>

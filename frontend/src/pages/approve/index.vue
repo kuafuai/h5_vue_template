@@ -1,6 +1,9 @@
 <template>
   <base-wrapper>
-    <base-list-header nickname="审批人管理" description="审批流程节点的审批人设置"></base-list-header>
+    <!-- <base-list-header nickname="审批人管理" description="审批流程节点的审批人设置"></base-list-header> -->
+    <view style="width:100%;background:white;padding:25px 15px;color:#6569F7;font-weight:600;font-size:18px">
+      审批人管理
+    </view>
     <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
       <view class="w-full flex-between-start">
         <view style="width: 200px">

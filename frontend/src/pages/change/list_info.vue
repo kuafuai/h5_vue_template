@@ -179,7 +179,8 @@
             </uni-td>
 
             <uni-td v-if=" '验收单' in showKeyMapColumns" align="center">
-              <fui-text :text="default_value" :size="28"></fui-text>
+              <uni-icons v-if="'验收报告' in item.infoMap" type="smallcircle-filled" size="20"></uni-icons>
+              <uni-icons v-else type="circle" size="20"></uni-icons>
             </uni-td>
 
             <uni-td v-if=" '备注' in showKeyMapColumns" align="center">

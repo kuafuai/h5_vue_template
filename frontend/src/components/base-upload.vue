@@ -49,7 +49,7 @@ const props = defineProps({
   // 大小限制(MB)
   fileSize: {
     type: Number,
-    default: 5,
+    default: 20,
   },
   // 文件类型, 例如['png', 'jpg', 'jpeg']
   fileType: {

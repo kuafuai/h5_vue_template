@@ -5,7 +5,10 @@
       <view class="w-full flex-between-start" style="position: relative;">
         <view style="width: 200px;position: absolute;" class="flex-start-center">
           <fui-button btnSize="small" @click="handle_change" radius="96rpx" class="m-r-10">发起变更</fui-button>
-          <fui-button btnSize="small" @click="handle_show_key" type="purple" radius="96rpx">设置展示字段</fui-button>
+          <fui-button btnSize="small" @click="handle_show_key" type="purple" radius="96rpx" class="m-r-10">
+            设置展示字段
+          </fui-button>
+          <fui-button btnSize="small" @click="handle_export" type="success" radius="96rpx">导 出</fui-button>
         </view>
         <base-search firstSearchData="changeTitle" :searchData="base_search"
                      firstSearchPlaceholder="请输入要搜索的变更标题"
@@ -53,7 +56,7 @@
             </uni-td>
 
             <uni-td v-if=" '项目阶段' in showKeyMapColumns" align="center">
-              <fui-text :text="default_value" :size="28"></fui-text>
+              <fui-text :text="item.changeProjectStage" :size="28"></fui-text>
             </uni-td>
 
             <uni-td v-if=" '零件编号' in showKeyMapColumns" align="center">
@@ -301,6 +304,11 @@ async function getShowKeySetting() {
     }
   }
 }
+
+function handle_export() {
+  proxy.$download.download("/changeManager/info/export", {...base_search.value}, `变更明细_${new Date().getTime()}.xlsx`)
+}
+
 
 const table_width = ref(800);
 

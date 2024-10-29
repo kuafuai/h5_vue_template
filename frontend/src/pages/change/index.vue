@@ -77,10 +77,10 @@
               <uni-tag v-if="item.changeStatus === 2" text="已完成" type="success" />
               <uni-tag v-if="item.changeStatus === 3" text="已驳回" type="error" />
             </uni-td>
-            <uni-td align="center">
-              <button size="mini" type="default" 
-                style="color:#ffffff;backgroundColor:#63b463;borderColor:#1AAD19" @click="handle_task_info(item)">详情
-              </button>
+            <uni-td align="center" style="display:flex;align-items: center;justify-content: center;box-sizing:border-box;">
+              <view style=""><button size="mini" type="default" 
+                style="color:#ffffff;backgroundColor:#63b463;borderColor:#1AAD19;" @click="handle_task_info(item)">详情
+              </button></view>
               <!--              <button v-if="item.changeStatus === 1" size="mini" type="default" class="m-r-10"-->
               <!--                      style="color:#ffffff;backgroundColor:#d58867;borderColor:#ad3419"-->
               <!--                      @click="handle_stop(item)">取消申请-->

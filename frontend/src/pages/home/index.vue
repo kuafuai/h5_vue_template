@@ -24,7 +24,7 @@
 
       <!-- <view style="width: 5%"></view> -->
 
-      <view style="width: 20%;height: 100%; background-color: #FFFFFF; border-radius: 10px"
+      <view style="width: 22%;height: 100%; background-color: #FFFFFF; border-radius: 10px"
             class="flex-c-between-start">
         <view class="w-full flex-center-center" style="height: 80px;">
           <fui-icon name="piechart" class="m-r-10"></fui-icon>
@@ -45,7 +45,7 @@
         </view>
       </view>
       <view class="flex-c-start-start"
-            style="width: 60%; height: 100%; background-color: #FFFFFF; border-radius: 10px">
+            style="width: 68%; height: 100%; background-color: #FFFFFF; border-radius: 10px">
 
         <view class="w-full flex-start-center" style="height: 80px;">
           <fui-icon name="info" class="m-x-10"></fui-icon>

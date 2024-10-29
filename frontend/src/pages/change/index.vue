@@ -1,8 +1,13 @@
 <template>
   <base-wrapper>
     <!-- <base-list-header nickname="变更管理" description="变更管理"></base-list-header> -->
-    <view style="width:100%;background:white;padding:25px 15px;color:#6569F7;font-weight:600;font-size:18px">
-      变更列表
+    <view style="width:98%;background:white;padding:25px 15px;display:flex;align-items: center;justify-content: space-between;">
+      <view style="color:#6569F7;font-weight:600;font-size:18px;">
+        变更列表
+      </view>
+      <view style="width: 40px; height: 40px;line-height:40px;border-radius:30px;background:rgb(101,105,247);text-align: center;color:white;">
+            {{ userInfo.userName }}
+          </view>
     </view>
     <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
       <view class="w-full flex-between-start" style="position: relative;">
@@ -63,7 +68,7 @@
               <uni-tag v-if="item.changeStatus === 3" text="已驳回" type="error" />
             </uni-td>
             <uni-td align="center">
-              <button size="mini" type="default" class="m-r-10"
+              <button size="mini" type="default" 
                 style="color:#ffffff;backgroundColor:#63b463;borderColor:#1AAD19" @click="handle_task_info(item)">详情
               </button>
               <!--              <button v-if="item.changeStatus === 1" size="mini" type="default" class="m-r-10"-->
@@ -126,9 +131,13 @@ const table_width = ref(800);
 onResize(() => {
   table_width.value = window.innerWidth - 300 + 12;
 })
-
+const userInfo=ref('')
 onMounted(() => {
   table_width.value = window.innerWidth - 300 + 12;
+  let strUserInfo = uni.getStorageSync("userInfo") || null;
+    if (strUserInfo != null) {
+      userInfo.value = JSON.parse(strUserInfo);
+    }
 })
 
 

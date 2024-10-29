@@ -1,8 +1,13 @@
 <template>
   <base-wrapper>
     <!-- <base-list-header nickname="变更详情" description="变更详情"></base-list-header> -->
-    <view style="width:100%;background:white;padding:25px 15px;color:#6569F7;font-weight:600;font-size:18px">
-      变更详情
+    <view style="width:98%;background:white;padding:25px 15px;display:flex;align-items: center;justify-content: space-between;">
+      <view style="color:#6569F7;font-weight:600;font-size:18px;">
+        变更详情
+      </view>
+      <view style="width: 40px; height: 40px;line-height:40px;border-radius:30px;background:rgb(101,105,247);text-align: center;color:white;">
+            {{ userInfo.userName }}
+          </view>
     </view>
     <base-layout class="m-t-20 p-t-20 overflow-y-scroll" display="flex" direction="c">
       <view class="flex-c-start-start m-b-20 w-full">

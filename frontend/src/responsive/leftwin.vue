@@ -33,17 +33,15 @@
         </template>
       </view>
 
-      <view class="w-full m-b-30">
+      <!-- <view class="w-full m-b-30">
         <view class="flex-end-center m-r-20">
-          <view style="width: 40px; height: 40px;line-height:40px;border-radius:30px;background:rgb(101,105,247);text-align: center;color:white;">
-            {{ userInfo.userName }}
-          </view>
-          <!-- <image src="@/assets/logo/logo.png" style="width: 30px; height: 30px;" mode="aspectFill"></image> -->
-          <uni-badge :is-dot="true" :text="1" absolute="rightTop" class="item m-l-20">
+         
+         <image src="@/assets/logo/logo.png" style="width: 30px; height: 30px;" mode="aspectFill"></image> 
+        <uni-badge :is-dot="true" :text="1" absolute="rightTop" class="item m-l-20">
             <uni-icons type="chatbubble" size="30"></uni-icons>
-          </uni-badge>
+          </uni-badge> 
         </view>
-      </view>
+      </view> -->
     </view>
   </scroll-view>
 </template>

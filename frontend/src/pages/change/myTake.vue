@@ -1,8 +1,13 @@
 <template>
   <base-wrapper>
     <!-- <base-list-header nickname="我参与的变更" description="我参与的变更"></base-list-header> -->
-    <view style="width:100%;background:white;padding:25px 15px;color:#6569F7;font-weight:600;font-size:18px">
-      我参与的变更
+    <view style="width:98%;background:white;padding:25px 15px;display:flex;align-items: center;justify-content: space-between;">
+      <view style="color:#6569F7;font-weight:600;font-size:18px;">
+        我参与的变更
+      </view>
+      <view style="width: 40px; height: 40px;line-height:40px;border-radius:30px;background:rgb(101,105,247);text-align: center;color:white;">
+            {{ userInfo.userName }}
+          </view>
     </view>
     <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
       <view class="w-full flex-between-start">
@@ -100,9 +105,13 @@ const table_width = ref(800);
 onResize(() => {
   table_width.value = window.innerWidth - 300;
 })
-
+const userInfo=ref('')
 onMounted(() => {
   table_width.value = window.innerWidth - 300;
+  let strUserInfo = uni.getStorageSync("userInfo") || null;
+    if (strUserInfo != null) {
+      userInfo.value = JSON.parse(strUserInfo);
+    }
 })
 
 onShow(() => {

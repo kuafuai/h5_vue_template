@@ -55,7 +55,7 @@
             </uni-td>
 
             <uni-td v-if=" 'ECR批准' in showKeyMapColumns" align="center">
-              <fui-text :text="default_value" :size="28"></fui-text>
+              <fui-text :text="'ECR批准' in item.infoMap ? item.infoMap['ECR批准'].infoValue : default_value" :size="28"></fui-text>
             </uni-td>
 
             <uni-td v-if=" 'ECN编号(内部)' in showKeyMapColumns" align="center">
@@ -71,7 +71,7 @@
             </uni-td>
 
             <uni-td v-if=" '零件编号' in showKeyMapColumns" align="center">
-              <fui-text :text="default_value" :size="28"></fui-text>
+              <fui-text :text="item.partNumber" :size="28"></fui-text>
             </uni-td>
 
             <uni-td v-if=" '产品名称' in showKeyMapColumns" align="center">
@@ -195,7 +195,7 @@
             </uni-td>
 
             <uni-td v-if=" '备注' in showKeyMapColumns" align="center">
-              <fui-text :text="default_value" :size="28"></fui-text>
+              <fui-text :text="'备注' in item.infoMap ? item.infoMap['备注'].infoValue : default_value" :size="28"></fui-text>
             </uni-td>
 
           </template>

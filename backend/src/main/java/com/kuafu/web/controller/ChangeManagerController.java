@@ -76,9 +76,14 @@ public class ChangeManagerController {
         if (StringUtils.isNotEmpty(pageVO.getChangeProjectName())) {
             queryWrapper.like(ChangeManager::getChangeProjectName, pageVO.getChangeProjectName());
         }
-        if (userInfo.getChangePerson() != null && userInfo.getChangePerson()) {
-            //如果是 发起变更人
-            queryWrapper.eq(ChangeManager::getChangePerson, SecurityUtils.getUserId());
+
+        if ((userInfo.getAdmin() == null || !userInfo.getAdmin()) &&
+                (userInfo.getAdminReadOnly() == null || !userInfo.getAdminReadOnly())) {
+            // 不是管理员 并且不是 只读管理员
+            if (userInfo.getChangePerson() != null && userInfo.getChangePerson()) {
+                //如果是 发起变更人
+                queryWrapper.eq(ChangeManager::getChangePerson, SecurityUtils.getUserId());
+            }
         }
 
         queryWrapper.orderByDesc(ChangeManager::getChangeId);
@@ -134,9 +139,13 @@ public class ChangeManagerController {
             queryWrapper.like(ChangeManager::getChangeProjectName, pageVO.getChangeProjectName());
         }
 
-        if (userInfo.getChangePerson() != null && userInfo.getChangePerson()) {
-            //如果是 发起变更人
-            queryWrapper.eq(ChangeManager::getChangePerson, SecurityUtils.getUserId());
+        if ((userInfo.getAdmin() == null || !userInfo.getAdmin()) &&
+                (userInfo.getAdminReadOnly() == null || !userInfo.getAdminReadOnly())) {
+            // 不是管理员 并且不是 只读管理员
+            if (userInfo.getChangePerson() != null && userInfo.getChangePerson()) {
+                //如果是 发起变更人
+                queryWrapper.eq(ChangeManager::getChangePerson, SecurityUtils.getUserId());
+            }
         }
 
         queryWrapper.orderByDesc(ChangeManager::getChangeId);
@@ -385,9 +394,13 @@ public class ChangeManagerController {
                 queryWrapper.like(ChangeManager::getChangeProjectName, pageVO.getChangeProjectName());
             }
 
-            if (userInfo.getChangePerson() != null && userInfo.getChangePerson()) {
-                //如果是 发起变更人
-                queryWrapper.eq(ChangeManager::getChangePerson, SecurityUtils.getUserId());
+            if ((userInfo.getAdmin() == null || !userInfo.getAdmin()) &&
+                    (userInfo.getAdminReadOnly() == null || !userInfo.getAdminReadOnly())) {
+                // 不是管理员 并且不是 只读管理员
+                if (userInfo.getChangePerson() != null && userInfo.getChangePerson()) {
+                    //如果是 发起变更人
+                    queryWrapper.eq(ChangeManager::getChangePerson, SecurityUtils.getUserId());
+                }
             }
 
             List<ChangeManager> list = changeManagerService.list(queryWrapper);

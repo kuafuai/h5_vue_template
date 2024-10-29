@@ -2,6 +2,7 @@
   <base-wrapper>
     <base-list-header nickname="流程定义管理" description="流程定义管理"></base-list-header>
     <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
+      <fui-button size="small" @click="handle_add">添 加</fui-button>
       <base-search firstSearchData="name" :searchData="base_search"
                    firstSearchPlaceholder="请输入要搜索的流程名称"
                    @refreshTableData="search_click"
@@ -58,6 +59,27 @@
         </base-table>
       </view>
     </base-layout>
+
+    <uni-popup ref="popup" borderRadius="10px 10px 10px 10px" background-color="#fff">
+      <view class="m-10 w-full">
+        <uni-forms ref="refForm" style="max-width: 100%" :modelValue="form" label-position="top">
+          <uni-forms-item label="名称">
+            <uni-easyinput v-model="form.name" placeholder="请输入名称"/>
+          </uni-forms-item>
+          <uni-forms-item label="分类">
+            <uni-easyinput v-model="form.category" placeholder="请输入分类"/>
+          </uni-forms-item>
+          <uni-forms-item label="内容">
+            <uni-easyinput type="textarea" :maxlength="-1" v-model="form.xml" placeholder="请输入内容"/>
+          </uni-forms-item>
+        </uni-forms>
+        <view class="flex-center-center">
+          <button type="primary" size="mini" @click="proxy.$refs.popup.close();">取 消</button>
+          <button type="primary" size="mini" @click="submitForm">确 定</button>
+        </view>
+      </view>
+    </uni-popup>
+
   </base-wrapper>
 </template>
 
@@ -66,7 +88,8 @@ import {onShow} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance();
 
-const base_search = ref({})
+const base_search = ref({});
+const form = ref({});
 
 function search_click(item) {
   proxy.$refs.refTableUserInfo.refresh(item);
@@ -75,6 +98,22 @@ function search_click(item) {
 function handle_start_task(item) {
   let url = '/pages/flowable/send/index?deployId=' + item.deploymentId + "&procDefId=" + item.id;
   proxy.$navigate(url)
+}
+
+function handle_add(){
+  proxy.$refs.popup.open();
+}
+
+async function submitForm(){
+  uni.showLoading({
+    title: '处理中'
+  });
+
+  let res = await proxy.$api.flowable_definition.add(form.value);
+
+  uni.hideLoading();
+
+  proxy.$refs.popup.close();
 }
 
 onShow(() => {
@@ -89,4 +128,11 @@ onShow(() => {
 ::v-deep .uni-left-window {
   height: 100%;
 }
+
+::v-deep .uni-popup__wrapper {
+  width: 600px;
+  //height: 60%;
+  max-width: 80%;
+}
+
 </style>

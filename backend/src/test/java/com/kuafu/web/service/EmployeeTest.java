@@ -11,11 +11,19 @@ import com.kuafu.flowable.mapper.FlowDeployMapper;
 import com.kuafu.flowable.service.IFlowDefinitionService;
 import com.kuafu.web.flowable.ChangeManagerBusinessService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.flowable.engine.RepositoryService;
+import org.flowable.engine.repository.ProcessDefinition;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @SpringBootTest(classes = {MisAppBackendApplication.class})
 @RunWith(SpringRunner.class)
@@ -28,6 +36,9 @@ public class EmployeeTest {
 
     @Autowired
     private ChangeManagerBusinessService changeManagerBusinessService;
+
+    @Autowired
+    private RepositoryService repositoryService;
 
     @Test
     public void test1() {
@@ -46,8 +57,39 @@ public class EmployeeTest {
 
 
     @Test
-    public void test3() {
-        System.out.println(AppConfig.getProfile());
+    public void test3() throws IOException {
+        //流程定义
+        ProcessDefinition definition =
+                repositoryService.createProcessDefinitionQuery().deploymentId("20001").singleResult();
+        InputStream inputStream =
+                repositoryService.getResourceAsStream(definition.getDeploymentId(), definition.getResourceName());
+        String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+        log.info("{}, {}, {},{}", definition, definition.getResourceName(), definition.getDiagramResourceName(), result);
+    }
+
+    @Test
+    public void test4() throws IOException {
+        ProcessDefinition definition =
+                repositoryService.createProcessDefinitionQuery().deploymentId("20001").singleResult();
+        //获得图片流
+        InputStream inputStream =
+                repositoryService.getResourceAsStream(definition.getDeploymentId(), definition.getDiagramResourceName());
+//        DefaultProcessDiagramGenerator diagramGenerator = new DefaultProcessDiagramGenerator();
+//        BpmnModel bpmnModel = repositoryService.getBpmnModel(definition.getId());
+//
+//        InputStream inputStream = diagramGenerator.generateDiagram(
+//                bpmnModel,
+//                "png",
+//                Collections.emptyList(),
+//                Collections.emptyList(),
+//                "宋体",
+//                "宋体",
+//                "宋体",
+//                null,
+//                1.0,
+//                false);
+//
+        IOUtils.copy(inputStream, new FileOutputStream("test1.png"));
     }
 
     @Test

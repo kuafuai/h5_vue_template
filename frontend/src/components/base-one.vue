@@ -21,11 +21,10 @@
         <text class="show_text" v-if="data_value_show!=null" v-for="(item, index) in data_value_show"
               :key="index">
           {{ item.text }}
-<!--          {{Object.keys(data_value_show).length}}-->
+          <!--          {{Object.keys(data_value_show).length}}-->
           <text v-if="index < (Object.keys(data_value_show).length-1)">,</text>
         </text>
         <text class="show_text"  v-else>前去选择{{ title }}</text>
-
 
         <image src="../static/right.png"
                style="width:32rpx;position:absolute;right:24rpx;display: flex; justify-content:center; "
@@ -156,6 +155,18 @@ const handleClick = () => {
 </script>
 
 <style scoped>
+button{
+  /* 清除默认边框 */
+  border:0;
+  outline:none;
+  /*清除默认背景 */
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  font-size: 0.92rem;
+  padding: 0.4rem 0 0.4rem 1.29rem;
+  color: rgb(172,172,172);
+}
 ::v-deep uni-forms-item__content >view:first-child{
   width:100%
 }

@@ -15,7 +15,7 @@
       <slot name="list"/>
 
       <view v-if="type=='more'">
-        <base-button model="base" title="选择" @click="click_select"/>
+        <base-button model="base" title="选择" @click="click_select" :isChoose="more_result_list.length"/>
       </view>
     </base-wrapper>
   </base-wrapper>

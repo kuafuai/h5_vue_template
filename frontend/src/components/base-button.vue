@@ -1,7 +1,13 @@
 <template>
   <view class="container" v-if="model != 'base'">
     <button v-if="model == 'float'" class="btnDialog" :type="type" @click="click">
-      <img style="height:81%" src="../static/add.png" alt="">
+      <img style="height:61%" src="../static/add.png" alt="">
+      <!--      <view style="display: flex;-->
+      <!--  align-items: center;-->
+      <!--  justify-content: center;">+</view>-->
+    </button>
+    <button v-if="model == 'update'" class="btnDialog" :type="type" @click="click">
+      <img style="height:41%" src="../static/update.png" alt="">
       <!--      <view style="display: flex;-->
       <!--  align-items: center;-->
       <!--  justify-content: center;">+</view>-->
@@ -14,7 +20,9 @@
                                                                                       alt="">
     </button>
   </view>
-  <button class="base-buttom" v-if="model == 'base'" :type="type" @click="click">{{ title }}</button>
+  <button class="base-buttom" v-if="model == 'base'" :type="type" @click="click"
+          :disabled="isChoose.length === 0 && type === 'more'">{{ title }}
+  </button>
 </template>
 
 <script setup>
@@ -33,6 +41,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  isChoose: {
+    type: Array,
+    default: "",
+  }
 });
 const emits = defineEmits(["click"]);
 const click = () => {

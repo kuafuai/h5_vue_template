@@ -27,7 +27,7 @@ watch(
     () => {
       getWrapperClass();
     },
-    { deep: true }
+    {deep: true}
 );
 
 function getWrapperClass() {
@@ -85,9 +85,10 @@ getWrapperClass();
 }
 
 .width-100 {
-  width: 100% ;
+  width: 100%;
 }
-.box{
+
+.box {
   display: flex;
   flex-direction: column;
   /* height: 100%; */

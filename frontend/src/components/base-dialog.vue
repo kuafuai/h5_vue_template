@@ -9,7 +9,7 @@
           :type="type"
           :class="popupClass"
       >
-        <view style="height: 100%;overflow-y: auto;width:100%;">
+        <view style="height: 100%;overflow-y: hidden;width:100%;">
           <slot name="dialog"/>
         </view>
       </uni-popup>
@@ -78,7 +78,6 @@ const toast = {
   messageText: '成功',
   value: ''
 }
-
 
 function dialogConfirm() {
   console.log('点击确认')
@@ -174,6 +173,10 @@ defineExpose({
 
 .dialog-box {
   padding: 10px;
+}
+
+::v-deep .all{
+  padding: 0 !important;
 }
 
 .dialog .button,

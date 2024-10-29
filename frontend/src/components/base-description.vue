@@ -39,7 +39,7 @@ const props = defineProps({
     }
   },
 });
-const description = ref({})
+const description = defineModel()
 const refresh = async () => {
   console.log()
   var response = await props.api.split('.').reduce((acc, item) => acc[item], proxy.$api)(props.params);
@@ -47,8 +47,12 @@ const refresh = async () => {
 }
 
 onLoad(async () => {
-  refresh()
+  // refresh()
 });
+
+onMounted(()=>{
+  refresh()
+})
 
 // }
 defineExpose({
@@ -68,7 +72,6 @@ defineExpose({
   box-sizing: border-box;
 
   .all_content {
-    
     ::v-deep .uni-section:first-child {
       border-radius: 10px 10px 0px 0px;
     }
@@ -83,11 +86,15 @@ defineExpose({
       color: rgba(56, 56, 56, 1) !important;
     }
 
+
     ::v-deep .uni-section .uni-section-header__content-sub {
       display: flex !important;
       justify-content: flex-start !important;
       font-size: 0.875rem !important;
       color: rgba(166, 166, 166, 1) !important;
+    }
+    ::v-deep .uni-section-header{
+      display: block !important;
     }
 
   }

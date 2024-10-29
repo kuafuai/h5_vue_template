@@ -1,7 +1,7 @@
 <template>
   <base-layout display="flex" direction="c" :w_full="true">
-    <base-layout display="flex" x="end" :w_full="true">
-      <base-layout display="flex" y="center" class="m-r-20" style="width: 91%;height:72rpx">
+    <base-layout display="flex" style="width: 100%;" x="end" :w_full="true">
+      <view class="search">
         <uni-easyinput class="uni-mt-5" suffixIcon="search" v-model="searchDataValue[firstSearchData]"
                        :placeholder="'请输入' + firstSearchDataComment" @iconClick="iconClick"></uni-easyinput>
         <button v-if="is_show_advance" size="mini" class="m-l-10" @click="toggleAdvanced">
@@ -11,7 +11,7 @@
           <!--            &lt;!&ndash;            <uni-icons v-else type="down"></uni-icons>&ndash;&gt;-->
           <!--          </a>-->
         </button>
-      </base-layout>
+      </view>
     </base-layout>
 
     <base-dialog ref="base_search_dailog" type="bottom">
@@ -85,6 +85,8 @@ const emit = defineEmits(["search"]);
 function toggleAdvanced() {
   // advanced.value = !advanced.value
   // if (advanced.value){
+  console.log("searchData is ", searchDataValue.value.hazardDescription)
+  searchDataValue.value.hazardDescription = null
   proxy.$refs.base_search_dailog.showDialog()
   // advanced.value=false
   // }else {
@@ -176,6 +178,14 @@ async function iconClick() {
   font-size: 14px;
   font-weight: 500;
   color: rgba(0, 0, 0, 1)
+}
+
+.search{
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.6rem auto;
 }
 
 ::v-deep .uni-select {
@@ -289,7 +299,8 @@ async function iconClick() {
 
 ::v-deep.content {
   margin: 0 !important;
-  border-radius: 20px 20px 0px 0px !important
+  border-radius: 20px 20px 0px 0px !important;
+  padding: 1rem 0;
 }
 
 .m-20 {

@@ -23,6 +23,7 @@ import com.kuafu.login.service.WechatRegisterService;
 import com.kuafu.login.service.WxAppService;
 import com.kuafu.login.utils.MessageTemplate;
 import com.kuafu.web.config.WechatConfig;
+import com.kuafu.web.handler.TenantContextHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -65,7 +66,6 @@ public class LoginController {
 
     @Autowired
     private MessageTemplate messageTemplate;
-
     @Autowired
     private WechatRegisterService wechatRegisterService;
 
@@ -151,6 +151,10 @@ public class LoginController {
         loginUser.setLoginTime(null);
         loginUser.setUserId(Long.valueOf(loginUser.getRelevanceId()));
         loginUser.setRelevanceTable(loginUser.getRelevanceTable());
+        if (TenantContextHolder.getEnableTenant()) {
+            Integer userTenantIdByLoginUser = loginBusinessService.getUserTenantIdByLoginUser(loginUser);
+            System.out.println("userTenantIdByLoginUser = " + userTenantIdByLoginUser);
+        }
         return ResultUtils.success(loginUser);
     }
 

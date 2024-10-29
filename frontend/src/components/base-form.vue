@@ -1,7 +1,7 @@
 <template>
   <view class="all">
     <uni-forms ref="formRef" :modelValue="form" :rules="rules" label-width="auto" style="
-  background-color: white;padding: 20px ;box-sizing:border-box" @submit.prevent="onSubmit">
+  background-color: white;padding: 20px ;box-sizing:border-box;border-radius: 10px 10px;" @submit.prevent="onSubmit">
       <slot name="form-items"></slot>
       <uni-forms-item>
         <view style="display:flex;flex-direction:row">
@@ -241,11 +241,15 @@ const onSubmit = () => {
   width: 100%;
   background: white;
   padding:40rpx;
+  margin-bottom: 0.4375rem !important;
   box-sizing:border-box
 }
 .all {
   //height: 100%;
   // overflow: auto;
+  background: rgb(245, 247, 250) !important;
+  padding: 0 0.9357rem 0.9357rem;
+  box-sizing: border-box;
 }
 
 ::v-deep .uni-forms-item__error {
@@ -262,7 +266,7 @@ const onSubmit = () => {
   width: 100%;
   display: flex;
   flex-direction: column !important;
-
+  margin-bottom: 12px !important;
 }
 
 ::v-deep .uni-forms-item__content {
@@ -310,7 +314,7 @@ const onSubmit = () => {
 .up,
 .reset {
   border-radius: 100px;
-  width: 10rem;
+  width: 9rem;
   height: 3.2rem;
   font-size: 0.9375rem;
   color: rgba(255, 255, 255, 1);

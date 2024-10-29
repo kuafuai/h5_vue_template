@@ -6,9 +6,10 @@
       :limit="limit"
       :return-type="'array'"
       file-extname="jpg,jpeg,png"
-      v-model="selectedFiles"
+      v-model="resources"
       @select="handleFileChange"
       @delete="handelDelete"
+      sourceType="['album','camera']"
   >
     <view class="content"
           style="display:flex;flex-direction:column;justify-content:center;align-items:center;border:none">
@@ -34,7 +35,7 @@ import {ref, watch} from 'vue';
 import {onLoad, onShow} from "@dcloudio/uni-app";
 
 // 通过 defineModel() 传递资源数组，支持外部传入
-
+const num = ref([])
 const resources = ref([])
 // const pre_url = import.meta.env.VITE_APP_SERVICE_API;
 const pre_url = import.meta.env.VITE_APP_BASE_API;
@@ -43,6 +44,11 @@ let image_model = defineModel()
 // console.log("初始值", image_model.value)
 let selectedFiles = ref([]);
 
+onShow(()=>{
+  // 失焦
+  selectedFiles.value=image_model.value
+
+})
 onLoad(() => {
   // console.log("1234321234321234321234321234", image_model.value)
   // selectedFiles.value = image_model.value
@@ -84,6 +90,7 @@ watch(image_model, (newValue) => {
   console.log("image_model111", newValue)
   resources.value=newValue
   selectedFiles.value = newValue;
+  num.value=newValue
   console.log(image_model.value,resources.value,selectedFiles.value)
 }, {deep: true, once: true});
 
@@ -129,6 +136,7 @@ const handleFileChange = async (files) => {
   // 文件大小验证
   for (var i = 0; i < files.tempFiles.length; i++) {
     var file_item = files.tempFiles[i];
+    console.log(`File ${i} Path: `, file_item.path)
     if (file_item.size > props.size * 1024 * 1024) {
       uni.showToast({
         title: `文件大小在${props.size}MB以内,请压缩后上传`,
@@ -136,18 +144,22 @@ const handleFileChange = async (files) => {
       });
       files.tempFiles = [];
       selectedFiles.value = [];
+      resources.value=[]
+      setTimeout(() => {
+        resources.value=num.value
+      }, 0);
       return;
     }
   }
-
   selectedFiles.value = files.tempFiles;
-  console.log(selectedFiles);
+  console.log(selectedFiles.value,"selectedFiles");
 
   // 自动上传文件
   await uploadFiles();
 };
 
 const handelDelete = (e) => {
+  console.log(e,resources.value);
 
   resources.value.splice(e.index, 1)
   image_model.value.splice(e.index, 1)
@@ -168,6 +180,8 @@ const uploadFiles = async () => {
 
   try {
     for (const file of selectedFiles.value) {
+      console.log(file,"file1111");
+
       await uploadFile(file);
     }
     uni.showToast({
@@ -198,9 +212,10 @@ const uploadFile = (file) => {
           const response = JSON.parse(res.data);
           if (response.code === 0) {
             const fileInfo = extractFileNameAndExtension(response.data.url);
+            console.log("fileInfo", fileInfo)
             // 将文件上传结果存储到传入的资源数组中
             resources.value.push({
-              name: fileInfo.name,
+              name: fileInfo.fileName,
               extension: fileInfo.extension,
               url: response.data.url,
             });

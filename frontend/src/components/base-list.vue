@@ -2,8 +2,8 @@
   <view v-if="pageRes.records.length" class="list_box">
     <checkbox-group @change="check_box">
       <view class="box" v-for="(item, index) in pageRes.records" :key="index">
-        <view @click="click_ok(item)" class="content">
-          <view class="indexBox">
+        <view  @click="click_ok(item)" class="content">
+          <view v-if="props.is_show_number" class="indexBox">
             <view>{{ index + 1 }}</view>
           </view>
           <uni-list class="list" :border="false">
@@ -11,10 +11,10 @@
               <uni-list-item :title="item.title"> old{{ item }}</uni-list-item>
             </slot>
           </uni-list>
-          <view v-show="is_click" class="imgs">
+          <view v-if="is_show_number" v-show="is_click" class="imgs">
             <slot name="right" :item="item">
-              <image src="../static/toRight.png" style="
-          width:0.625rem;height:1.25rem;" mode="widthFill"/>
+              <!--              <image src="../static/toRight.png" style="-->
+              <!--          width:0.625rem;height:1.25rem;" mode="widthFill"/>-->
             </slot>
           </view>
         </view>
@@ -51,7 +51,7 @@
 
       </view>
       <view v-if="isPage" class="flex-end-center m-t-10 m-r-10">
-        <fui-pagination :total="pageRes.total" :pageSize="pageParams.pageSize" :current="pageParams.current"
+        <fui-pagination style="width:100%" :total="pageRes.total" :pageSize="pageParams.pageSize" :current="pageParams.current"
                         @change="handleCurrentChange" :pageType="2"></fui-pagination>
       </view>
     </checkbox-group>
@@ -97,22 +97,13 @@ const props = defineProps({
   is_click: {
     type: Boolean,
     default: () => false,
+  },
+  is_show_number: {
+    type: Boolean,
+    default: () => true,
   }
 });
 
-// let route_query = proxy.$route.query
-//
-// var p = props.params
-// // 如果查询参数没有，那么使用路由中的参数
-// if (p==null || p==undefined) {
-//   if (route_query!=null){
-//     for (let key in route_query){
-//       props.params.params[key] = route_query[key];
-//     }
-//   }
-//
-// }
-// console.log(p,route_query)
 
 let isLoading = ref(true);
 // 分页响应数据
@@ -126,8 +117,14 @@ defineExpose({
 });
 
 onLoad(() => {
-  refresh();
+  console.log("list组件 执行")
+
 });
+
+onMounted(()=>{
+  console.log("base-list on mount",props.params)
+  refresh();
+})
 
 // 刷新
 function refresh(query_param) {
@@ -177,6 +174,7 @@ async function getApiData(pageObj) {
     }
 
 
+
     let response = await apiMethod(props.params, pageParams);
     pageRes.value = response.data;
   } else {
@@ -188,6 +186,7 @@ async function getApiData(pageObj) {
 }
 
 function apiMethod(params, headers) {
+  console.log("base-list apiMethod",params,headers)
   let data = {...params};
   if (headers) {
     data = Object.assign(data, headers.value);
@@ -228,8 +227,8 @@ function check_box(e){
 ::v-deep .op_button_list view{
   width: 100%;
   display: flex;
-    justify-content: flex-end;
-    align-items: center;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 ::v-deep .uni-list--border:after {
@@ -281,19 +280,19 @@ function check_box(e){
     font-family: 'DemiLight';
     font-weight: 400;
     background: white;
-    margin-bottom: 40rpx;
+    margin-bottom: 0.5rem;
   }
 
   .content {
     display: flex;
-    margin: 30rpx 0 0 0;
+    // margin: 30rpx 0 0 0;
     box-sizing: border-box;
     background: white;
     font-size: 1rem;
     justify-content: space-between;
 
     .indexBox {
-      width: 20%;
+      width: 13%;
 
       view {
         margin: 0 auto;
@@ -355,7 +354,7 @@ function check_box(e){
 
   .list {
     flex: 1;
-    margin: 30rpx 0;
+    margin: 15rpx 0;
     box-sizing: border-box;
     border-radius: 15rpx;
     background: white;
@@ -364,6 +363,7 @@ function check_box(e){
     ::v-deep .uni-list-item {
       position: static;
       background: white !important;
+      line-height: 33rpx;
     }
   }
 
@@ -380,7 +380,7 @@ function check_box(e){
   }
 
   .list:first-child {
-    margin: 0rpx 0rpx 30rpx 0px;
+    // margin: 0rpx 0rpx 30rpx 0px;
     box-sizing: border-box;
     border-radius: 15rpx;
     background: white;

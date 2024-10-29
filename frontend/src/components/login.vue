@@ -9,33 +9,34 @@
       <h2>{{ show_title }}</h2>
     </view>
     <!-- <uni-forms style="max-width: 320px; width: 100%; margin: 0 auto;" :="" :rules="" ref="loginForm_sms" label-width="auto" status-icon> -->
-    <uni-forms ref="formRef" style="max-width: 320px; width: 100%; margin: 0 auto;" :modelValue="form" :rules="rules"
-               label-width="auto" status-icon>
+    <view class="custom-form">
+      <uni-forms ref="formRef" :modelValue="form" :rules="rules" label-width="auto" status-icon>
 
-      <uni-forms-item name="phone">
-        <view class="icon-input-container">
-          <uni-easyinput placeholder="请输入用户名" v-model="form.phone" class="input-field"/>
-          <view class="icon">
-            <img src="../static/peo.png" style="width:13px;height:13px;" alt="">
+        <uni-forms-item name="phone" class="phone">
+          <view class="icon-input-container">
+            <uni-easyinput placeholder="请输入用户名" v-model="form.phone" class="input-field" />
+            <view class="icon">
+              <img src="../static/peo.png" style="width:13px;height:13px;" alt="">
+            </view>
           </view>
-        </view>
-      </uni-forms-item>
-      <uni-forms-item name="password">
-        <view class="icon-input-container">
-          <uni-easyinput placeholder="请输入密码" type="password" v-model="form.password" class="input-field"/>
-          <view class="icon">
-            <img src="../static/pass.png" style="width:13px;height:13px;" alt="">
+        </uni-forms-item>
+        <uni-forms-item name="password">
+          <view class="icon-input-container">
+            <uni-easyinput placeholder="请输入密码" type="password" v-model="form.password" class="input-field" />
+            <view class="icon">
+              <img src="../static/pass.png" style="width:13px;height:13px;" alt="">
+            </view>
           </view>
-        </view>
-      </uni-forms-item>
-      <uni-forms-item>
-        <button class="submit-btn" @click="submitForm(formRef)">
-          登录
-        </button>
-      </uni-forms-item>
-    </uni-forms>
+        </uni-forms-item>
+        <uni-forms-item>
+          <button class="submit-btn" @click="submitForm(formRef)">
+            登录
+          </button>
+        </uni-forms-item>
+      </uni-forms>
+    </view>
     <!-- <h5>默认账户密码：admin / 123456</h5> -->
-    <h5 v-show="is_register" @click="to_page" style="color: rgba(93, 95, 239, 1);font-size: 13px;font-weight:450">
+    <h5 v-show="is_register" @click="to_page" style="color: rgba(93, 95, 239, 1);font-size: 0.8125rem;font-weight:450">
       <text style="color:rgba(52, 57, 101, 1);font-weight:450">没有账号?</text>
       现在去注册
     </h5>
@@ -56,7 +57,7 @@
       <!-- 手机号输入框 -->
       <uni-forms-item name="phone">
         <view class="icon-input-container">
-          <uni-easyinput v-model="form_sms.phone" placeholder="请输入手机号" type="number" maxlength="11"/>
+          <uni-easyinput v-model="form_sms.phone" placeholder="请输入手机号" type="number" maxlength="11" />
           <view class="icon">
             <img src="../static/phone.png" style="width:11px;height:16px; margin-top:3px" alt="">
           </view>
@@ -67,7 +68,7 @@
 
       <uni-forms-item name="code">
         <view class="code-input-container">
-          <uni-easyinput style="width:50px;" v-model="form_sms.code" placeholder="请输入验证码"/>
+          <uni-easyinput style="width:50px;" v-model="form_sms.code" placeholder="请输入验证码" />
           <view class="icon">
             <img src="../static/safe.png" style="width:22px;height:24px; margin-bottom:2px" alt="">
           </view>
@@ -84,84 +85,47 @@
       </button>
     </uni-forms>
 
-    <h5 v-show="is_register" @click="to_page" style="color: rgba(93, 95, 239, 1);font-size: 13px;font-weight:450">
+    <h5 v-show="is_register" @click="to_page" style="color: rgba(93, 95, 239, 1);font-size: 0.8125rem;font-weight:450">
       <text style="color:rgba(52, 57, 101, 1);font-weight:450">没有账号?</text>
       现在去注册
     </h5>
   </view>
 
-
   <view v-else-if="login_type === 'h5'" class="login">
     <fui-button type="success" round size="large" @click="login_click">点击微信授权登录</fui-button>
-
   </view>
-  <view v-else class="wxlogin">
-    <view class="h5Login">
-      码上飞CodeFlying
-    </view>
-    <button class="identity" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="radio1">
+  <view v-else class="login">
+
+    <button class="identity" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
       点击微信授权登录
     </button>
-    <button class="identity" v-else @click="btnF1">
-      点击微信授权登录
-    </button>
-    <view class="radios">
-      <label class="radio">
-        <radio style="zoom: 74%;margin:0.15rem 18rpx 0rpx 0rpx" @click="isCheck" value="radio1" :checked="radio1"/>
-        <text style="color: rgba(169,169,169,1)">阅读并同意
-          <text class="agreement" @click.stop="services">《服务协议》</text>
-          <text
-              class="agreement">及
-          </text>
-          <text class="agreement" @click.stop="policy">《隐私协议》</text>
-        </text>
-      </label>
-    </view>
-    <view class="add">
-      想在这里添加任何描述都可以告诉小飞飞哦
-    </view>
-
   </view>
 
-  <view class="bottom" v-if="login_type === 'passwd' || login_type === 'sms' || login_type === 'h5'">
+  <view class="bottom">
     本应用由AI智能软件开发平台CodeFlying自动开发
   </view>
 </template>
-
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
-import {getCurrentInstance, ref} from "vue";
-import service from "@/utils/request.js";
-const radio1 = ref(false)
-const isCheck = () => {
-  radio1.value = !radio1.value;
-}
-
+import { getCurrentInstance, ref } from "vue";
+import service from "@/utils/request";
 
 const isTrue = ref(false)
-const {proxy} = getCurrentInstance();
-
-const services = () => {
-  console.log(111)
-}
-const policy = () => {
-  console.log(222)
-}
-const btnF1 = () => {
-  uni.showToast({
-    icon: "none",
-    title: "请先阅读《用户服务协议》及《隐私协议》",
-    duration: 2000,
-  });
-  return;
-}
+const { proxy } = getCurrentInstance();
 const emit = defineEmits(["loginSuccess", "loginFail"]);
 
 const props = defineProps({
-  login_type: {type: String, default: null},
-  show_title: {type: String, default: "登陆"},
-  relevanceTable: {type: String, required: true,},
-  is_register: {type: String, required: false,},
-  register_page: {type: String, required: false, default: ""}
+  login_type: { type: String, default: null },
+  show_title: { type: String, default: "登陆" },
+  relevanceTable: { type: String, required: true, },
+  is_register: { type: String, required: false, },
+  register_page: { type: String, required: false, default: "" }
 });
 const to_page = () => {
   proxy.$navigate(props.register_page)
@@ -261,8 +225,8 @@ const rules = ref({
   },
   password: {
     rules: [
-      {required: true, errorMessage: '请输入密码'},
-      {minLength: 3, maxLength: 18, errorMessage: '密码长度3-18位'}
+      { required: true, errorMessage: '请输入密码' },
+      { minLength: 3, maxLength: 18, errorMessage: '密码长度3-18位' }
     ]
   }
 });
@@ -317,7 +281,7 @@ const submitForm_sms = () => {
       login_error(err);
     });
   }).catch(error => {
-    uni.showToast({title: '请填写正确的信息', icon: 'none'});
+    uni.showToast({ title: '请填写正确的信息', icon: 'none' });
 
   });
 };
@@ -386,7 +350,7 @@ const getPhoneNumber = function (e) {
           }
         }).then((res) => {
           console.log("获取手机号之后的结果：", res)
-          if (res.code == 0) {
+          if (res.code === 0) {
             phone.value = res.data
             login_click();
           }
@@ -406,7 +370,7 @@ function login_click() {
       "provider": "weixin",
       "onlyAuthorize": true, // 微信登录仅请求授权认证
       success: function (event) {
-        const {code} = event
+        const { code } = event
         //客户端成功获取授权临时票据（code）,向业务服务器发起登录请求。
         uni.request({
           url: import.meta.env.VITE_APP_SERVICE_API + '/login/wxApp', //仅为示例，并非真实接口地址。
@@ -447,12 +411,29 @@ function login_click() {
 </script>
 
 <style lang="scss" scoped>
-::v-deep.uni-input-input {
+::v-deep .title view {
+  width: 100%;
+  // max-width: 320px;
+  max-width: 20rem;
+  font-size: 0.9375rem;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  color: rgba(93, 95, 239, 1);
+  margin-bottom: 8px !important;
+}
+
+.custom-form {
+  width: 90% !important;
+  margin: 0 auto;
+}
+
+::v-deep .uni-input-input {
   color: #999 !important;
 }
 
 ::v-deep .uni-easyinput__content-input {
-  padding-left: 20px !important;
+  padding-left: 1.25rem !important;
 }
 
 ::v-deep .uni-forms-item_error {
@@ -462,22 +443,25 @@ function login_click() {
 ::v-deep.is-input-error-border .uni-easyinput__placeholder-class {
   color: #999;
 }
-
+::v-deep.uni-easyinput__placeholder-class {
+  font-size:0.75rem;
+}
 ::v-deep .code-input-container .is-input-border uni-input {
   width: 46%;
   position: relative;
   overflow: hidden;
   flex: none;
   line-height: 1;
-  font-size: 14px;
-  height: 35px;
+  // font-size: 14px;
+  font-size:0.875rem;
+  height:2.1875rem
 }
 
 .hello {
-  max-width: 320px;
-  width: 100%;
-  height: 140px;
-  font-size: 26px;
+  // max-width: 320px;
+  width: 90%;
+  height:8.75rem;
+  font-size:1.625rem;
   letter-spacing: 1px;
   color: rgba(52, 57, 101, 1);
 }
@@ -489,7 +473,8 @@ function login_click() {
 ::v-deep .is-input-border {
   border-radius: 30px;
   padding-left: 15px;
-  height: 58px;
+  // height: 58px;
+  height:3.625rem;
   background: rgba(236, 242, 255, 1) !important;
   justify-content: flex-start;
   border: none;
@@ -500,9 +485,9 @@ function login_click() {
 }
 
 .title {
-  width: 100%;
-  max-width: 320px;
-  font-size: 15px;
+  width: 90%;
+  // max-width: 320px;
+  font-size:0.9375rem;
   display: flex;
   justify-content: flex-start;
   border-bottom: 1px solid rgba(230, 232, 240, 1);
@@ -524,7 +509,6 @@ h5 {
   width: 100%;
   max-width: 100%;
   height: 100vh;
-  // background: #ffffff;
   border-radius: 10px;
   margin: 0 auto;
   display: flex;
@@ -551,13 +535,12 @@ h5 {
 
 
   .input-field {
-    // height: 45px;
-    font-size: 16px;
+    font-size:1rem;
   }
 
   .submit-btn {
     width: 100%;
-    height: 55px;
+    height:3.4375rem;
     margin-top: 35px;
     background: rgba(93, 95, 239, 1);
     box-shadow: 0px 7px 40px rgba(0, 29, 176, 0.3);
@@ -565,7 +548,7 @@ h5 {
     border: none;
     border-radius: 30px;
     cursor: pointer;
-    font-size: 16px;
+    font-size:1rem;
     transition: background-color 0.3s;
     display: flex;
     align-items: center;
@@ -643,7 +626,6 @@ h5 {
   background-color: #007aff;
   color: white;
   border-radius: 5px;
-  //padding: 15px;
   text-align: center;
 }
 
@@ -651,11 +633,75 @@ h5 {
   width: 100%;
   display: flex;
   justify-content: center;
-  font-size: 12px;
+  font-size:0.75rem;
   color: rgba(166, 166, 166, 1);
   margin-bottom: 5px;
 }
 
+.wxlogin {
+  width: 100%;
+  max-width: 100%;
+  height: 100vh;
+  // background: #ffffff;
+  border-radius: 10px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  justify-content: normal;
+  box-sizing: border-box;
+}
+
+
+.h5Login {
+  width: 100%;
+  height: 11.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1.9375rem;
+  font-size: 1.375rem;
+  font-weight: 500;
+  color: rgba(65, 67, 79, 1);
+}
+
+.identity {
+  color: rgba(250, 251, 255, 1);
+  background-color: rgba(93, 95, 239, 1);
+  border-radius: 10px;
+  line-height: 25px;
+  width: 512rpx;
+  height: 88rpx;
+  font-size: 36rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.radios {
+  display: flex;
+  justify-content: center;
+  font-size: 28rpx;
+  margin-top: 48rpx;
+  height: 300rpx;
+
+  .radio {
+    display: flex;
+    justify-content: center;
+
+    .agreement {
+      color: rgba(93, 95, 239, 1);
+    }
+  }
+}
+
+.add {
+  line-height: 19px;
+  color: rgba(169, 169, 169, 1);
+  font-size: 0.8125rem;
+  margin-top: 10.375rem;
+}
 .wxlogin {
   width: 100%;
   max-width: 100%;

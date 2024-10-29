@@ -1,26 +1,27 @@
 <template>
-  <div class="file-preview">
-    <!-- 如果是图片类型，则显示图片 -->
-    <view class="image_list" v-for="item in url">
-      <image  v-if="isImage(item.url)" :src="item.url" mode="widthFix" alt="预览图片" class="preview-image"/>
+  <view style="display:flex">
+    <view class="file-preview"  v-for="(item, index) in url">
+      <!-- 如果是图片类型，则显示图片 -->
+      <view class="image_list">
+        <image  v-if="isImage(item.url)" :src="item.url" mode="widthFix" alt="预览图片" class="preview-image" @click="previewImage(index)"/>
 
-      <div v-else class="file-preview-button">
-        <view v-if="item!=null && item!=''">
-          <button @click="openFile(item.url)" class="custom-button">
-            {{item.fileName}}
-          </button>
-        </view>
-        <view v-else>
-          暂无文件
-        </view>
+        <view v-else class="file-preview-button">
+          <view v-if="item!=null && item!=''">
+            <button @click="openFile(item.url)" class="custom-button">
+              {{item.fileName}}
+            </button>
+          </view>
+          <view v-else>
+            暂无文件
+          </view>
 
-      </div>
+        </view>
+      </view>
+
+      <!-- 如果是文件类型，则显示打开文件按钮 -->
+
     </view>
-
-
-    <!-- 如果是文件类型，则显示打开文件按钮 -->
-
-  </div>
+  </view>
 </template>
 
 <script setup>
@@ -55,6 +56,14 @@ const isImage =  (newUrl) => {
   var fileExtension = extractFileExtension(newUrl);
   const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
   return imageTypes.includes(fileExtension);
+}
+
+const previewImage = (index) => {
+  console.log('点击了图片', index)
+  uni.previewImage({
+    current: index,
+    urls: props.url.map(item => item.url)
+  })
 }
 
 
@@ -98,9 +107,11 @@ const openFile = (url) => {
   padding: 5px;
   /*border: 2px solid #e0e0e0;*/
   border-radius: 10px;
-  margin: 10px 0 0 0;
+  margin: 10px 0 0 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* 添加轻微阴影效果 */
   overflow: hidden;
+  width: 200rpx;
+  height:200rpx
 }
 
 .image_list {

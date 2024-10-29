@@ -20,40 +20,46 @@
       </view>
     </view>
     <base-layout class="m-y-20" display="flex" x="around" :w_full="true" :h_full="true"
-                 style="display:flex;justify-content: space-evenly;">
+      style="display:flex;justify-content: space-evenly;">
 
       <!-- <view style="width: 5%"></view> -->
 
       <view style="width: 22%;height: 100%; background-color: #FFFFFF; border-radius: 10px"
-            class="flex-c-between-start">
+        class="flex-c-between-start">
         <view class="w-full flex-center-center" style="height: 80px;">
           <fui-icon name="piechart" class="m-r-10"></fui-icon>
           <fui-text text="数据统计"></fui-text>
         </view>
         <view class="w-full h-full">
-          <view v-for="(item,index) in staticsList" :key="index" class="flex-c-center-center m-y-40">
+          <view v-for="(item, index) in staticsList" :key="index" class="flex-c-center-center m-y-40">
             <fui-text :text="item.number" :color="setColor(item.change_status)" :size="60" :fontWeight="900"
-                      class="m-b-10"></fui-text>
+              class="m-b-10"></fui-text>
             <fui-text v-if="item.change_status === 1" text="审批中" :size="40"></fui-text>
             <fui-text v-if="item.change_status === 2" text="已通过" :size="40"></fui-text>
             <fui-text v-if="item.change_status === 3" text="已驳回" :size="40"></fui-text>
             <fui-text v-if="item.change_status === 0" text="已关闭" :size="40"></fui-text>
           </view>
         </view>
-        <view class="w-full flex-center-start" style="margin-bottom:15px;">
-          <fui-button width="80%" height="40px" size="26" @click="handle_change">+ 发起变更申请</fui-button>
+        <view class="w-full flex-center-start" style="margin-bottom:45px;">
+          <fui-button width="80%" height="49px" size="26" @click="handle_change" style="
+    line-height: 49px !important;
+    ">
+          <view style="font-size: 1rem !important;">
+            <text style="display:inline-block;font-size:1.5rem;">
+              +</text> 发起变更申请
+          </view>
+    </fui-button>
         </view>
       </view>
-      <view class="flex-c-start-start"
-            style="width: 68%; height: 100%; background-color: #FFFFFF; border-radius: 10px">
+      <view class="flex-c-start-start" style="width: 68%; height: 100%; background-color: #FFFFFF; border-radius: 10px">
 
         <view class="w-full flex-start-center" style="height: 80px;">
           <fui-icon name="info" class="m-x-10"></fui-icon>
-          <fui-text :text='"您当前有 "+todoList.length+" 个任务需要处理"'></fui-text>
+          <fui-text :text='"您当前有 " + todoList.length + " 个任务需要处理"'></fui-text>
         </view>
 
-        <view v-if="todoList.length>0" class="flex-column overflow-x-scroll w-full h-full">
-          <view style="height: 110px" v-for="(item,index) in todoList" :key="index">
+        <view v-if="todoList.length > 0" class="flex-column overflow-x-scroll w-full h-full">
+          <view style="height: 110px" v-for="(item, index) in todoList" :key="index">
             <uni-card>
               <template #title>
                 <fui-text class="m-y-4" :text='item.changeTitle' type="black" size="36"></fui-text>
@@ -85,7 +91,7 @@
 
         <view v-else class="flex-column overflow-x-scroll h-full w-full">
           <view class="nodata">
-            <img src="@/static/noData.png" style="width:12.5rem;height:auto" alt=""/>
+            <img src="@/static/noData.png" style="width:12.5rem;height:auto" alt="" />
             <view class="noText">暂无数据～</view>
           </view>
         </view>
@@ -98,9 +104,9 @@
 </template>
 
 <script setup>
-import {onShow} from "@dcloudio/uni-app";
+import { onShow } from "@dcloudio/uni-app";
 
-const {proxy} = getCurrentInstance();
+const { proxy } = getCurrentInstance();
 
 
 function handle_change() {
@@ -135,9 +141,9 @@ async function getMyTodo() {
 }
 const userInfo = ref('')
 let strUserInfo = uni.getStorageSync("userInfo") || null;
-    if (strUserInfo != null) {
-      userInfo.value = JSON.parse(strUserInfo);
-    }
+if (strUserInfo != null) {
+  userInfo.value = JSON.parse(strUserInfo);
+}
 function setColor(val) {
   if (val === 2) {
     return "#2bc418";
@@ -181,5 +187,4 @@ onShow(() => {
     font-size: 0.875rem;
   }
 }
-
 </style>

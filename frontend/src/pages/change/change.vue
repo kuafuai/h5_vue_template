@@ -1,8 +1,22 @@
 <template>
   <base-wrapper>
-    <base-list-header nickname="变更申请" description="变更申请"></base-list-header>
+<!--    <base-list-header nickname="变更申请" description="变更申请"></base-list-header>-->
+    <view style="width:100%;background:white;padding:25px 15px;color:#6569F7;font-weight:600;font-size:18px">
+      变更申请
+      <uni-breadcrumb separator="/">
+        <uni-breadcrumb-item>
+          变更管理平台
+        </uni-breadcrumb-item>
+        <uni-breadcrumb-item>
+          变更列表
+        </uni-breadcrumb-item>
+        <uni-breadcrumb-item>
+          变更申请
+        </uni-breadcrumb-item>
+      </uni-breadcrumb>
+    </view>
     <base-layout class="m-t-20 p-t-20" display="flex" x="between">
-      <view style="width: 5%"></view>
+<!--      <view style="width: 1%"></view>-->
       <view style="width: 50%">
         <uni-section class="p-10" title="变更基础信息" type="line">
           <uni-forms class="w-full" style="max-width: 90%" ref="baseForm" :rules="baseFormRules"
@@ -43,13 +57,13 @@
           </view>
         </uni-section>
       </view>
-      <view style="width: 1%"></view>
-      <view style="width: 40%">
+<!--      <view style="width: 1%"></view>-->
+      <view style="width: 48%">
         <uni-section title="变更扩展信息" type="line" class="p-10">
           <v-form-render :form-data="formRenderData" ref="vFormRef"/>
         </uni-section>
       </view>
-      <view style="width: 5%"></view>
+      <view style="width: 1%"></view>
     </base-layout>
   </base-wrapper>
 </template>

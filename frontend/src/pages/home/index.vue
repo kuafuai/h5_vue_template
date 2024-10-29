@@ -3,8 +3,17 @@
     <!-- <base-list-header nickname="首页" description="首页统计信息"></base-list-header> -->
     <view style="width:100%;background:white;padding:25px 15px;color:#6569F7;font-weight:600;font-size:18px">
       首页
+      <uni-breadcrumb separator="/">
+        <uni-breadcrumb-item>
+          变更管理平台
+        </uni-breadcrumb-item>
+        <uni-breadcrumb-item>
+          首页
+        </uni-breadcrumb-item>
+      </uni-breadcrumb>
     </view>
-    <base-layout class="m-y-20" display="flex" x="around" :w_full="true" :h_full="true" style="display:flex;justify-content: space-evenly;">
+    <base-layout class="m-y-20" display="flex" x="around" :w_full="true" :h_full="true"
+                 style="display:flex;justify-content: space-evenly;">
 
       <!-- <view style="width: 5%"></view> -->
 
@@ -28,44 +37,52 @@
           <fui-button width="80%" height="40px" size="26" @click="handle_change">+ 发起变更申请</fui-button>
         </view>
       </view>
-      <view v-if="todoList.length>0" class="flex-column overflow-x-scroll"
+      <view class="flex-c-start-start"
             style="width: 60%; height: 100%; background-color: #FFFFFF; border-radius: 10px">
-        <view style="height: 110px" v-for="(item,index) in todoList" :key="index">
-          <uni-card>
-            <template #title>
-              <fui-text class="m-y-4" :text='item.changeTitle' type="black" size="36"></fui-text>
-            </template>
-            <view class="flex-c-start-start"  @click="handle_change_task(item)">
-              <view>
-                <uni-icons type="person" size="18"></uni-icons>
-                <fui-text text="发起人：" class="m-x-6" size="28"></fui-text>
-                <text>{{ item.startUserName }}</text>
-              </view>
-              <view class="flex-between-start w-full">
-                <view>
-                  <fui-icon name="warning" size="34" color="#e58276"></fui-icon>
-                  <fui-text text="需要您：" class="m-x-6" size="28"></fui-text>
-                  <text style="cursor: pointer">{{ item.taskName }}</text>
-                </view>
-                <view>
-                  <fui-icon name="wait" size="34"></fui-icon>
-                  <text class="m-x-6">{{ item.finishTime }}</text>
-                  <fui-text text="截止，已用时" class="m-x-6" size="28"></fui-text>
-                  <text class="m-x-6">{{ item.duration }}</text>
 
-                </view>
-              </view>
-            </view>
-          </uni-card>
+        <view class="w-full flex-start-center" style="height: 80px;">
+          <fui-icon name="info" class="m-x-10"></fui-icon>
+          <fui-text :text='"您当前有 "+todoList.length+" 个任务需要处理"'></fui-text>
         </view>
 
-      </view>
-      <view v-else class="flex-column overflow-x-scroll"
-            style="width: 60%; height: 100%; background-color: #FFFFFF; border-radius: 10px">
-        <view class="nodata">
-          <img src="@/static/noData.png" style="width:12.5rem;height:auto" alt=""/>
-          <view class="noText">暂无数据～</view>
+        <view v-if="todoList.length>0" class="flex-column overflow-x-scroll w-full h-full">
+          <view style="height: 110px" v-for="(item,index) in todoList" :key="index">
+            <uni-card>
+              <template #title>
+                <fui-text class="m-y-4" :text='item.changeTitle' type="black" size="36"></fui-text>
+              </template>
+              <view class="flex-c-start-start" @click="handle_change_task(item)">
+                <view>
+                  <uni-icons type="person" size="18"></uni-icons>
+                  <fui-text text="发起人：" class="m-x-6" size="28"></fui-text>
+                  <text>{{ item.startUserName }}</text>
+                </view>
+                <view class="flex-between-start w-full">
+                  <view>
+                    <fui-icon name="warning" size="34" color="#e58276"></fui-icon>
+                    <fui-text text="需要您：" class="m-x-6" size="28"></fui-text>
+                    <text style="cursor: pointer">{{ item.taskName }}</text>
+                  </view>
+                  <view>
+                    <fui-icon name="wait" size="34"></fui-icon>
+                    <text class="m-x-6">{{ item.finishTime }}</text>
+                    <fui-text text="截止，已用时" class="m-x-6" size="28"></fui-text>
+                    <text class="m-x-6">{{ item.duration }}</text>
+
+                  </view>
+                </view>
+              </view>
+            </uni-card>
+          </view>
         </view>
+
+        <view v-else class="flex-column overflow-x-scroll h-full w-full">
+          <view class="nodata">
+            <img src="@/static/noData.png" style="width:12.5rem;height:auto" alt=""/>
+            <view class="noText">暂无数据～</view>
+          </view>
+        </view>
+
       </view>
 
       <!-- <view style="width: 5%"></view> -->

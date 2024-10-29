@@ -3,6 +3,14 @@
     <!-- <base-list-header nickname="变更管理" description="变更管理"></base-list-header> -->
     <view style="width:100%;background:white;padding:25px 15px;color:#6569F7;font-weight:600;font-size:18px">
       变更列表
+      <uni-breadcrumb separator="/">
+        <uni-breadcrumb-item>
+          变更管理平台
+        </uni-breadcrumb-item>
+        <uni-breadcrumb-item>
+          变更列表
+        </uni-breadcrumb-item>
+      </uni-breadcrumb>
     </view>
     <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
       <view class="w-full flex-between-start" style="position: relative;">

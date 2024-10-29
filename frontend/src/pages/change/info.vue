@@ -3,6 +3,17 @@
     <!-- <base-list-header nickname="变更详情" description="变更详情"></base-list-header> -->
     <view style="width:100%;background:white;padding:25px 15px;color:#6569F7;font-weight:600;font-size:18px">
       变更详情
+      <uni-breadcrumb separator="/">
+        <uni-breadcrumb-item>
+          变更管理平台
+        </uni-breadcrumb-item>
+        <uni-breadcrumb-item>
+          变更列表
+        </uni-breadcrumb-item>
+        <uni-breadcrumb-item>
+          变更详情
+        </uni-breadcrumb-item>
+      </uni-breadcrumb>
     </view>
     <base-layout class="m-t-20 p-t-20 overflow-y-scroll" display="flex" direction="c">
       <view class="flex-c-start-start m-b-20 w-full">

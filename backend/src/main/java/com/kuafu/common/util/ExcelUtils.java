@@ -97,7 +97,12 @@ public class ExcelUtils {
         }
 
         Cell headCell3 = headRow.createCell(3);
-        headCell3.setCellValue("/");
+        if (changeManager.getInfoMap().containsKey("ECR批准")) {
+            ChangeManagerInfo info = (ChangeManagerInfo) changeManager.getInfoMap().get("ECR批准");
+            headCell3.setCellValue(info.getInfoValue());
+        } else {
+            headCell3.setCellValue("/");
+        }
 
         Cell headCell4 = headRow.createCell(4);
         if (changeManager.getInfoMap().containsKey("ECN编号")) {
@@ -114,7 +119,7 @@ public class ExcelUtils {
         headCell6.setCellValue(changeManager.getChangeProjectStage());
 
         Cell headCell7 = headRow.createCell(7);
-        headCell7.setCellValue("/");
+        headCell7.setCellValue(changeManager.getPartNumber());
 
         Cell headCell8 = headRow.createCell(8);
         headCell8.setCellValue(changeManager.getChangeProductName());
@@ -252,7 +257,12 @@ public class ExcelUtils {
         }
 
         Cell headCell33 = headRow.createCell(33);
-        headCell33.setCellValue("/");
+        if (changeManager.getInfoMap().containsKey("备注")) {
+            ChangeManagerInfo info = (ChangeManagerInfo) changeManager.getInfoMap().get("备注");
+            headCell33.setCellValue(info.getInfoValue());
+        } else {
+            headCell33.setCellValue("/");
+        }
     }
 
     private static void createHead(Row headRow) {

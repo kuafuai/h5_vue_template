@@ -28,6 +28,16 @@ public class FlowDefinitionController {
 
     }
 
+    @PostMapping("add")
+    public BaseResponse add(@RequestBody FlowSaveVo pageVO) {
+        String name = pageVO.getName();
+        String category = pageVO.getCategory();
+        String content = pageVO.getXml();
+        flowDefinitionService.importByString(name, category, content);
+
+        return ResultUtils.success();
+    }
+
     @PostMapping("/start/{procDefId}")
     public BaseResponse start(@PathVariable(value = "procDefId") String procDefId,
                               @RequestBody Map<String, Object> variables) {

@@ -8,6 +8,6 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
     druid:
-      url: jdbc:mysql://${DB_HOST:60.204.199.245}:${DB_PORT:3306}/${DB_NAME:cz_sp}?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true
+      url: jdbc:mysql://${DB_HOST:60.204.199.245}:${DB_PORT:3306}/${DB_NAME:cz_test}?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true
       username: ${DB_USER:root}
       password: ${DB_PASSWD:g7p@q2xb!j9}

@@ -74,6 +74,7 @@ public class ChangeManagerBusinessService {
                 .changePerson(currentUserInfo.getUserInfoId().toString())
                 .changePersonName(currentUserInfo.getUserName())
                 .changeProjectStage(changeManagerVO.getChangeProjectStage())
+                .partNumber(changeManagerVO.getPartNumber())
                 .flowableInstanceId(procInsId)
                 .build();
 

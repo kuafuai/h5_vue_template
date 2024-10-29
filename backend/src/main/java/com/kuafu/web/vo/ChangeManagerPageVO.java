@@ -27,4 +27,5 @@ public class ChangeManagerPageVO extends PageRequest {
     private String changePersonName;
     private String flowableInstanceId;
     private Integer changeStatus;
+    private String partNumber;
 }

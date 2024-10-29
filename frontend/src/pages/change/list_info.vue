@@ -1,13 +1,23 @@
 <template>
   <base-wrapper>
     <!-- <base-list-header nickname="变更列表" description="变更列表明细"></base-list-header> -->
-    <view style="width:98%;background:white;padding:25px 15px;display:flex;align-items: center;justify-content: space-between;">
-      <view style="color:#6569F7;font-weight:600;font-size:18px;">
+    <view
+      style="width:100%;background:white;padding:25px 15px;box-sizing:border-box;display:flex;align-items: center;justify-content: space-between;">
+      <view style="color:#6569F7;font-weight:600;font-size:18px">
         变更明细
+        <uni-breadcrumb separator="/">
+          <uni-breadcrumb-item>
+            变更管理平台
+          </uni-breadcrumb-item>
+          <uni-breadcrumb-item>
+            变更明细
+          </uni-breadcrumb-item>
+        </uni-breadcrumb>
       </view>
-      <view style="width: 40px; height: 40px;line-height:40px;border-radius:30px;background:rgb(101,105,247);text-align: center;color:white;">
-            {{ userInfo.userName }}
-          </view>
+      <view
+        style="width: 40px; height: 40px;line-height:40px;border-radius:30px;background:rgb(101,105,247);text-align: center;color:white;">
+        {{ userInfo.userName }}
+      </view>
     </view>
     <base-layout class="m-t-20 p-t-20" display="flex" direction="c">
       <view class="w-full flex-between-start" style="position: relative;">
@@ -52,7 +62,7 @@
             </uni-td>
 
             <uni-td v-if=" 'ECR批准' in showKeyMapColumns" align="center">
-              <fui-text :text="default_value" :size="28"></fui-text>
+              <fui-text :text="'ECR批准' in item.infoMap ? item.infoMap['ECR批准'].infoValue : default_value" :size="28"></fui-text>
             </uni-td>
 
             <uni-td v-if=" 'ECN编号(内部)' in showKeyMapColumns" align="center">
@@ -68,7 +78,7 @@
             </uni-td>
 
             <uni-td v-if=" '零件编号' in showKeyMapColumns" align="center">
-              <fui-text :text="default_value" :size="28"></fui-text>
+              <fui-text :text="item.partNumber" :size="28"></fui-text>
             </uni-td>
 
             <uni-td v-if=" '产品名称' in showKeyMapColumns" align="center">
@@ -192,7 +202,7 @@
             </uni-td>
 
             <uni-td v-if=" '备注' in showKeyMapColumns" align="center">
-              <fui-text :text="default_value" :size="28"></fui-text>
+              <fui-text :text="'备注' in item.infoMap ? item.infoMap['备注'].infoValue : default_value" :size="28"></fui-text>
             </uni-td>
 
           </template>

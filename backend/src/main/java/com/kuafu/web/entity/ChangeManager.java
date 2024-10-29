@@ -34,6 +34,7 @@ public class ChangeManager {
     private String flowableInstanceId;
 
     private Integer changeStatus;
+    private String partNumber;
 
     @TableField(exist = false)
     private Map<String, Object> infoMap;

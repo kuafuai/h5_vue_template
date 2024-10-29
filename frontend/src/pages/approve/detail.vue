@@ -1,6 +1,20 @@
 <template>
   <base-wrapper>
-    <base-list-header nickname="审批人管理" description="审批流程节点的审批人设置"></base-list-header>
+<!--    <base-list-header nickname="审批人管理" description="审批流程节点的审批人设置"></base-list-header>-->
+    <view style="width:100%;background:white;padding:25px 15px;color:#6569F7;font-weight:600;font-size:18px">
+      审批人管理
+      <uni-breadcrumb separator="/">
+        <uni-breadcrumb-item>
+          变更管理平台
+        </uni-breadcrumb-item>
+        <uni-breadcrumb-item>
+          审批人管理
+        </uni-breadcrumb-item>
+        <uni-breadcrumb-item>
+          审批流程节点的审批人设置
+        </uni-breadcrumb-item>
+      </uni-breadcrumb>
+    </view>
     <base-layout class="m-20 h-full">
       <base-form model="editor" :form="form_data" table_module="approvenode" :id="allParams.approveNodeId" @success="form_success">
         <template #form-items>

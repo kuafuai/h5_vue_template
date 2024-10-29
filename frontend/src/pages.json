@@ -19,19 +19,21 @@
       "path": "pages/home/index",
       "style": {
         "leftWindow": true,
-        "navigationBarTitleText": ""
+        "navigationBarTitleText": "首页"
       }
     },
     {
       "path": "pages/user/index",
       "style": {
-        "leftWindow": true
+        "leftWindow": true,
+        "navigationBarTitleText": "用户管理"
       }
     },
     {
       "path": "pages/approve/index",
       "style": {
-        "leftWindow": true
+        "leftWindow": true,
+        "navigationBarTitleText": "审批节点管理"
       }
     },
     {
@@ -43,7 +45,8 @@
     {
       "path": "pages/submission/index",
       "style": {
-        "leftWindow": true
+        "leftWindow": true,
+        "navigationBarTitleText": "提交物管理"
       }
     },
     {
@@ -55,7 +58,8 @@
     {
       "path": "pages/form/index",
       "style": {
-        "leftWindow": true
+        "leftWindow": true,
+        "navigationBarTitleText": "表单配置"
       }
     },
     {
@@ -67,31 +71,36 @@
     {
       "path": "pages/change/index",
       "style": {
-        "leftWindow": true
+        "leftWindow": true,
+        "navigationBarTitleText": "变更管理"
       }
     },
     {
       "path": "pages/change/myTake",
       "style": {
-        "leftWindow": true
+        "leftWindow": true,
+        "navigationBarTitleText": "我的参与"
       }
     },
     {
       "path": "pages/change/change",
       "style": {
-        "leftWindow": true
+        "leftWindow": true,
+        "navigationBarTitleText": "发起变更"
       }
     },
     {
       "path": "pages/change/info",
       "style": {
-        "leftWindow": true
+        "leftWindow": true,
+        "navigationBarTitleText": "变更详情"
       }
     },
     {
       "path": "pages/change/list_info",
       "style": {
-        "leftWindow": true
+        "leftWindow": true,
+        "navigationBarTitleText": "变更列表详情"
       }
     },
     {

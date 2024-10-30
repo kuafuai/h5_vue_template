@@ -128,7 +128,7 @@ const rules_sms = {
     rules: [
       {
         required: true,
-        errorMessage: $t('login.enter_phone')
+        errorMessage: proxy.$tt('login.enter_phone')
       }
     ]
   },
@@ -136,7 +136,7 @@ const rules_sms = {
     rules: [
       {
         required: true,
-        errorMessage: $t('login.enter_verification_code')
+        errorMessage: proxy.$tt('login.enter_verification_code')
       }
     ]
   }
@@ -197,7 +197,7 @@ const rules = ref({
     rules: [
       {
         required: true,
-        errorMessage: $t('login.enter_user_name')
+        errorMessage: proxy.$tt('login.enter_user_name')
       },
       {
         minLength: 1,
@@ -208,7 +208,7 @@ const rules = ref({
   },
   password: {
     rules: [
-      { required: true, errorMessage: $t('login.enter_pass_wd') },
+      { required: true, errorMessage: proxy.$tt('login.enter_pass_wd') },
       { minLength: 3, maxLength: 18, errorMessage: '密码长度3-18位' }
     ]
   }

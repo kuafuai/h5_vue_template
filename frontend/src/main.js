@@ -29,6 +29,7 @@ export function createApp() {
     app.config.globalProperties.$navigate = navigate;
     app.component("login",login);
     app.use(i18n);
+    app.config.globalProperties.$tt = i18n.global.t;
     return {
         app,
     };

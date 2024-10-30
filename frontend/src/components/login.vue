@@ -1,8 +1,8 @@
 <template>
   <view v-if="login_type === 'passwd'" class="login">
     <view class="hello">
-      <view class="nihao">嘿！你好</view>
-      <view class="code"> 欢迎来到CodeFlying!</view>
+      <view class="nihao">{{ $t('login.nihao') }}</view>
+      <view class="code">{{ $t('login.code') }}</view>
     </view>
     <view class="title">
       <h2>{{ show_title }}</h2>
@@ -13,7 +13,7 @@
 
       <uni-forms-item name="phone">
         <view class="icon-input-container">
-          <uni-easyinput placeholder="请输入用户名" v-model="form.phone" class="input-field" />
+          <uni-easyinput :placeholder="$t('login.enter_user_name')" v-model="form.phone" class="input-field" />
           <view class="icon">
             <img src="../static/peo.png" style="width:13px;height:13px;" alt="">
           </view>
@@ -21,7 +21,7 @@
       </uni-forms-item>
       <uni-forms-item name="password">
         <view class="icon-input-container">
-          <uni-easyinput placeholder="请输入密码" type="password" v-model="form.password" class="input-field" />
+          <uni-easyinput :placeholder="$t('login.enter_pass_wd')" type="password" v-model="form.password" class="input-field" />
           <view class="icon">
             <img src="../static/pass.png" style="width:13px;height:13px;" alt="">
           </view>
@@ -29,14 +29,14 @@
       </uni-forms-item>
       <uni-forms-item>
         <button class="submit-btn" @click="submitForm(formRef)">
-          登录
+          {{ $t('login.login_btn') }}
         </button>
       </uni-forms-item>
     </uni-forms>
     <!-- <h5>默认账户密码：admin / 123456</h5> -->
     <h5 v-show="is_register" @click="to_page" style="color: rgba(93, 95, 239, 1);font-size: 13px;font-weight:450">
-      <text style="color:rgba(52, 57, 101, 1);font-weight:450">没有账号? </text>
-      现在去注册
+      <text style="color:rgba(52, 57, 101, 1);font-weight:450">{{ $t('login.login_msg') }}</text>
+      {{ $t('login.login_reg') }}
     </h5>
     <view>
 
@@ -44,8 +44,8 @@
   </view>
   <view v-else-if="login_type === 'sms'" class="login">
     <view class="hello">
-      <view class="nihao">嘿！你好</view>
-      <view class="code"> 欢迎来到CodeFlying!</view>
+      <view class="nihao">{{ $t('login.nihao') }}</view>
+      <view class="code">{{ $t('login.code') }}</view>
     </view>
     <view class="title">
       <h2>{{ show_title }}</h2>
@@ -55,7 +55,7 @@
       <!-- 手机号输入框 -->
       <uni-forms-item name="phone">
         <view class="icon-input-container">
-          <uni-easyinput v-model="form_sms.phone" placeholder="请输入手机号" type="number" maxlength="11" />
+          <uni-easyinput v-model="form_sms.phone" :placeholder="$t('login.enter_phone')" type="number" maxlength="11" />
           <view class="icon">
             <img src="../static/phone.png" style="width:11px;height:16px; margin-top:3px" alt="">
           </view>
@@ -66,7 +66,7 @@
 
       <uni-forms-item name="code">
         <view class="code-input-container">
-          <uni-easyinput style="width:50px;" v-model="form_sms.code" placeholder="请输入验证码" />
+          <uni-easyinput style="width:50px;" v-model="form_sms.code" :placeholder="$t('login.enter_verification_code')" />
           <view class="icon">
             <img src="../static/safe.png" style="width:22px;height:24px; margin-bottom:2px" alt="">
           </view>
@@ -79,13 +79,13 @@
 
       <!-- 登录按钮 -->
       <button class="submit-btn" @click="submitForm_sms">
-        登录
+        {{ $t('login.login_btn') }}
       </button>
     </uni-forms>
 
     <h5 v-show="is_register" @click="to_page" style="color: rgba(93, 95, 239, 1);font-size: 13px;font-weight:450">
-      <text style="color:rgba(52, 57, 101, 1);font-weight:450">没有账号? </text>
-      现在去注册
+      <text style="color:rgba(52, 57, 101, 1);font-weight:450">{{ $t('login.login_msg') }}</text>
+      {{ $t('login.login_reg') }}
     </h5>
   </view>
 
@@ -93,7 +93,7 @@
     <fui-button type="success" round size="large" @click="login_click">点击微信授权登录</fui-button>
   </view>
   <view class="bottom">
-    本应用由AI智能软件开发平台CodeFlying自动开发
+    {{ $t('login.login_bottom_msg') }}
   </view>
 </template>
 
@@ -128,7 +128,7 @@ const rules_sms = {
     rules: [
       {
         required: true,
-        errorMessage: '请输入手机号'
+        errorMessage: $t('login.enter_phone')
       }
     ]
   },
@@ -136,7 +136,7 @@ const rules_sms = {
     rules: [
       {
         required: true,
-        errorMessage: '请输入验证码'
+        errorMessage: $t('login.enter_verification_code')
       }
     ]
   }
@@ -197,7 +197,7 @@ const rules = ref({
     rules: [
       {
         required: true,
-        errorMessage: '请输入用户名'
+        errorMessage: $t('login.enter_user_name')
       },
       {
         minLength: 1,
@@ -208,7 +208,7 @@ const rules = ref({
   },
   password: {
     rules: [
-      { required: true, errorMessage: '请输入密码' },
+      { required: true, errorMessage: $t('login.enter_pass_wd') },
       { minLength: 3, maxLength: 18, errorMessage: '密码长度3-18位' }
     ]
   }

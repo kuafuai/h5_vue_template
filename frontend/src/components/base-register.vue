@@ -1,20 +1,20 @@
 <template>
   <view class="all_register">
     <view class="title">
-      <h2>注册</h2>
+      <h2>{{ $t('register.title') }}</h2>
     </view>
     <!--    <view>-->
     <view v-if="register_type === 'sms'">
       <uni-forms :modelValue="baseFormData" :rules="rules" ref="formRef" label-width="auto" status-icon>
         <!-- 手机号输入框 -->
-        <uni-forms-item label="手机号" name="phone" required>
-          <uni-easyinput v-model="baseFormData.phone" placeholder="请输入手机号"/>
+        <uni-forms-item :label="$t('register.phone')" name="phone" required>
+          <uni-easyinput v-model="baseFormData.phone" :placeholder="$t('register.enter_phone')"/>
         </uni-forms-item>
 
         <!-- 验证码输入框 -->
-        <uni-forms-item label="验证码" name="code" required>
+        <uni-forms-item :label="$t('register.phone_verification_code')" name="code" required>
           <view class="code-input-container">
-            <uni-easyinput v-model="baseFormData.code" placeholder="请输入验证码"/>
+            <uni-easyinput v-model="baseFormData.code" :placeholder="$t('register.enter_verification_code')"/>
             <button class="send-code-button" @click="sendcode" :disabled="countdown > 0">
               {{ countdown > 0 ? `${countdown}s后重发` : '获取验证码' }}
             </button>
@@ -24,12 +24,12 @@
         </uni-forms-item>
         <uni-forms-item v-for="(item, index) in not_filed_list" :key="index" :label="item.description" required
                         :name="item.fieldName">
-          <uni-easyinput @input="oninput12($event, item.fieldName)" :placeholder="'请输入' + item.description"/>
+          <uni-easyinput @input="oninput12($event, item.fieldName)" :placeholder="$t('register.enter_prefix') + item.description"/>
         </uni-forms-item>
 
         <uni-forms-item>
           <button type="primary" class="submit-btn" style="background-color: rgb(93, 95, 239);" @click="submitForm()">
-            注册
+            {{ $t('register.title') }}
           </button>
         </uni-forms-item>
       </uni-forms>
@@ -39,15 +39,15 @@
     <view v-else-if="register_type === 'passwd'">
       <uni-forms ref="formRef" :rules="rules" :modelValue="baseFormData">
 
-        <uni-forms-item label="用户名" required name="username">
+        <uni-forms-item :label="$t('register.user_name_label')" required name="username">
 
-          <uni-easyinput v-model="baseFormData.username" placeholder="请输入用户名"/>
+          <uni-easyinput v-model="baseFormData.username" :placeholder="$t('register.enter_user_name')"/>
         </uni-forms-item>
-        <uni-forms-item label="密码" required name="passwd">
-          <uni-easyinput v-model="baseFormData.passwd" placeholder="请输入密码"/>
+        <uni-forms-item :label="$t('register.pass_word')" required name="passwd">
+          <uni-easyinput v-model="baseFormData.passwd" :placeholder="$t('register.enter_pass_word')"/>
         </uni-forms-item>
-        <uni-forms-item label="再次输入密码" required name="checkPassWd">
-          <uni-easyinput v-model="baseFormData.checkPassWd" placeholder="请输入密码"/>
+        <uni-forms-item :label="$t('register.again_pass_word')" required name="checkPassWd">
+          <uni-easyinput v-model="baseFormData.checkPassWd" :placeholder="$t('register.enter_again_pass_word')"/>
         </uni-forms-item>
 
         <uni-forms-item v-for="(item, index) in not_filed_list" :key="index" :label="item.description" required
@@ -59,7 +59,7 @@
             <!--            <base-select></base-select>-->
           </view>
           <view v-else>
-            <uni-easyinput @input="oninput12($event, item.fieldName)" :placeholder="'请输入' + item.description"/>
+            <uni-easyinput @input="oninput12($event, item.fieldName)" :placeholder="$t('register.enter_prefix') + item.description"/>
           </view>
 
 
@@ -67,7 +67,7 @@
 
         <uni-forms-item>
           <button type="primary" class="submit-btn" style="background-color: rgb(93, 95, 239);" @click="submitForm()">
-            注册
+            {{ $t('register.title') }}
           </button>
         </uni-forms-item>
       </uni-forms>
@@ -120,7 +120,7 @@ const rules = ref({
     rules: [
       {
         required: true,
-        errorMessage: '请输入用户名'
+        errorMessage: proxy.$tt('register.enter_user_name')
       }
     ]
   },
@@ -128,7 +128,7 @@ const rules = ref({
     rules: [
       {
         required: true,
-        errorMessage: '请输入密码'
+        errorMessage: proxy.$tt('register.enter_pass_word')
       }
     ]
   },
@@ -136,7 +136,7 @@ const rules = ref({
     rules: [
       {
         required: true,
-        errorMessage: '请输入密码'
+        errorMessage: proxy.$tt('register.enter_again_pass_word')
       }
     ]
   },
@@ -144,7 +144,7 @@ const rules = ref({
     rules: [
       {
         required: true,
-        errorMessage: '请输入手机号'
+        errorMessage: proxy.$tt('register.enter_phone')
       }
     ]
   },
@@ -152,7 +152,7 @@ const rules = ref({
     rules: [
       {
         required: true,
-        errorMessage: '请输入验证码'
+        errorMessage: proxy.$tt('register.enter_verification_code')
       }
     ]
   }

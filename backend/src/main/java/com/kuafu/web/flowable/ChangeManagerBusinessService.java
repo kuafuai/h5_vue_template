@@ -15,6 +15,7 @@ import com.kuafu.web.entity.ChangeManager;
 import com.kuafu.web.entity.ChangeManagerInfo;
 import com.kuafu.web.entity.ChangeManagerSub;
 import com.kuafu.web.entity.UserInfo;
+import com.kuafu.web.exception.PersonException;
 import com.kuafu.web.service.IChangeManagerInfoService;
 import com.kuafu.web.service.IChangeManagerService;
 import com.kuafu.web.service.IChangeManagerSubService;
@@ -245,7 +246,7 @@ public class ChangeManagerBusinessService {
             return false;
         } else {
             if (flowTaskVo.getChoosePerson() == null || flowTaskVo.getChoosePerson().isEmpty()) {
-                return false;
+                throw new PersonException("请正确填写提交人");
             }
             List<Map<String, Object>> subTasks = Lists.newArrayList();
             for (String checkSubmit : flowTaskVo.getCheckSubmits()) {

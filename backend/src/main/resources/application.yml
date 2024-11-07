@@ -83,6 +83,7 @@ qywx:
   message:
     token: ${MESSAGE_TOKEN:5J07lqDR79J8OZZCc6LreP}
     aes: ${MESSAGE_AES:dWSLWl9g6M9Hmy2auEePaBw19wrz8a8qosZ9Uj3QCCC}
+    url: ${MESSAGE_URL:http://dev.codeflying.net:9090/}
 
 # flowable相关表
 flowable:

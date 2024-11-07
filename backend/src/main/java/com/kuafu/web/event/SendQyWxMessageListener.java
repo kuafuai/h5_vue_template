@@ -15,6 +15,7 @@ import com.kuafu.web.service.IUserInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -37,6 +38,9 @@ public class SendQyWxMessageListener implements InitializingBean {
 
     @Autowired
     private IChangeTakeRecordService changeTakeRecordService;
+
+    @Value("${qywx.message.url}")
+    private String messageUrl;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -74,7 +78,6 @@ public class SendQyWxMessageListener implements InitializingBean {
             String userId = userInfo.getUserId();
 
             String title = "变更任务";
-            String url = "http://dev.codeflying.net:9090/";
             String description;
             if (parentManager != null) {
                 description = "您收到一条：" + parentManager.getChangeProjectName() + "-" + parentManager.getChangeTitle() + "\n"
@@ -83,7 +86,7 @@ public class SendQyWxMessageListener implements InitializingBean {
                 description = "您收到一条：审批变更 任务";
             }
 
-            qyWxBusinessService.sendTextCardMessage(userId, title, description, url);
+            qyWxBusinessService.sendTextCardMessage(userId, title, description, messageUrl);
 
             // 插入参与记录
             LambdaQueryWrapper<ChangeTakeRecord> recordQuery = new LambdaQueryWrapper<>();

@@ -4,6 +4,9 @@ console.log("stepup")
 </script>
 
 <style>
+/* 引入icon图标 */
+@import "@/static/image-iconfont/iconfont.css";
+
 /*每个页面公共css */
  ::v-deep .uni-popup__wrapper{
     width: 80%;
@@ -19,6 +22,11 @@ uni-left-window{
   margin-right: 1rem;
   background: white;
   padding-right: 2rem;
+}
+@media (max-width: 900px) {
+  uni-left-window {
+    display: none;
+  }
 }
 .uni-forms{
   width: 90%;

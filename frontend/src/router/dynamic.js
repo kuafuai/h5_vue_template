@@ -6,7 +6,8 @@ export const dynamicRoutes = [
             allShow: true,
             shownot: false,
             adminShow: true,
-            changeShow: true
+            changeShow: true,
+            icon:'icon-zhuye'
         }
     },
     {
@@ -15,7 +16,8 @@ export const dynamicRoutes = [
             title: '变更列表',
             shownot: false,
             adminShow: true,
-            changeShow: true
+            changeShow: true,
+            icon:'icon-liebiao1'
         }
     },
     {
@@ -24,7 +26,8 @@ export const dynamicRoutes = [
             title: '变更明细',
             shownot: false,
             adminShow: true,
-            changeShow: true
+            changeShow: true,
+            icon:'icon-liebiao1'
         }
     },
     {
@@ -33,7 +36,8 @@ export const dynamicRoutes = [
             title: '参与的变更',
             shownot: false,
             adminShow: true,
-            changeShow: true
+            changeShow: true,
+            icon:'icon-biangeng'
         }
     },
     {
@@ -42,7 +46,8 @@ export const dynamicRoutes = [
             title: '提交物管理',
             shownot: false,
             adminShow: true,
-            changeShow: false
+            changeShow: false,
+            icon:'icon-zuanshi-L'
         }
     },
     {
@@ -51,7 +56,8 @@ export const dynamicRoutes = [
             title: '审批人管理',
             shownot: false,
             adminShow: true,
-            changeShow: false
+            changeShow: false,
+            icon:'icon-Viconzq-'
         }
     },
     {
@@ -60,7 +66,8 @@ export const dynamicRoutes = [
             title: '表单配置',
             shownot: false,
             adminShow: true,
-            changeShow: false
+            changeShow: false,
+            icon:'icon-bianji'
         }
     },
     {
@@ -69,7 +76,8 @@ export const dynamicRoutes = [
             title: '人员管理',
             shownot: false,
             adminShow: true,
-            changeShow: false
+            changeShow: false,
+            icon:'icon-pingtaiguanli-renyuanguanli'
         }
     },
     {

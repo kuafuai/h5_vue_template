@@ -72,14 +72,19 @@
               <fui-text :text="item.changePersonName" :size="28"></fui-text>
             </uni-td>
             <uni-td align="center">
-              <uni-tag v-if="item.changeStatus === 0" text="关闭" />
+              <!-- <uni-tag v-if="item.changeStatus === 0" text="关闭" />
               <uni-tag v-if="item.changeStatus === 1" text="进行中" type="warning" />
               <uni-tag v-if="item.changeStatus === 2" text="已完成" type="success" />
-              <uni-tag v-if="item.changeStatus === 3" text="已驳回" type="error" />
+              <uni-tag v-if="item.changeStatus === 3" text="已驳回" type="error" /> -->
+              <uni-tag v-if="item.changeStatus === 0" text="关闭" style="cursor: default;" />
+              <uni-tag v-if="item.changeStatus === 1" text="进行中" type="warning" style="cursor: default;" />
+              <uni-tag v-if="item.changeStatus === 2" text="已完成" type="success" style="cursor: default;" />
+              <uni-tag v-if="item.changeStatus === 3" text="已驳回" type="error" style="cursor: default;" />
+
             </uni-td>
             <uni-td align="center" style="display:flex;align-items: center;justify-content: center;box-sizing:border-box;">
               <view style=""><button size="mini" type="default" 
-                style="color:#ffffff;backgroundColor:#63b463;borderColor:#1AAD19;" @click="handle_task_info(item)">详情
+                style="color:#ffffff;backgroundColor:#63b463;borderColor:#1AAD19;margin-top: 9px;" @click="handle_task_info(item)">详情
               </button></view>
               <!--              <button v-if="item.changeStatus === 1" size="mini" type="default" class="m-r-10"-->
               <!--                      style="color:#ffffff;backgroundColor:#d58867;borderColor:#ad3419"-->
@@ -163,4 +168,5 @@ onShow(() => {
 ::v-deep .uni-left-window {
   height: 100%;
 }
+   
 </style>

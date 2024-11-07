@@ -28,6 +28,7 @@
               @click="() => { setActiveIndex(index); }"
               :class="activeIndex === index ? 'active-navigator' : ''"
           >
+          <uni-icons custom-prefix="iconfont" :type="item.meta.icon" size="25" color="gray" class="icon" />
             <text class="active_text">{{ item.meta.title }}</text>
           </navigator>
         </template>
@@ -102,7 +103,7 @@ uni-navigator {
   color: white;
 }
 
-.active-navigator .active_text {
+.active-navigator .active_text  {
   color: white !important; /* 确保选中状态下字体颜色为白色 */
 }
 
@@ -110,5 +111,13 @@ uni-navigator {
   margin: 0 !important;
   padding-left: 10px !important;
   box-sizing: border-box;
+}
+.icon{
+  position: absolute;
+  left: 14%;
+  size: 28%;
+}
+.active-navigator .icon {
+  color: white !important; /* 确保激活状态下图标颜色为白色 */
 }
 </style>

@@ -15,7 +15,7 @@
       <slot name="list"/>
 
       <view v-if="type=='more'">
-        <base-button model="base" title="选择" @click="click_select" :isChoose="more_result_list.length"/>
+        <base-button model="base" :title="$t('common.select_text')" @click="click_select" :isChoose="more_result_list.length"/>
       </view>
     </base-wrapper>
   </base-wrapper>
@@ -142,9 +142,6 @@ const click_select = () => {
 
   let param = {...url_params};
   let select_id = param.select_id
-
-
-  console.log("选中提交", more_result_list)
 
   uni.setStorageSync("select_storage_" + select_id, more_result_list.value)
   uni.navigateBack()

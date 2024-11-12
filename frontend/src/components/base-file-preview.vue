@@ -12,7 +12,7 @@
             </button>
           </view>
           <view v-else>
-            暂无文件
+            {{ $t('file_preview.no_file_text') }}
           </view>
 
         </view>
@@ -25,8 +25,9 @@
 </template>
 
 <script setup>
-import {ref, computed, watch} from 'vue';
+import {ref, computed, watch, getCurrentInstance} from 'vue';
 
+const {proxy} = getCurrentInstance();
 const props = defineProps({
   url: {
     type: Array,
@@ -85,14 +86,14 @@ const openFile = (url) => {
       fail: function (error) {
         console.error('文件打开失败', error);
         uni.showToast({
-          title: '文件打开失败',
+          title: proxy.$tt('file_preview.file_open_fail_text'),
           icon: 'none',
         });
       },
     });
   } else {
     uni.showToast({
-      title: '无法找到文件路径',
+      title: proxy.$tt('file_preview.unable_to_find_file_path'),
       icon: 'none',
     });
   }

@@ -83,8 +83,8 @@ watch(data.value, (newValue, oldValue) => {
 });
 
 const handleChange = (item) => {
-  console.log("change",item)
-  for (var i = item+1; i <= data.value.length; i++) {
+  console.log("change", item)
+  for (var i = item + 1; i <= data.value.length; i++) {
     getSelectValue(i, i)
   }
 }

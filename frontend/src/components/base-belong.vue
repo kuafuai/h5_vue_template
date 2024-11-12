@@ -31,7 +31,7 @@ const props = defineProps({
   page_name: {type: String, default: ""}
 })
 
-show_value.value = "请选择" + props.title
+show_value.value = proxy.$tt('common.select_text') + props.title
 onShow(() => {
   let res = uni.getStorageSync(props.page_name)
   console.log("base-blog", res);
@@ -61,17 +61,18 @@ const handleClick = () => {
 </script>
 
 <style scoped lang="scss">
-button{
+button {
   /* 清除默认边框 */
   // border:0;
   // padding: 1rem 0;
   padding: 0rem 0 0rem 1.29rem;
-  outline:none;
+  outline: none;
   /*清除默认背景 */
   background-color: transparent;
   display: flex;
   align-items: center;
 }
+
 .text {
 
   ::v-deep view {

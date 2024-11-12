@@ -5,7 +5,7 @@
         <uni-easyinput class="uni-mt-5" suffixIcon="search" v-model="searchDataValue[firstSearchData]"
                        :placeholder="'请输入' + firstSearchDataComment" @iconClick="iconClick"></uni-easyinput>
         <button v-if="is_show_advance" size="mini" class="m-l-10" @click="toggleAdvanced">
-          高级搜索
+          {{ $t('search.advanced_search') }}
           <!--          <a style="margin-left: 8px">-->
           <!--            &lt;!&ndash;            <uni-icons v-if="advanced" type="up"></uni-icons>&ndash;&gt;-->
           <!--            &lt;!&ndash;            <uni-icons v-else type="down"></uni-icons>&ndash;&gt;-->
@@ -33,7 +33,7 @@
 
             <uni-forms-item>
               <button class="button-botttom" size="mini" style="float: right;" @click="iconClick">
-                搜索
+                {{ $t('search.search_text') }}
               </button>
             </uni-forms-item>
           </uni-forms>
@@ -142,6 +142,14 @@ async function iconClick() {
 ::v-deep .m-r-20 {
   display: flex;
   justify-content: flex-end;
+}
+
+::v-deep .uni-forms{
+  width: 80% !important;
+}
+
+::v-deep .uni-forms-item__label{
+  width: 168rpx !important;
 }
 
 ::v-deep.uni-mt-5 {

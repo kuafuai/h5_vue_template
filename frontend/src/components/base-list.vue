@@ -59,8 +59,8 @@
 
   <view v-else class="list_box">
     <view class="nodata">
-      <img src="../static/noData.png" style="width:12.5rem;height:auto" alt=""/>
-      <view class="noText">暂无数据～</view>
+      <img src="../static/noData.png" style="width: 12.5rem;height: 8.5rem;" alt=""/>
+      <view class="noText">{{ $t('list.empty_text') }}～</view>
     </view>
   </view>
 </template>
@@ -74,7 +74,6 @@ export default {
 <script setup>
 import {getCurrentInstance, ref} from "vue";
 import {onLoad} from "@dcloudio/uni-app";
-
 
 const {proxy} = getCurrentInstance();
 
@@ -116,19 +115,17 @@ defineExpose({
   refresh,
 });
 
-onLoad(() => {
-  console.log("list组件 执行")
-
+onMounted(() => {
+  refresh();
 });
 
-onMounted(()=>{
-  console.log("base-list on mount",props.params)
-  refresh();
-})
+watch(() => pageRes.value, (newVal) => {
+  pageRes.value=newVal
+}, {deep: true})
 
 // 刷新
 function refresh(query_param) {
-  console.log("list refresh", query_param)
+  console.log("list refresh", query_param,props.isPage)
   isLoading.value = true;
   // 情况2：走api接口数据
   if (props.isPage) {
@@ -186,13 +183,13 @@ async function getApiData(pageObj) {
 }
 
 function apiMethod(params, headers) {
-  console.log("base-list apiMethod",params,headers)
   let data = {...params};
   if (headers) {
     data = Object.assign(data, headers.value);
   }
-  console.log("params", props.params);
-  console.log("data", data);
+  console.log(props.api.split(".").reduce((acc, item) => acc[item], proxy.$api)(
+      data
+  ))
   return props.api.split(".").reduce((acc, item) => acc[item], proxy.$api)(
       data
   );
@@ -200,7 +197,6 @@ function apiMethod(params, headers) {
 
 // 分页组件参数变更时触发
 function handleCurrentChange(val) {
-  console.log(val);
   getApiData({page: val.current, limit: pageParams.value.pageSize});
 }
 
@@ -209,12 +205,13 @@ function handleSizeChange(val) {
 }
 
 function click_ok(item) {
+  console.log(item,"点击的值")
   emits("click", item);
 }
 
-function check_box(e){
-  console.log("选中",e)
-  emits("check_group_change",e.detail.value)
+function check_box(e) {
+  console.log("选中", e)
+  emits("check_group_change", e.detail.value)
 }
 </script>
 
@@ -261,7 +258,7 @@ function check_box(e){
 }
 
 ::v-deep .uni-list {
-  width: 70%;
+  // width: 70%;
 }
 
 .list_box {

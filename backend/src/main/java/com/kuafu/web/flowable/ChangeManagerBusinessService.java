@@ -85,15 +85,34 @@ public class ChangeManagerBusinessService {
             if (!StringUtils.equalsIgnoreCase(entry.getKey(), "formJson")) {
                 Object value = entry.getValue();
 
-                ChangeManagerInfo info = ChangeManagerInfo.builder()
-                        .changeId(changeManager.getChangeId())
-                        .procInsId(procInsId)
-                        .infoKey(entry.getKey())
-                        .taskId("")
-                        .infoValue(Objects.nonNull(value) ? value.toString() : "")
-                        .build();
+                if (value instanceof String) {
+                    ChangeManagerInfo info = ChangeManagerInfo.builder()
+                            .changeId(changeManager.getChangeId())
+                            .procInsId(procInsId)
+                            .infoKey(entry.getKey())
+                            .taskId("")
+                            .infoValue(Objects.nonNull(value) ? value.toString() : "")
+                            .build();
+                    infoList.add(info);
+                } else if (value instanceof List) {
 
-                infoList.add(info);
+                    List<Map<String, String>> listMap = (List) value;
+                    StringBuilder infoValue = new StringBuilder();
+                    for (Map<String, String> v_entry : listMap) {
+                        if (v_entry.containsKey("url")) {
+                            infoValue.append(v_entry.get("url")).append(";");
+                        }
+                    }
+
+                    ChangeManagerInfo info = ChangeManagerInfo.builder()
+                            .changeId(changeManager.getChangeId())
+                            .procInsId(procInsId)
+                            .infoKey(entry.getKey())
+                            .taskId("")
+                            .infoValue(infoValue.toString())
+                            .build();
+                    infoList.add(info);
+                }
             }
         }
 

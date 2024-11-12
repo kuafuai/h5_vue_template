@@ -39,19 +39,34 @@
             <uni-forms-item label="产品名称" required name="changeProductName">
               <uni-easyinput v-model="baseFormData.changeProductName" placeholder="请输入产品名称"/>
             </uni-forms-item>
-
             <uni-forms-item label="项目阶段" required name="changeProjectStage">
-              <uni-easyinput v-model="baseFormData.changeProjectStage" placeholder="请输入项目阶段"/>
+              <el-select v-model="baseFormData.changeProjectStage" placeholder="请选择项目阶段">
+                <el-option v-for="stage in projectStages"
+                          :key="stage.value"
+                          :label="stage.text"
+                          :value="stage.value"
+                />
+              </el-select>
             </uni-forms-item>
 
             <uni-forms-item label="零件编号" required name="partNumber">
               <uni-easyinput type="textarea"  v-model="baseFormData.partNumber" placeholder="请输入零件编号"/>
             </uni-forms-item>
 
-            <uni-forms-item label="断点时间" required name="changeEndTime">
-              <uni-datetime-picker type="datetime" v-model="baseFormData.changeEndTime"
-                                   :format="'yyyy-MM-dd HH:mm:ss'" :value-format="'yyyy-MM-dd HH:mm:ss'"/>
+            <!-- <uni-forms-item label="断点时间" required name="changeEndTime">
+              <uni-datetime-picker type="date" v-model="baseFormData.changeEndTime"
+                                   :format="'yyyy-MM-dd'" :value-format="'yyyy-MM-dd'"/>
+            </uni-forms-item> -->
+
+            <uni-forms-item label="断点时间" required name="changeEndTimeOption">
+              <uni-data-checkbox v-model="baseFormData.changeEndTimeOption" :localdata="changeEndTimeOptions" />
             </uni-forms-item>
+            <uni-forms-item v-if="baseFormData.changeEndTimeOption.includes('breakpoint')" label="选择断点时间" required name="changeEndTime">
+              <uni-datetime-picker type="date" v-model="baseFormData.changeEndTime"
+                                   :format="'yyyy-MM-dd'" :value-format="'yyyy-MM-dd'"/>
+            </uni-forms-item>
+
+
 
           </uni-forms>
           <view class="flex-center-center">
@@ -77,9 +92,28 @@ import {onShow} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance();
 
+const projectStages = ref([
+  { text: '样件制造阶段', value: '样件制造阶段' },
+  { text: 'OTS工装样件阶段', value: 'OTS工装样件阶段' },
+  { text: 'SOP量产阶段', value: 'SOP量产阶段' }
+]);
+
 const formRenderData = ref({});
 const formJson = ref({});
-const baseFormData = ref({});
+const baseFormData = ref({
+  changeEndTimeOption: [], // 初始化为空数组，以便可以存储选择的选项
+  changeEndTime: ''
+});
+const changeEndTimeOptions = ref([
+  {
+    text: '自然切换',
+    value: 'natural'
+  },
+  {
+    text: '断点时间',
+    value: 'breakpoint'
+  }
+]);
 const baseFormRules = ref({
   changeType: {
     rules: [{

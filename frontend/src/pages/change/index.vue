@@ -66,8 +66,13 @@
               <fui-text :text="item.changeStartTime" :size="28"></fui-text>
             </uni-td>
             <uni-td align="center">
-              <fui-text :text="item.changeEndTime" :size="28"></fui-text>
+              <!-- 如果 changeEndTime 是空字符串，则显示 "自然切换" -->
+              <fui-text v-if="item.changeEndTime === null" text="自然切换" size="28"></fui-text>
+
+              <!-- 否则，显示日期部分（去除时间） -->
+              <fui-text v-else :text="item.changeEndTime.split(' ')[0]" :size="28"></fui-text>
             </uni-td>
+
             <uni-td align="center">
               <fui-text :text="item.changePersonName" :size="28"></fui-text>
             </uni-td>

@@ -100,11 +100,12 @@
             </uni-td>
 
             <uni-td v-if=" '发行日期' in showKeyMapColumns" align="center">
-              <fui-text :text="item.changeStartTime" :size="28"></fui-text>
+              <fui-text :text="item.changeStartTime.split(' ')[0]" :size="28"></fui-text>
             </uni-td>
 
             <uni-td v-if=" '断点日期' in showKeyMapColumns" align="center">
-              <fui-text :text="item.changeEndTime.split(' ')[0]" :size="28"></fui-text>
+              <fui-text v-if="item.changeEndTime === null" text="自然切换" size="28"></fui-text>
+              <fui-text v-else :text="item.changeEndTime.split(' ')[0]" :size="28"></fui-text>
             </uni-td>
 
             <uni-td v-if=" '3D图纸' in showKeyMapColumns" align="center">

@@ -79,8 +79,10 @@
                   <view>    
                     <fui-icon name="wait" size="34"></fui-icon>
                     <fui-text v-if="item.finishTime === '自然切换' || item.finishTime === null" text="自然切换，已用时" class="m-x-6" size="28"></fui-text>
-                    <text class="m-x-6">{{ item.finishTime.split(' ')[0] }}</text>
+
+                    <text v-if="item.finishTime !== '自然切换' && item.finishTime !== null" class="m-x-6">{{ item.finishTime.split(' ')[0] }}</text>
                     <fui-text v-if="item.finishTime !== '自然切换' && item.finishTime !== null" text="截止，已用时" class="m-x-6" size="28"></fui-text>
+
                     <text class="m-x-6">{{ item.duration }}</text>
 
                   </view>

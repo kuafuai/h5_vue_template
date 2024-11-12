@@ -9,4 +9,9 @@ import org.springframework.stereotype.Service;
 @Service("ChangeManagerInfo")
 public class ChangeManagerInfoServiceImpl extends ServiceImpl<ChangeManagerInfoMapper, ChangeManagerInfo>
         implements IChangeManagerInfoService {
+
+    @Override
+    public String getInfoValue(String infoKey) {
+        return getBaseMapper().getInfoValue(infoKey);
+    }
 }

@@ -10,15 +10,10 @@ import com.kuafu.common.domin.BaseResponse;
 import com.kuafu.common.domin.ErrorCode;
 import com.kuafu.common.domin.ResultUtils;
 import com.kuafu.common.login.SecurityUtils;
-import com.kuafu.common.util.ExcelUtils;
-import com.kuafu.common.util.JSON;
-import com.kuafu.common.util.ServletUtils;
-import com.kuafu.common.util.StringUtils;
-import com.kuafu.flowable.domain.FlowFormDto;
+import com.kuafu.common.util.*;
 import com.kuafu.flowable.domain.FlowProcDefDto;
 import com.kuafu.flowable.domain.FlowTaskVo;
 import com.kuafu.flowable.service.IFlowDefinitionService;
-import com.kuafu.flowable.service.IFlowTaskService;
 import com.kuafu.web.entity.*;
 import com.kuafu.web.flowable.ChangeManagerBusinessService;
 import com.kuafu.web.service.*;
@@ -179,6 +174,13 @@ public class ChangeManagerController {
     @ApiOperation("根据Id查询")
     public BaseResponse get(@PathVariable(value = "id") Integer id) {
         ChangeManager entity = this.changeManagerService.getById(id);
+
+        LambdaQueryWrapper<ChangeManagerInfo> infoQuery = new LambdaQueryWrapper<>();
+        infoQuery.eq(ChangeManagerInfo::getChangeId, entity.getChangeId());
+        List<ChangeManagerInfo> listInfo = changeManagerInfoService.list(infoQuery);
+        Map<String, Object> map = listInfo.stream().collect(Collectors.toMap(ChangeManagerInfo::getInfoKey, p -> p, (oldValue, newValue) -> newValue));
+        entity.setInfoMap(map);
+
         return entity != null ? ResultUtils.success(entity) : ResultUtils.error(ErrorCode.OPERATION_ERROR);
     }
 
@@ -418,4 +420,41 @@ public class ChangeManagerController {
         }
     }
 
+    /**
+     * 获取 自动生成编码
+     *
+     * @param codeType
+     * @return
+     */
+    @GetMapping("getCode")
+    public BaseResponse getChangeCode(String codeType) {
+        String code = "ECR编号";
+        String type = "ECR";
+        String value = "";
+        if (StringUtils.equalsIgnoreCase(codeType, "ECR")) {
+            code = "ECR编号";
+            type = "ECR";
+        } else {
+            code = "ECN编号";
+            type = "ECN";
+        }
+
+        String infoValue = changeManagerInfoService.getInfoValue(code);
+        String today = DateUtils.dateTime();
+        if (StringUtils.isNotEmpty(infoValue)) {
+            String date = infoValue.split("-")[1];
+            if (today.equals(date)) {
+                int num = Integer.parseInt(infoValue.split("-")[2]);
+                num += 1;
+                String numStr = String.format("%03d", num);
+                value = type + "-" + today + "-" + numStr;
+            } else {
+                value = type + "-" + today + "-" + "001";
+            }
+        } else {
+            value = type + "-" + today + "-001";
+        }
+
+        return ResultUtils.success(value);
+    }
 }

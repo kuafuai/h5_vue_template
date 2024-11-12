@@ -18,7 +18,7 @@
   <view v-if="comp_type === 'popup' ">
     <!-- 提示窗示例 -->
     <uni-popup ref="popup" type="dialog">
-      <uni-popup-dialog :type="toast.msgType" cancelText="取消" confirmText="确定" title="提示" :content="props.content"
+      <uni-popup-dialog :type="toast.msgType" :cancelText="$t('cancel_text')" :confirmText="$t('confirm_text')" :title="$t('dialog_title')" :content="props.content"
                         @confirm="dialogConfirm"
                         @close="dialogClose"></uni-popup-dialog>
     </uni-popup>
@@ -75,7 +75,7 @@ onHide(()=>{
 const toast = {
   type: 'center',
   msgType: 'success',
-  messageText: '成功',
+  messageText: proxy.$tt('common.success_text'),
   value: ''
 }
 

@@ -19,10 +19,17 @@ public class BaseResponse<T> implements Serializable {
 
     private String message;
 
+    private boolean success;
+
     public BaseResponse(int code, T data, String message) {
         this.code = code;
         this.data = data;
         this.message = message;
+        if (code == 0) {
+            success = true;
+        } else {
+            success = false;
+        }
     }
 
     public BaseResponse(int code, T data) {

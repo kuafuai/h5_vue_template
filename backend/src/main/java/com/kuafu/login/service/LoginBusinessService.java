@@ -247,8 +247,7 @@ public class LoginBusinessService {
     }
 
     /**
-     *
-     * @param phone 手机号
+     * @param phone          手机号
      * @param relevanceTable 登录关联表的名称
      * @return ID
      */
@@ -357,7 +356,7 @@ public class LoginBusinessService {
         QueryWrapper<Object> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("phone_number", phone);
         // 查询时忽略 tenant_id
-        if(TenantContextHolder.getEnableTenant()) {
+        if (TenantContextHolder.getEnableTenant()) {
             CustomTenantHandler.threadLocalSet.get().add(table);
         }
         Object object = iService.getOne(queryWrapper);
@@ -403,6 +402,9 @@ public class LoginBusinessService {
 
         Object tenantId = this.getValue(bean, StringUtils.dbStrToHumpLower(TenantContextHolder.TENANT_TABLE_FIELD_NAME));
         log.info("获取登录用户的 tenantId:{}", tenantId);
+        if (tenantId == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR.getCode(), "还没有绑定企业");
+        }
         loginUser.setTenantId(Integer.valueOf(tenantId.toString()));
         return Integer.valueOf(tenantId.toString());
     }

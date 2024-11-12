@@ -92,6 +92,12 @@ public class LoginController {
         Authentication returnAuth = authenticationManager.authenticate(authenticationToken);
         LoginUser loginUser = (LoginUser) returnAuth.getPrincipal();
         String token = tokenService.createToken(loginUser);
+        if(TenantContextHolder.getEnableTenant()) {
+            Integer tenantId = loginBusinessService.getUserTenantIdByLoginUser(loginUser);
+            if(tenantId != null) {
+                loginUser.setTenantId(tenantId);
+            }
+        }
         LoginRelevanceConfig.remove();
         return ResultUtils.success(token);
     }

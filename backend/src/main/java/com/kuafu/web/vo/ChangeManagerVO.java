@@ -1,5 +1,6 @@
 package com.kuafu.web.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class ChangeManagerVO {
     private String changeProductName;
     private String changeProjectStage;
     private Date changeStartTime;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date changeEndTime;
     private String changePerson;
     private String changePersonName;

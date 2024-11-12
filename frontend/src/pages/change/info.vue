@@ -54,7 +54,6 @@
         </view>
 
 
-
         <view class="flex-between-start m-b-10 w-full">
           <view style="width: 30%">
             <fui-text text="变更类型："></fui-text>
@@ -81,7 +80,7 @@
         <view class="flex-between-start m-b-10 w-full">
           <view style="width: 30%">
             <fui-text text="变更原因："></fui-text>
-            <fui-text v-if="baseInfo.infoMap.变更原因.infoValue ===''" text="无"></fui-text>
+            <fui-text v-if="baseInfo.infoMap.变更原因.infoValue === ''" text="无"></fui-text>
             <fui-text :text="baseInfo.infoMap.变更原因.infoValue"></fui-text>
           </view>
           <view style="width: 30%">
@@ -104,7 +103,7 @@
                                 :src="baseInfo.infoMap.变更原因图片.infoValue" :width="50" :height="50"/>
           </view>
 
-          <view style="width: 30%" class="flex-start-center" >
+          <view style="width: 30%" class="flex-start-center">
             <fui-text text="更改前图片："></fui-text>
             <base-image-preview v-if="baseInfo.infoMap.更改前图片.infoValue !== ''"
                                 :src="baseInfo.infoMap.更改前图片.infoValue" :width="50" :height="50"/>
@@ -586,7 +585,20 @@ if (currentUser != null) {
 }
 
 
-const baseInfo = ref({});
+const baseInfo = ref({
+  changeStartTime: '',
+  infoMap: {
+    变更类型:{},
+    产品代号:{},
+    更改前说明:{},
+    更改后说明: {},
+    开发阶段:{},
+    变更原因:{},
+    变更原因图片: {},
+    更改后图片:{},
+    更改前图片: {},
+  }
+});
 const flowRecordList = ref([])
 
 onMounted(async () => {
@@ -594,6 +606,7 @@ onMounted(async () => {
   if (baseRes.code === 0) {
     baseInfo.value = baseRes.data;
   }
+  console.log(baseInfo)
   handle_load_records();
 });
 

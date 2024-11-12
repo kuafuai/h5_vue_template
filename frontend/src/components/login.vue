@@ -91,12 +91,12 @@
   </view>
 
   <view v-else-if="login_type === 'h5'" class="login">
-    <fui-button type="success" round size="large" @click="login_click">点击微信授权登录</fui-button>
+    <fui-button type="success" round size="large" @click="login_click">{{ $t('login.wx_login') }}</fui-button>
   </view>
   <view v-else class="login">
 
     <button class="identity" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
-      点击微信授权登录
+      {{ $t('login.wx_login') }}
     </button>
   </view>
 
@@ -173,7 +173,7 @@ const sendcode = async () => {
   console.log(isphoneValid.value)
   if (!isphoneValid.value) {
     uni.showToast({
-      title: "手机号格式错误",
+      title: proxy.$tt('login.phone_number_format_error_text'),
       icon: "none"
     })
     return;
@@ -182,7 +182,7 @@ const sendcode = async () => {
   try {
     let res = await proxy.$api.login.getCodeByPhone(form_sms.value.phone)
     uni.showToast({
-      title: "验证码发送成功",
+      title: proxy.$tt('login.verification_code_success_text'),
       icon: "success"
     })
     countdown.value = 60;
@@ -196,7 +196,7 @@ const sendcode = async () => {
   } catch (e) {
     console.log(e)
     uni.showToast({
-      title: "验证码发送失败",
+      title: proxy.$tt('login.verification_code_fail_text'),
       icon: "none"
     })
   }
@@ -218,14 +218,14 @@ const rules = ref({
       {
         minLength: 1,
         maxLength: 100,
-        errorMessage: '用户名长度1-100位'
+        errorMessage: proxy.$tt('login.username_length_rule_text')
       }
     ]
   },
   password: {
     rules: [
       { required: true, errorMessage: proxy.$tt('login.enter_pass_wd') },
-      { minLength: 3, maxLength: 18, errorMessage: '密码长度3-18位' }
+      { minLength: 3, maxLength: 18, errorMessage: proxy.$tt('login.password_length_rule_text') }
     ]
   }
 });
@@ -280,7 +280,7 @@ const submitForm_sms = () => {
       login_error(err);
     });
   }).catch(error => {
-    uni.showToast({ title: '请填写正确的信息', icon: 'none' });
+    uni.showToast({ title: proxy.$tt('login.please_enter_correct_info'), icon: 'none' });
 
   });
 };
@@ -292,7 +292,7 @@ function login_error(err) {
 
 const login_success = (res) => {
   uni.showToast({
-    title: "登录成功",
+    title: proxy.$tt('login.login_success_text'),
     icon: "success",
     duration: 2000
   });
@@ -328,7 +328,7 @@ const getPhoneNumber = function (e) {
   if (e.detail.errMsg === "getPhoneNumber:fail user deny") {
     // 用户拒绝授权手机号
     uni.showToast({
-      title: "您拒绝了授权",
+      title: proxy.$tt('login.deny_authorization_text'),
       icon: "none",
       duration: 2000,
     });

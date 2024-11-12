@@ -48,10 +48,12 @@
           </view>
           <view style="width: 30%">
             <fui-text text="断点时间："></fui-text>
-<!--            <fui-text :text="baseInfo.changeEndTime"></fui-text>-->
-            <fui-text :text="baseInfo.changeEndTime ? baseInfo.changeEndTime.split(' ')[0] : '自然切换'" />
+            <!--            <fui-text :text="baseInfo.changeEndTime"></fui-text>-->
+            <fui-text :text="baseInfo.changeEndTime ? baseInfo.changeEndTime.split(' ')[0] : '自然切换'"/>
           </view>
         </view>
+
+
 
         <view class="flex-between-start m-b-10 w-full">
           <view style="width: 30%">
@@ -59,6 +61,24 @@
             <fui-text v-if="baseInfo.infoMap.变更类型.infoValue ===''" text="无"></fui-text>
             <fui-text :text="baseInfo.infoMap.变更类型.infoValue"></fui-text>
           </view>
+          <view style="width: 30%">
+            <fui-text text="产品代号："></fui-text>
+            <fui-text v-if="baseInfo.infoMap.产品代号.infoValue ===''" text="无"></fui-text>
+            <fui-text :text="baseInfo.infoMap.产品代号.infoValue"></fui-text>
+          </view>
+
+          <view style="width: 30%">
+            <fui-text text="开发阶段："></fui-text>
+            <fui-text v-if="baseInfo.infoMap.开发阶段.infoValue ===''" text="无"></fui-text>
+            <fui-text :text="baseInfo.infoMap.开发阶段.infoValue"></fui-text>
+          </view>
+
+        </view>
+
+        <view class="flex-around-start m-b-20">
+        </view>
+
+        <view class="flex-between-start m-b-10 w-full">
           <view style="width: 30%">
             <fui-text text="变更原因："></fui-text>
             <fui-text v-if="baseInfo.infoMap.变更原因.infoValue ===''" text="无"></fui-text>
@@ -69,24 +89,33 @@
             <fui-text v-if="baseInfo.infoMap.更改前说明.infoValue ===''" text="无"></fui-text>
             <fui-text :text="baseInfo.infoMap.更改前说明.infoValue"></fui-text>
           </view>
-        </view>
-
-        <view class="flex-between-start m-b-10 w-full">
           <view style="width: 30%">
-            <fui-text text="产品代号："></fui-text>
-            <fui-text v-if="baseInfo.infoMap.产品代号.infoValue ===''" text="无"></fui-text>
-            <fui-text :text="baseInfo.infoMap.产品代号.infoValue"></fui-text>
-          </view>
-          <view style="width: 30%">
-            <fui-text text="开发阶段："></fui-text>
-            <fui-text v-if="baseInfo.infoMap.开发阶段.infoValue ===''" text="无"></fui-text>
-            <fui-text :text="baseInfo.infoMap.开发阶段.infoValue"></fui-text>
-          </view>
-          <view style="width: 30%">
-            <fui-text text="更改后说明：" />
+            <fui-text text="更改后说明："/>
             <fui-text v-if="baseInfo.infoMap.更改后说明.infoValue ===''" text="无"></fui-text>
             <fui-text :text="baseInfo.infoMap.更改后说明.infoValue"></fui-text>
           </view>
+        </view>
+
+
+        <view class="flex-between-start m-b-10 w-full">
+          <view style="width: 30%" class="flex-start-center">
+            <fui-text text="变更原因图片："></fui-text>
+            <base-image-preview v-if="baseInfo.infoMap.变更原因图片.infoValue !== ''"
+                                :src="baseInfo.infoMap.变更原因图片.infoValue" :width="50" :height="50"/>
+          </view>
+
+          <view style="width: 30%" class="flex-start-center" >
+            <fui-text text="更改前图片："></fui-text>
+            <base-image-preview v-if="baseInfo.infoMap.更改前图片.infoValue !== ''"
+                                :src="baseInfo.infoMap.更改前图片.infoValue" :width="50" :height="50"/>
+          </view>
+
+          <view style="width: 30%" class="flex-start-center">
+            <fui-text text="更改后图片："></fui-text>
+            <base-image-preview v-if="baseInfo.infoMap.更改后图片.infoValue !== ''"
+                                :src="baseInfo.infoMap.更改后图片.infoValue" :width="50" :height="50"/>
+          </view>
+
         </view>
 
 
@@ -394,32 +423,32 @@
   white-space: nowrap; 
   overflow: hidden; 
   text-overflow: ellipsis;"
-  v-show="submitForm.checkSubmits.includes(item.submissionName)"
->
-  <el-text 
-    style="
+                        v-show="submitForm.checkSubmits.includes(item.submissionName)"
+                  >
+                    <el-text
+                        style="
       font-size: 12px; 
       flex:none;
       font-weight: 600; 
       cursor: pointer; 
       display: inline-block; 
       width: 200px;"
-    v-if="alreadySubmitPerson.hasOwnProperty(item.submissionName)"
-    @click="chooseSubmitPerson(item.submissionName)"
-  >
-    {{ alreadySubmitPerson[item.submissionName].text }}
-  </el-text>
-  
-  <el-button 
-    v-else 
-    type="warning" 
-    size="small" 
-    link 
-    @click="chooseSubmitPerson(item.submissionName)"
-  >
-    请设置提交人
-  </el-button>
-</view>
+                        v-if="alreadySubmitPerson.hasOwnProperty(item.submissionName)"
+                        @click="chooseSubmitPerson(item.submissionName)"
+                    >
+                      {{ alreadySubmitPerson[item.submissionName].text }}
+                    </el-text>
+
+                    <el-button
+                        v-else
+                        type="warning"
+                        size="small"
+                        link
+                        @click="chooseSubmitPerson(item.submissionName)"
+                    >
+                      请设置提交人
+                    </el-button>
+                  </view>
 
 
                 </div>

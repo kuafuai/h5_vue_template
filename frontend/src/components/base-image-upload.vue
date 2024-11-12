@@ -15,7 +15,7 @@
           style="display:flex;flex-direction:column;justify-content:center;align-items:center;border:none">
       <image src="../static/picture.png" style="width:80rpx;height:80rpx" alt=""></image>
       <view style="line-height: 17px;color: rgba(154,154,154,1);font-size: 0.75rem;margin-top:10rpx">
-        点击拍照/长按
+        点{{ $t('image_upload.upload_text') }}
       </view>
     </view>
   </uni-file-picker>
@@ -31,9 +31,10 @@ export default {
 </script>
 
 <script setup>
-import {ref, watch} from 'vue';
+import {getCurrentInstance, ref, watch} from 'vue';
 import {onLoad, onShow} from "@dcloudio/uni-app";
 
+const {proxy} = getCurrentInstance()
 // 通过 defineModel() 传递资源数组，支持外部传入
 const num = ref([])
 const resources = ref([])
@@ -66,7 +67,7 @@ const props = defineProps({
   },
   uploadUrl: {
     type: String,
-    default: () => import.meta.env.VITE_APP_BASE_API + "/common/upload",
+    default: () => import.meta.env.VITE_APP_BASE_API + "/file/upload",
   },
   size: {
     type: Number,
@@ -139,7 +140,7 @@ const handleFileChange = async (files) => {
     console.log(`File ${i} Path: `, file_item.path)
     if (file_item.size > props.size * 1024 * 1024) {
       uni.showToast({
-        title: `文件大小在${props.size}MB以内,请压缩后上传`,
+        title: proxy.$tt('image_upload.file_size_prefix') + `${props.size}` + proxy.$tt('image_upload.file_size_suffix'),
         icon: "none",
       });
       files.tempFiles = [];
@@ -172,7 +173,7 @@ const handelDelete = (e) => {
 const uploadFiles = async () => {
   if (selectedFiles.value.length === 0) {
     uni.showToast({
-      title: '请先选择文件',
+      title: proxy.$tt('image_upload.please_select_file'),
       icon: 'none',
     });
     return;
@@ -185,13 +186,13 @@ const uploadFiles = async () => {
       await uploadFile(file);
     }
     uni.showToast({
-      title: '文件上传成功',
+      title: proxy.$tt('image_upload.file_upload_success'),
       icon: 'success',
     });
   } catch (error) {
     console.log(error);
     uni.showToast({
-      title: '文件上传失败',
+      title: proxy.$tt('image_upload.file_upload_fail'),
       icon: 'none',
     });
   }
@@ -205,6 +206,7 @@ const uploadFile = (file) => {
       name: 'file',
       header: {
         "BackendAddress": import.meta.env.VITE_APP_SERVICE_API,
+        "Authorization": "Bearer " + uni.getStorageSync("h5_token")
       },
       success: (res) => {
         console.log("base-image", res)
@@ -233,7 +235,7 @@ const uploadFile = (file) => {
             reject(new Error(response.message));
           }
         } else {
-          reject(new Error('上传失败'));
+          reject(new Error(proxy.$tt('common.upload_fail_text')));
         }
       },
       fail: (err) => {

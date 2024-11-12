@@ -1,6 +1,6 @@
 <template>
   <uni-data-select v-model="select_item" @change="handleInput" :disabled="disabled" :clear="clear" v-bind="$attrs"
-                   :placeholder="'请选择' + title" :localdata="selectData" :filter="true">
+                   :placeholder="$t('select.select_placeholder') + title" :localdata="selectData" :filter="true">
   </uni-data-select>
 
 

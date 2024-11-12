@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuafu.web.mapper.ChangeManagerInfoMapper">
+    <select id="getInfoValue" resultType="String">
+        SELECT info_value
+        FROM `change_manager_info`
+        WHERE info_key = #{info_key}
+        ORDER BY info_value DESC LIMIT 1;
+    </select>
+</mapper>

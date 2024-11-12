@@ -26,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -80,10 +82,32 @@ public class ChangeManagerBusinessService {
                 .build();
 
         boolean flag = changeManagerService.save(changeManager);
+        //定义日期格式及变量
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        Object value;
+        String type = "";
+
         List<ChangeManagerInfo> infoList = Lists.newArrayList();
         for (Map.Entry<String, Object> entry : changeManagerVO.getVariables().entrySet()) {
             if (!StringUtils.equalsIgnoreCase(entry.getKey(), "formJson")) {
-                Object value = entry.getValue();
+                //判断是否为ECN/ECR编号
+                if(entry.getKey().equals("ECN编号") || entry.getKey().equals("ECR编号")){
+                   type = entry.getKey().substring(0,3);
+                   String infoValue =  changeManagerInfoService.getInfoValue(entry.getKey());
+                   String date = infoValue.split("-")[1];
+                   String today = LocalDate.now().format(formatter);
+                   //判断今日是否已有编号，若有则将编号+1，没有则001
+                    if (today.equals(date)){
+                        int num = Integer.parseInt(infoValue.split("-")[2]);
+                        num+=1;
+                        String numStr = String.format("%03d", num);
+                        value= type + "-" + today + "-" + numStr;
+                    }else {
+                        value = type + "-" + today + "-" + "001";
+                    }
+                 }else {
+                    value = entry.getValue();
+                }
 
                 ChangeManagerInfo info = ChangeManagerInfo.builder()
                         .changeId(changeManager.getChangeId())

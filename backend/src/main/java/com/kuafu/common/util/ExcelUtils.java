@@ -147,7 +147,9 @@ public class ExcelUtils {
         headCell12.setCellValue(DateUtils.dateTime(changeManager.getChangeStartTime()));
 
         Cell headCell13 = headRow.createCell(13);
-        headCell13.setCellValue(DateUtils.dateTime(changeManager.getChangeEndTime()));
+        headCell13.setCellValue(changeManager.getChangeEndTime() != null
+                ? DateUtils.dateTime(changeManager.getChangeEndTime())
+                : "");  // 或使用其他默认值
 
         Cell headCell14 = headRow.createCell(14);
         Cell headCell15 = headRow.createCell(15);

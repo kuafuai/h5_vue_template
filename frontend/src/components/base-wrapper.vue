@@ -1,23 +1,23 @@
 <template>
   <view :class="wrapperClass+' box'">
-    <slot />
+    <slot/>
   </view>
 </template>
 
 <script setup>
 // import { ref, watch, getCurrentInstance } from 'vue';
 
-const { proxy } = getCurrentInstance();
+const {proxy} = getCurrentInstance();
 const type = ref(import.meta.env.VITE_APP_TYPE);
 
 const props = defineProps({
-  display: { type: String, default: '' },
-  direction: { type: String, default: '' },
-  x: { type: String, default: '' },
-  y: { type: String, default: '' },
-  h_full: { type: Boolean, default: false },
-  w_full: { type: Boolean, default: false },
-  bg_color: { type: String, default: '' }
+  display: {type: String, default: ''},
+  direction: {type: String, default: ''},
+  x: {type: String, default: ''},
+  y: {type: String, default: ''},
+  h_full: {type: Boolean, default: false},
+  w_full: {type: Boolean, default: false},
+  bg_color: {type: String, default: ''}
 });
 
 const wrapperClass = ref('');

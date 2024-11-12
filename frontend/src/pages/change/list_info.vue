@@ -43,7 +43,7 @@
         </base-search>
       </view>
 
-      <view class="m-b-20 overflow-x-scroll" :style="{width: table_width+'px'}">
+      <view class="m-b-20" :style="{width: table_width+'px'}">  <!-- 删除多余滚动条 -->
         <base-table ref="refTableUserInfo" api="change_manager.page_info" :columns="showKeyColumns">
           <template #default="{item}">
 
@@ -104,7 +104,7 @@
             </uni-td>
 
             <uni-td v-if=" '断点日期' in showKeyMapColumns" align="center">
-              <fui-text :text="item.changeEndTime" :size="28"></fui-text>
+              <fui-text :text="item.changeEndTime.split(' ')[0]" :size="28"></fui-text>
             </uni-td>
 
             <uni-td v-if=" '3D图纸' in showKeyMapColumns" align="center">

@@ -23,6 +23,9 @@
 
           </fui-text>
         </view>
+        <view class="flex-around-start m-b-8"><!-- 显示更多变更详情信息 -->
+          <fui-text text="基本信息——" size="36"></fui-text>
+        </view>
         <view class="flex-between-start m-b-10 w-full">
           <view style="width: 30%">
             <fui-text text="发起人："></fui-text>
@@ -47,10 +50,73 @@
             <fui-text :text="baseInfo.changeProjectStage"></fui-text>
           </view>
           <view style="width: 30%">
-            <fui-text text="断点时间："></fui-text>
-            <fui-text :text="baseInfo.changeEndTime"></fui-text>
+            <fui-text text="断点时间：" />
+            <fui-text :text="baseInfo.changeEndTime ? baseInfo.changeEndTime.split(' ')[0] : '自然切换'" />
           </view>
         </view>
+
+        <view class="flex-around-start m-b-8">
+          <fui-text text="扩展信息——" size="36"></fui-text>
+        </view>
+
+        <view class="flex-between-start m-b-10 w-full">
+          <view style="width: 30%">
+            <fui-text text="变更类型："></fui-text>
+            <fui-text v-if="baseInfo.infoMap.变更类型.infoValue ===''" text="无"></fui-text>
+            <fui-text :text="baseInfo.infoMap.变更类型.infoValue"></fui-text>
+          </view>
+          <view style="width: 30%">
+            <fui-text text="变更原因："></fui-text>
+            <fui-text v-if="baseInfo.infoMap.变更原因.infoValue ===''" text="无"></fui-text>
+            <fui-text :text="baseInfo.infoMap.变更原因.infoValue"></fui-text>
+          </view>
+          <view style="width: 30%">
+            <fui-text text="更改前说明："></fui-text>
+            <fui-text v-if="baseInfo.infoMap.更改前说明.infoValue ===''" text="无"></fui-text>
+            <fui-text :text="baseInfo.infoMap.更改前说明.infoValue"></fui-text>
+          </view>
+        </view>
+        <view class="flex-between-start m-b-10 w-full">
+          <view style="width: 30%">
+            <fui-text text="产品代号："></fui-text>
+            <fui-text v-if="baseInfo.infoMap.产品代号.infoValue ===''" text="无"></fui-text>
+            <fui-text :text="baseInfo.infoMap.产品代号.infoValue"></fui-text>
+          </view>
+          <view style="width: 30%">
+            <fui-text text="开发阶段："></fui-text>
+            <fui-text v-if="baseInfo.infoMap.开发阶段.infoValue ===''" text="无"></fui-text>
+            <fui-text :text="baseInfo.infoMap.开发阶段.infoValue"></fui-text>
+          </view>
+          <view style="width: 30%">
+            <fui-text text="更改后说明：" />
+            <fui-text v-if="baseInfo.infoMap.更改后说明.infoValue ===''" text="无"></fui-text>
+            <fui-text :text="baseInfo.infoMap.更改后说明.infoValue"></fui-text>
+          </view>
+        </view>
+        <view class="flex-between-start m-b-10 w-full">
+          <view style="width: 30%">
+            <fui-text text="零件编号："></fui-text>
+            <fui-text :text="baseInfo.partNumber"></fui-text>
+          </view>
+          <view style="width: 30%">
+            <fui-text text="ECR编号："></fui-text>
+            <fui-text v-if="baseInfo.infoMap.ECR编号.infoValue ===''" text="无"></fui-text>
+            <fui-text :text="baseInfo.infoMap.ECR编号.infoValue"></fui-text>
+          </view>
+          <view style="width: 30%">
+            <fui-text text="ECR批准：" />
+            <fui-text v-if="baseInfo.infoMap.ECR批准.infoValue ===''" text="无"></fui-text>
+            <fui-text :text="baseInfo.infoMap.ECR批准.infoValue"></fui-text>
+          </view>
+        </view>
+        
+
+        <!-- <view class="flex-between-start m-b-10" style="display: flex; flex-wrap: wrap; gap: 20px 30px;">
+          <view v-for="(info, key, index) in baseInfo.infoMap" :key="info.changeInfoId" style="width: 30%; margin-bottom: -6px;">
+            <fui-text :text="key + '：'" ></fui-text>
+            <fui-text :text="info.infoValue ? info.infoValue : '无'" />
+          </view>
+        </view> -->
       </view>
       <view class=" m-20 w-full">
         <el-tabs tab-position="top" v-model="activeName" @tab-click="handleClick">

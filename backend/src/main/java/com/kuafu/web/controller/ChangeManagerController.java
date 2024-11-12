@@ -178,7 +178,7 @@ public class ChangeManagerController {
     @GetMapping("get/{id}")
     @ApiOperation("根据Id查询")
     public BaseResponse get(@PathVariable(value = "id") Integer id) {
-        ChangeManager entity = this.changeManagerService.getById(id);
+        ChangeManager entity = this.changeManagerService.getDetailsById(id);
         return entity != null ? ResultUtils.success(entity) : ResultUtils.error(ErrorCode.OPERATION_ERROR);
     }
 

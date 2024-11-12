@@ -9,4 +9,6 @@ import java.util.Map;
 public interface IChangeManagerService extends IService<ChangeManager> {
 
     List<Map<String,Object>> queryStatusStatics();
+
+    ChangeManager getDetailsById(Integer id);
 }

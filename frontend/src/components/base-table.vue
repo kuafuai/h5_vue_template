@@ -1,6 +1,6 @@
 <template>
   <view>
-    <uni-table stripe :type="selection?'selection':''" border emptyText="暂无更多数据"
+    <uni-table stripe :type="selection?'selection':''" border :emptyText="$t('table.empty_text')"
                ref="baseTableRef"
                :loading="isLoading"
                @selection-change="selectionChange">
@@ -10,11 +10,11 @@
         </template>
       </uni-tr>
       <uni-tr v-for="(item, index) in pageRes.records" :key="index">
-        <slot name="default" :item="item">old {{  item }} </slot>
+        <slot name="default" :item="item">old {{ item }}</slot>
       </uni-tr>
 
     </uni-table>
-    <view v-if="isPage"  class="uni-pagination-box">
+    <view v-if="isPage" class="uni-pagination-box">
       <uni-pagination
           v-if="pageRes && pageRes.total > 0"
           show-icon

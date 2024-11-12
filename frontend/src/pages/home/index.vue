@@ -76,10 +76,11 @@
                     <fui-text text="需要您：" class="m-x-6" size="28"></fui-text>
                     <text style="cursor: pointer">{{ item.taskName }}</text>
                   </view>
-                  <view>
+                  <view>    
                     <fui-icon name="wait" size="34"></fui-icon>
-                    <text class="m-x-6">{{ item.finishTime }}</text>
-                    <fui-text text="截止，已用时" class="m-x-6" size="28"></fui-text>
+                    <fui-text v-if="item.finishTime === '自然切换' || item.finishTime === null" text="自然切换，已用时" class="m-x-6" size="28"></fui-text>
+                    <text class="m-x-6">{{ item.finishTime.split(' ')[0] }}</text>
+                    <fui-text v-if="item.finishTime !== '自然切换' && item.finishTime !== null" text="截止，已用时" class="m-x-6" size="28"></fui-text>
                     <text class="m-x-6">{{ item.duration }}</text>
 
                   </view>
@@ -129,8 +130,8 @@ async function getMyTodo() {
   let res = await proxy.$api.change_manager.myTodo();
 
   if (res.code === 0) {
-    todoList.value = res.data;
-  }
+  todoList.value = res.data
+}
 
   let resStatics = await proxy.$api.change_manager.myStatics();
   if (resStatics.code === 0) {

@@ -1,12 +1,12 @@
 import axios from 'axios'
-import {Loading} from 'element-ui'
+import {ElLoading} from 'element-plus'
 import {saveAs} from 'file-saver'
 
 const baseURL = import.meta.env.VITE_APP_BASE_API;
 
 export default {
     name(name) {
-        let downloadLoadingInstance = Loading.service({
+        let downloadLoadingInstance = ElLoading.service({
             text: "正在下载数据，请稍候",
             spinner: "el-icon-loading",
             background: "rgba(0, 0, 0, 0.7)",

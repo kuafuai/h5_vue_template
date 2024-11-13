@@ -17,7 +17,11 @@ export default {
             method: 'get',
             url: url,
             responseType: 'blob',
-            headers: {'Authorization': 'Bearer ' + localStorage.getItem("h5_token")}
+            headers: {'Authorization': 'Bearer ' + localStorage.getItem("h5_token")},
+            onDownloadProgress: (progressEvent) => {
+                const percentCompleted = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+                downloadLoadingInstance.setText(`下载进度：${percentCompleted}%`)
+            }
         }).then((res) => {
             const blob = new Blob([res.data])
             this.saveAs(blob, decodeURIComponent(res.headers['download-filename']))

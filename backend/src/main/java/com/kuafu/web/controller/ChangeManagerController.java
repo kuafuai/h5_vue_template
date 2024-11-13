@@ -442,12 +442,18 @@ public class ChangeManagerController {
         String infoValue = changeManagerInfoService.getInfoValue(code);
         String today = DateUtils.dateTime();
         if (StringUtils.isNotEmpty(infoValue)) {
-            String date = infoValue.split("-")[1];
-            if (today.equals(date)) {
-                int num = Integer.parseInt(infoValue.split("-")[2]);
-                num += 1;
-                String numStr = String.format("%03d", num);
-                value = type + "-" + today + "-" + numStr;
+            String[] splitData = StringUtils.split(infoValue, "-");
+            if (splitData.length > 1) {
+                String date = splitData[1];
+                if (StringUtils.equalsIgnoreCase(today, date)) {
+                    int num = Integer.parseInt(splitData[2]);
+                    num += 1;
+                    String numStr = String.format("%03d", num);
+                    value = type + "-" + today + "-" + numStr;
+                } else {
+                    value = type + "-" + today + "-" + "001";
+                }
+
             } else {
                 value = type + "-" + today + "-" + "001";
             }

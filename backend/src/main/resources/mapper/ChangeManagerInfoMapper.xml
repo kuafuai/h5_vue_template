@@ -6,7 +6,7 @@
         SELECT info_value
         FROM `change_manager_info`
         WHERE info_key = #{info_key}
-        ORDER BY info_value DESC LIMIT 1;
+        ORDER BY change_info_id DESC LIMIT 1;
     </select>
 
 </mapper>

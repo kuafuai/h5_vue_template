@@ -108,8 +108,9 @@ public class CommonController {
             } else {
                 filePath = AppConfig.getDownloadPath() + fileName;
             }
-            
+
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            response.setContentLengthLong(FileUtils.sizeOf(filePath));
             FileUtils.setAttachmentResponseHeader(response, realFileName);
             FileUtils.writeBytes(filePath, response.getOutputStream());
 

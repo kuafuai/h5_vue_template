@@ -1,10 +1,17 @@
 import axios from 'axios'
+import {Loading} from 'element-ui'
 import {saveAs} from 'file-saver'
 
 const baseURL = import.meta.env.VITE_APP_BASE_API;
 
 export default {
     name(name) {
+        let downloadLoadingInstance = Loading.service({
+            text: "正在下载数据，请稍候",
+            spinner: "el-icon-loading",
+            background: "rgba(0, 0, 0, 0.7)",
+        })
+
         let url = baseURL + "/common/download?fileName=" + encodeURIComponent(name)
         axios({
             method: 'get',
@@ -14,6 +21,9 @@ export default {
         }).then((res) => {
             const blob = new Blob([res.data])
             this.saveAs(blob, decodeURIComponent(res.headers['download-filename']))
+            downloadLoadingInstance.close();
+        }).catch((r) => {
+            downloadLoadingInstance.close();
         })
     },
     download(url, params, filename) {

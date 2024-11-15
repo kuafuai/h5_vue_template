@@ -1,19 +1,20 @@
 <template>
+  <web-view id="foo" v-if="isTrue" :src="previewUrl" style="width:640px; height:480px"></web-view>
   <view v-if="login_type === 'passwd'" class="login">
     <view class="hello">
       <view class="nihao">{{ $t('login.nihao') }}</view>
-      <view class="code">{{ $t('login.code') }}</view>
+      <view class="code"> {{ $t('login.code') }}</view>
     </view>
     <view class="title">
       <h2>{{ show_title }}</h2>
     </view>
     <!-- <uni-forms style="max-width: 320px; width: 100%; margin: 0 auto;" :="" :rules="" ref="loginForm_sms" label-width="auto" status-icon> -->
-    <view class="custom-form">
-      <uni-forms ref="formRef" :modelValue="form" :rules="rules" label-width="auto" status-icon>
+    <uni-forms ref="formRef" style="max-width: 320px; width: 100%; margin: 0 auto;" :modelValue="form" :rules="rules"
+               label-width="auto" status-icon>
 
       <uni-forms-item name="phone">
         <view class="icon-input-container">
-          <uni-easyinput :placeholder="$t('login.enter_user_name')" v-model="form.phone" class="input-field" />
+          <uni-easyinput :placeholder="$t('login.enter_user_name')" v-model="form.phone" class="input-field"/>
           <view class="icon">
             <img src="../static/peo.png" style="width:13px;height:13px;" alt="">
           </view>
@@ -21,7 +22,7 @@
       </uni-forms-item>
       <uni-forms-item name="password">
         <view class="icon-input-container">
-          <uni-easyinput :placeholder="$t('login.enter_pass_wd')" type="password" v-model="form.password" class="input-field" />
+          <uni-easyinput :placeholder="$t('login.enter_pass_wd')" type="password" v-model="form.password" class="input-field"/>
           <view class="icon">
             <img src="../static/pass.png" style="width:13px;height:13px;" alt="">
           </view>
@@ -33,7 +34,6 @@
         </button>
       </uni-forms-item>
     </uni-forms>
-    </view>
     <!-- <h5>默认账户密码：admin / 123456</h5> -->
     <h5 v-show="is_register" @click="to_page" style="color: rgba(93, 95, 239, 1);font-size: 13px;font-weight:450">
       <text style="color:rgba(52, 57, 101, 1);font-weight:450">{{ $t('login.login_msg') }}</text>
@@ -46,7 +46,7 @@
   <view v-else-if="login_type === 'sms'" class="login">
     <view class="hello">
       <view class="nihao">{{ $t('login.nihao') }}</view>
-      <view class="code">{{ $t('login.code') }}</view>
+      <view class="code"> {{ $t('login.code') }}</view>
     </view>
     <view class="title">
       <h2>{{ show_title }}</h2>
@@ -56,7 +56,7 @@
       <!-- 手机号输入框 -->
       <uni-forms-item name="phone">
         <view class="icon-input-container">
-          <uni-easyinput v-model="form_sms.phone" :placeholder="$t('login.enter_phone')" type="number" maxlength="11" />
+          <uni-easyinput v-model="form_sms.phone" :placeholder="$t('login.enter_phone')" type="number" maxlength="11"/>
           <view class="icon">
             <img src="../static/phone.png" style="width:11px;height:16px; margin-top:3px" alt="">
           </view>
@@ -67,7 +67,7 @@
 
       <uni-forms-item name="code">
         <view class="code-input-container">
-          <uni-easyinput style="width:50px;" v-model="form_sms.code" :placeholder="$t('login.enter_verification_code')" />
+          <uni-easyinput style="width:50px;" v-model="form_sms.code" :placeholder="$t('login.enter_verification_code')"/>
           <view class="icon">
             <img src="../static/safe.png" style="width:22px;height:24px; margin-bottom:2px" alt="">
           </view>
@@ -90,41 +90,79 @@
     </h5>
   </view>
 
+
   <view v-else-if="login_type === 'h5'" class="login">
     <fui-button type="success" round size="large" @click="login_click">{{ $t('login.wx_login') }}</fui-button>
-  </view>
-  <view v-else class="login">
 
-    <button class="identity" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
+  </view>
+  <view v-else class="wxlogin">
+    <view class="h5Login">
+      {{props.title}}
+    </view>
+    <button class="identity" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="radio1">
       {{ $t('login.wx_login') }}
     </button>
+    <button class="identity" v-else @click="btnF1">
+      {{ $t('login.wx_login') }}
+    </button>
+    <view class="radios">
+      <label class="radio">
+        <radio style="zoom: 74%;margin:0.15rem 18rpx 0rpx 0rpx" @click="isCheck" value="radio1" :checked="radio1"/>
+        <text style="color: rgba(169,169,169,1)">{{$t('login.read_and_agree')}}
+          <text class="agreement" @click.stop="services">《{{$t('login.service_agreement')}}》</text>
+          <text
+              class="agreement">及
+          </text>
+          <text class="agreement" @click.stop="policy">《{{$t('login.privacy_agreement')}}》</text>
+        </text>
+      </label>
+    </view>
+    <view class="add">
+      {{props.end_content}}
+    </view>
   </view>
 
-  <view class="bottom">
-    {{ $t('login.login_bottom_msg') }}
+  <view class="bottom" v-if="login_type === 'passwd' || login_type === 'sms' || login_type === 'h5'">
+    {{props.end_content}}
   </view>
 </template>
-<script>
-export default {
-  options: {
-    styleIsolation: 'shared', // 解除样式隔离
-  }
-};
-</script>
+
 <script setup>
-import { getCurrentInstance, ref } from "vue";
-import service from "@/utils/request";
+import {getCurrentInstance, ref} from "vue";
+import service from "@/utils/request.js";
+const radio1 = ref(false)
+const isCheck = () => {
+  radio1.value = !radio1.value;
+}
+
 
 const isTrue = ref(false)
-const { proxy } = getCurrentInstance();
+const {proxy} = getCurrentInstance();
+
+const services = () => {
+  proxy.$navigate( "/pages/services/index",false)
+}
+const policy = () => {
+  proxy.$navigate( "/pages/policy/index",false)
+}
+const btnF1 = () => {
+  uni.showToast({
+    icon: "none",
+    title: proxy.$tt('login.agreement_toast'),
+    duration: 2000,
+  });
+  return;
+}
 const emit = defineEmits(["loginSuccess", "loginFail"]);
 
 const props = defineProps({
-  login_type: { type: String, default: null },
-  show_title: { type: String, default: "登陆" },
-  relevanceTable: { type: String, required: true, },
-  is_register: { type: String, required: false, },
-  register_page: { type: String, required: false, default: "" }
+  login_type: {type: String, default: null},
+  show_title: {type: String, default: "登陆"},
+  relevanceTable: {type: String, required: true,},
+  is_register: {type: String, required: false,},
+  register_page: {type: String, required: false, default: ""},
+  title: {type: String, required: false, default: "码上飞CodeFlying"},
+  end_content: {type: String, required: false, default: "本应用由AI智能软件开发平台CodeFlying自动开发"}
 });
 const to_page = () => {
   proxy.$navigate(props.register_page)
@@ -224,8 +262,8 @@ const rules = ref({
   },
   password: {
     rules: [
-      { required: true, errorMessage: proxy.$tt('login.enter_pass_wd') },
-      { minLength: 3, maxLength: 18, errorMessage: proxy.$tt('login.password_length_rule_text') }
+      {required: true, errorMessage: proxy.$tt('login.enter_pass_wd')},
+      {minLength: 3, maxLength: 18, errorMessage: proxy.$tt('login.password_length_rule_text')}
     ]
   }
 });
@@ -280,7 +318,7 @@ const submitForm_sms = () => {
       login_error(err);
     });
   }).catch(error => {
-    uni.showToast({ title: proxy.$tt('login.please_enter_correct_info'), icon: 'none' });
+    uni.showToast({title: proxy.$tt('login.please_enter_correct_info'), icon: 'none'});
 
   });
 };
@@ -296,9 +334,10 @@ const login_success = (res) => {
     icon: "success",
     duration: 2000
   });
-
+  console.log("123456765", "登陆成功")
   // #ifdef MP-WEIXIN
-  localStorage.setItem("h5_token", res.data);
+  // uni.setStorageSync('h5_token', res.data)
+  console.log("=======================", res)
   proxy.$api.login.getLoginUser().then((res) => {
     const item = res.data;
     uni.setStorageSync("currentUser", JSON.stringify(item));
@@ -368,7 +407,7 @@ function login_click() {
       "provider": "weixin",
       "onlyAuthorize": true, // 微信登录仅请求授权认证
       success: function (event) {
-        const { code } = event
+        const {code} = event
         //客户端成功获取授权临时票据（code）,向业务服务器发起登录请求。
         uni.request({
           url: import.meta.env.VITE_APP_SERVICE_API + '/login/wxApp', //仅为示例，并非真实接口地址。
@@ -404,32 +443,17 @@ function login_click() {
   }
   // #endif
 }
+
+
 </script>
 
 <style lang="scss" scoped>
-::v-deep .title view {
-  width: 100%;
-  // max-width: 320px;
-  max-width: 20rem;
-  font-size: 0.9375rem;
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 20px;
-  color: rgba(93, 95, 239, 1);
-  margin-bottom: 8px !important;
-}
-
-.custom-form {
-  width: 90% !important;
-  margin: 0 auto;
-}
-
-::v-deep .uni-input-input {
+::v-deep.uni-input-input {
   color: #999 !important;
 }
 
 ::v-deep .uni-easyinput__content-input {
-  padding-left: 1.25rem !important;
+  padding-left: 20px !important;
 }
 
 ::v-deep .uni-forms-item_error {
@@ -439,25 +463,22 @@ function login_click() {
 ::v-deep.is-input-error-border .uni-easyinput__placeholder-class {
   color: #999;
 }
-::v-deep.uni-easyinput__placeholder-class {
-  font-size:0.75rem;
-}
+
 ::v-deep .code-input-container .is-input-border uni-input {
   width: 46%;
   position: relative;
   overflow: hidden;
   flex: none;
   line-height: 1;
-  // font-size: 14px;
-  font-size:0.875rem;
-  height:2.1875rem
+  font-size: 14px;
+  height: 35px;
 }
 
 .hello {
-  // max-width: 320px;
-  width: 90%;
-  height:8.75rem;
-  font-size:1.625rem;
+  max-width: 320px;
+  width: 100%;
+  height: 140px;
+  font-size: 26px;
   letter-spacing: 1px;
   color: rgba(52, 57, 101, 1);
 }
@@ -469,8 +490,7 @@ function login_click() {
 ::v-deep .is-input-border {
   border-radius: 30px;
   padding-left: 15px;
-  // height: 58px;
-  height:3.625rem;
+  height: 58px;
   background: rgba(236, 242, 255, 1) !important;
   justify-content: flex-start;
   border: none;
@@ -481,9 +501,9 @@ function login_click() {
 }
 
 .title {
-  width: 90%;
-  // max-width: 320px;
-  font-size:0.9375rem;
+  width: 100%;
+  max-width: 320px;
+  font-size: 15px;
   display: flex;
   justify-content: flex-start;
   border-bottom: 1px solid rgba(230, 232, 240, 1);
@@ -505,6 +525,7 @@ h5 {
   width: 100%;
   max-width: 100%;
   height: 100vh;
+  // background: #ffffff;
   border-radius: 10px;
   margin: 0 auto;
   display: flex;
@@ -520,7 +541,6 @@ h5 {
   }
 
 
-
   .demo-form {
     width: 100%;
     margin-top: 20px;
@@ -532,12 +552,13 @@ h5 {
 
 
   .input-field {
-    font-size:1rem;
+    // height: 45px;
+    font-size: 16px;
   }
 
   .submit-btn {
     width: 100%;
-    height:3.4375rem;
+    height: 55px;
     margin-top: 35px;
     background: rgba(93, 95, 239, 1);
     box-shadow: 0px 7px 40px rgba(0, 29, 176, 0.3);
@@ -545,7 +566,7 @@ h5 {
     border: none;
     border-radius: 30px;
     cursor: pointer;
-    font-size:1rem;
+    font-size: 16px;
     transition: background-color 0.3s;
     display: flex;
     align-items: center;
@@ -623,6 +644,7 @@ h5 {
   background-color: #007aff;
   color: white;
   border-radius: 5px;
+  //padding: 15px;
   text-align: center;
 }
 
@@ -630,75 +652,11 @@ h5 {
   width: 100%;
   display: flex;
   justify-content: center;
-  font-size:0.75rem;
+  font-size: 12px;
   color: rgba(166, 166, 166, 1);
   margin-bottom: 5px;
 }
 
-.wxlogin {
-  width: 100%;
-  max-width: 100%;
-  height: 100vh;
-  // background: #ffffff;
-  border-radius: 10px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem;
-  justify-content: normal;
-  box-sizing: border-box;
-}
-
-
-.h5Login {
-  width: 100%;
-  height: 11.75rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  line-height: 1.9375rem;
-  font-size: 1.375rem;
-  font-weight: 500;
-  color: rgba(65, 67, 79, 1);
-}
-
-.identity {
-  color: rgba(250, 251, 255, 1);
-  background-color: rgba(93, 95, 239, 1);
-  border-radius: 10px;
-  line-height: 25px;
-  width: 512rpx;
-  height: 88rpx;
-  font-size: 36rpx;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.radios {
-  display: flex;
-  justify-content: center;
-  font-size: 28rpx;
-  margin-top: 48rpx;
-  height: 300rpx;
-
-  .radio {
-    display: flex;
-    justify-content: center;
-
-    .agreement {
-      color: rgba(93, 95, 239, 1);
-    }
-  }
-}
-
-.add {
-  line-height: 19px;
-  color: rgba(169, 169, 169, 1);
-  font-size: 0.8125rem;
-  margin-top: 10.375rem;
-}
 .wxlogin {
   width: 100%;
   max-width: 100%;

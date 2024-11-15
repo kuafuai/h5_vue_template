@@ -2,7 +2,7 @@
   <view>
     <view v-if="description != null && description != {}" class="margin-top" :column="4">
       <view class="all">
-        {{ $t('all_info') }}：
+        {{ $t('description.all_info') }}：
       </view>
       <view class="all_content">
         <slot name="description-items" :description="description">
@@ -15,7 +15,7 @@
     <view v-else class="list_box">
       <view class="nodata">
         <img src="../static/noData.png" style="width:200px;height:auto" alt="">
-        <view class="noText">{{$t('no_text')}}</view>
+        <view class="noText">{{$t('description,no_text')}}</view>
       </view>
     </view>
   </view>

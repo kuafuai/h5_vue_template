@@ -18,7 +18,7 @@
   <view v-if="comp_type === 'popup' ">
     <!-- 提示窗示例 -->
     <uni-popup ref="popup" type="dialog">
-      <uni-popup-dialog :type="toast.msgType" :cancelText="$t('cancel_text')" :confirmText="$t('confirm_text')" :title="$t('dialog_title')" :content="props.content"
+      <uni-popup-dialog :type="toast.msgType" :cancelText="$t('dialog.cancel_text')" :confirmText="$t('dialog.confirm_text')" :title="$t('dialog.dialog_title')" :content="props.content"
                         @confirm="dialogConfirm"
                         @close="dialogClose"></uni-popup-dialog>
     </uni-popup>

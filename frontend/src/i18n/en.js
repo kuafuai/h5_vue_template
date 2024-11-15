@@ -11,6 +11,10 @@ export default {
         login_reg: "Create an account",
         login_bottom_msg: "This application is automatically developed by the AI intelligent software development platform CodeFlying",
         wx_login: "Quick login with mobile phone number",
+        read_and_agree: "Read and Agree",
+        service_agreement: "Service Agreement",
+        privacy_agreement: "Privacy Agreement",
+        agreement_toast: "Please read the 'Service Agreement' and 'Privacy Agreement' first",
         phone_number_format_error_text: "Phone number format error",
         verification_code_success_text: "Verification code sent successfully",
         verification_code_fail_text: "Failed to send verification code",
@@ -61,7 +65,7 @@ export default {
         reset: "Reset"
     },
     select: {
-        select_placeholder: "Please select"
+        select_placeholder: "Please select "
     },
     search: {
         advanced_search: "Advanced search",

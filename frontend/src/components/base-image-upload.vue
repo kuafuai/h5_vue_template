@@ -67,7 +67,7 @@ const props = defineProps({
   },
   uploadUrl: {
     type: String,
-    default: () => import.meta.env.VITE_APP_BASE_API + "/file/upload",
+    default: () => import.meta.env.VITE_APP_SERVICE_API + "/common/upload",
   },
   size: {
     type: Number,

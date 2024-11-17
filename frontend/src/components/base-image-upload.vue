@@ -15,7 +15,7 @@
           style="display:flex;flex-direction:column;justify-content:center;align-items:center;border:none">
       <image src="../static/picture.png" style="width:80rpx;height:80rpx" alt=""></image>
       <view style="line-height: 17px;color: rgba(154,154,154,1);font-size: 0.75rem;margin-top:10rpx">
-        点{{ $t('image_upload.upload_text') }}
+        {{ $t('image_upload.upload_text') }}
       </view>
     </view>
   </uni-file-picker>
@@ -67,7 +67,7 @@ const props = defineProps({
   },
   uploadUrl: {
     type: String,
-    default: () => import.meta.env.VITE_APP_SERVICE_API + "/common/upload",
+    default: () => import.meta.env.VITE_APP_BASE_API + "/common/upload",
   },
   size: {
     type: Number,

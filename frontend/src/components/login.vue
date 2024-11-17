@@ -1,8 +1,9 @@
 <template>
+  <web-view id="foo" v-if="isTrue" :src="previewUrl" style="width:640px; height:480px"></web-view>
   <view v-if="login_type === 'passwd'" class="login">
     <view class="hello">
       <view class="nihao">{{ $t('login.nihao') }}</view>
-      <view class="code">{{ $t('login.code') }}</view>
+      <view class="code"> {{ $t('login.code') }}</view>
     </view>
     <view class="title">
       <h2>{{ show_title }}</h2>
@@ -13,7 +14,7 @@
 
       <uni-forms-item name="phone">
         <view class="icon-input-container">
-          <uni-easyinput :placeholder="$t('login.enter_user_name')" v-model="form.phone" class="input-field" />
+          <uni-easyinput :placeholder="$t('login.enter_user_name')" v-model="form.phone" class="input-field"/>
           <view class="icon">
             <img src="../static/peo.png" style="width:13px;height:13px;" alt="">
           </view>
@@ -21,7 +22,7 @@
       </uni-forms-item>
       <uni-forms-item name="password">
         <view class="icon-input-container">
-          <uni-easyinput :placeholder="$t('login.enter_pass_wd')" type="password" v-model="form.password" class="input-field" />
+          <uni-easyinput :placeholder="$t('login.enter_pass_wd')" type="password" v-model="form.password" class="input-field"/>
           <view class="icon">
             <img src="../static/pass.png" style="width:13px;height:13px;" alt="">
           </view>
@@ -45,7 +46,7 @@
   <view v-else-if="login_type === 'sms'" class="login">
     <view class="hello">
       <view class="nihao">{{ $t('login.nihao') }}</view>
-      <view class="code">{{ $t('login.code') }}</view>
+      <view class="code"> {{ $t('login.code') }}</view>
     </view>
     <view class="title">
       <h2>{{ show_title }}</h2>
@@ -55,7 +56,7 @@
       <!-- 手机号输入框 -->
       <uni-forms-item name="phone">
         <view class="icon-input-container">
-          <uni-easyinput v-model="form_sms.phone" :placeholder="$t('login.enter_phone')" type="number" maxlength="11" />
+          <uni-easyinput v-model="form_sms.phone" :placeholder="$t('login.enter_phone')" type="number" maxlength="11"/>
           <view class="icon">
             <img src="../static/phone.png" style="width:11px;height:16px; margin-top:3px" alt="">
           </view>
@@ -66,7 +67,7 @@
 
       <uni-forms-item name="code">
         <view class="code-input-container">
-          <uni-easyinput style="width:50px;" v-model="form_sms.code" :placeholder="$t('login.enter_verification_code')" />
+          <uni-easyinput style="width:50px;" v-model="form_sms.code" :placeholder="$t('login.enter_verification_code')"/>
           <view class="icon">
             <img src="../static/safe.png" style="width:22px;height:24px; margin-bottom:2px" alt="">
           </view>
@@ -89,26 +90,79 @@
     </h5>
   </view>
 
-  <view v-else>
-    <fui-button type="success" round size="large" @click="login_click">点击微信授权登录</fui-button>
+
+  <view v-else-if="login_type === 'h5'" class="login">
+    <fui-button type="success" round size="large" @click="login_click">{{ $t('login.wx_login') }}</fui-button>
+
   </view>
-  <view class="bottom">
-    {{ $t('login.login_bottom_msg') }}
+  <view v-else class="wxlogin">
+    <view class="h5Login">
+      {{props.title}}
+    </view>
+    <button class="identity" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="radio1">
+      {{ $t('login.wx_login') }}
+    </button>
+    <button class="identity" v-else @click="btnF1">
+      {{ $t('login.wx_login') }}
+    </button>
+    <view class="radios">
+      <label class="radio">
+        <radio style="zoom: 74%;margin:0.15rem 18rpx 0rpx 0rpx" @click="isCheck" value="radio1" :checked="radio1"/>
+        <text style="color: rgba(169,169,169,1)">{{$t('login.read_and_agree')}}
+          <text class="agreement" @click.stop="services">《{{$t('login.service_agreement')}}》</text>
+          <text
+              class="agreement">及
+          </text>
+          <text class="agreement" @click.stop="policy">《{{$t('login.privacy_agreement')}}》</text>
+        </text>
+      </label>
+    </view>
+    <view class="add">
+      {{props.end_content}}
+    </view>
+  </view>
+
+  <view class="bottom" v-if="login_type === 'passwd' || login_type === 'sms' || login_type === 'h5'">
+    {{props.end_content}}
   </view>
 </template>
 
 <script setup>
-import { getCurrentInstance, ref } from "vue";
+import {getCurrentInstance, ref} from "vue";
+import service from "@/utils/request.js";
+const radio1 = ref(false)
+const isCheck = () => {
+  radio1.value = !radio1.value;
+}
 
-const { proxy } = getCurrentInstance();
+
+const isTrue = ref(false)
+const {proxy} = getCurrentInstance();
+
+const services = () => {
+  proxy.$navigate( "/pages/services/index",false)
+}
+const policy = () => {
+  proxy.$navigate( "/pages/policy/index",false)
+}
+const btnF1 = () => {
+  uni.showToast({
+    icon: "none",
+    title: proxy.$tt('login.agreement_toast'),
+    duration: 2000,
+  });
+  return;
+}
 const emit = defineEmits(["loginSuccess", "loginFail"]);
 
 const props = defineProps({
-  login_type: { type: String, default: null },
-  show_title: { type: String, default: "登陆" },
-  relevanceTable: { type: String, required: true, },
-  is_register: { type: String, required: false, },
-  register_page: { type: String, required: false, default: "" }
+  login_type: {type: String, default: null},
+  show_title: {type: String, default: "登陆"},
+  relevanceTable: {type: String, required: true,},
+  is_register: {type: String, required: false,},
+  register_page: {type: String, required: false, default: ""},
+  title: {type: String, required: false, default: "码上飞CodeFlying"},
+  end_content: {type: String, required: false, default: "本应用由AI智能软件开发平台CodeFlying自动开发"}
 });
 const to_page = () => {
   proxy.$navigate(props.register_page)
@@ -157,7 +211,7 @@ const sendcode = async () => {
   console.log(isphoneValid.value)
   if (!isphoneValid.value) {
     uni.showToast({
-      title: "手机号格式错误",
+      title: proxy.$tt('login.phone_number_format_error_text'),
       icon: "none"
     })
     return;
@@ -166,7 +220,7 @@ const sendcode = async () => {
   try {
     let res = await proxy.$api.login.getCodeByPhone(form_sms.value.phone)
     uni.showToast({
-      title: "验证码发送成功",
+      title: proxy.$tt('login.verification_code_success_text'),
       icon: "success"
     })
     countdown.value = 60;
@@ -180,7 +234,7 @@ const sendcode = async () => {
   } catch (e) {
     console.log(e)
     uni.showToast({
-      title: "验证码发送失败",
+      title: proxy.$tt('login.verification_code_fail_text'),
       icon: "none"
     })
   }
@@ -202,14 +256,14 @@ const rules = ref({
       {
         minLength: 1,
         maxLength: 100,
-        errorMessage: '用户名长度1-100位'
+        errorMessage: proxy.$tt('login.username_length_rule_text')
       }
     ]
   },
   password: {
     rules: [
-      { required: true, errorMessage: proxy.$tt('login.enter_pass_wd') },
-      { minLength: 3, maxLength: 18, errorMessage: '密码长度3-18位' }
+      {required: true, errorMessage: proxy.$tt('login.enter_pass_wd')},
+      {minLength: 3, maxLength: 18, errorMessage: proxy.$tt('login.password_length_rule_text')}
     ]
   }
 });
@@ -264,7 +318,7 @@ const submitForm_sms = () => {
       login_error(err);
     });
   }).catch(error => {
-    uni.showToast({ title: '请填写正确的信息', icon: 'none' });
+    uni.showToast({title: proxy.$tt('login.please_enter_correct_info'), icon: 'none'});
 
   });
 };
@@ -276,12 +330,14 @@ function login_error(err) {
 
 const login_success = (res) => {
   uni.showToast({
-    title: "登录成功",
+    title: proxy.$tt('login.login_success_text'),
     icon: "success",
     duration: 2000
   });
-
-  localStorage.setItem("h5_token", res.data);
+  console.log("123456765", "登陆成功")
+  // #ifdef MP-WEIXIN
+  // uni.setStorageSync('h5_token', res.data)
+  console.log("=======================", res)
   proxy.$api.login.getLoginUser().then((res) => {
     const item = res.data;
     uni.setStorageSync("currentUser", JSON.stringify(item));
@@ -289,12 +345,106 @@ const login_success = (res) => {
   }).catch(err => {
     console.log(err);
   });
+  // #endif
+
+  // #ifdef H5
+  uni.setStorageSync("h5_token", res.data);
+  proxy.$api.login.getLoginUser().then((res) => {
+    const item = res.data;
+    uni.setStorageSync("currentUser", JSON.stringify(item));
+    emit("loginSuccess", item);
+  }).catch(err => {
+    console.log(err);
+  });
+  // #endif
+}
+const previewUrl = ref("")
+const phone = ref("")
+
+
+const getPhoneNumber = function (e) {
+  console.log(e, "getPhoneNumber")
+  if (e.detail.errMsg === "getPhoneNumber:fail user deny") {
+    // 用户拒绝授权手机号
+    uni.showToast({
+      title: proxy.$tt('login.deny_authorization_text'),
+      icon: "none",
+      duration: 2000,
+    });
+  } else {
+    // 用户同意授权手机号
+    let token = uni.getStorageSync("token")
+    uni.login({
+      success: (res) => {
+        console.log(res, "res============")
+
+        service({
+          url: "/login/phone",
+          method: "get",
+          data: {
+            code: e.detail.code,
+            relevanceTable: props.relevanceTable,
+          }
+        }).then((res) => {
+          console.log("获取手机号之后的结果：", res)
+          if (res.code === 0) {
+            phone.value = res.data
+            login_click();
+          }
+
+        })
+      }
+    })
+  }
 }
 
 function login_click() {
   let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodeURIComponent(callback)}&response_type=code&scope=snsapi_base&state=codeflying#wechat_redirect`;
-  window.location.href = url;
+  // #ifdef MP-WEIXIN
+  if (props.login_type === 'wechat') {
+    console.log("进来了", import.meta.env.VITE_APP_SERVICE_API + '/login/wxApp')
+    uni.login({
+      "provider": "weixin",
+      "onlyAuthorize": true, // 微信登录仅请求授权认证
+      success: function (event) {
+        const {code} = event
+        //客户端成功获取授权临时票据（code）,向业务服务器发起登录请求。
+        uni.request({
+          url: import.meta.env.VITE_APP_SERVICE_API + '/login/wxApp', //仅为示例，并非真实接口地址。
+          method: 'POST',
+          data: {
+            code: event.code,
+            phone: phone.value,
+            relevanceTable: props.relevanceTable,
+          },
+          success: (res) => {
+            console.log(res, "loginSuccess")
+            if (res.data.code === 0) {
+              //获得token完成登录
+              uni.setStorageSync('h5_token', res.data.data)
+              // emit("loginSuccess")
+              login_success(res)
+            } else {
+              login_error()
+            }
+          }
+        });
+      },
+      fail: function (err) {
+        login_error(err)
+      }
+    })
+  }
+  // #endif
+
+  // #ifdef H5
+  if (props.login_type === 'h5') {
+    window.location.href = url;
+  }
+  // #endif
 }
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -364,6 +514,7 @@ function login_click() {
     margin-bottom: 8px !important;
   }
 }
+
 h5 {
   color: #888;
   margin-top: 20px;
@@ -388,7 +539,6 @@ h5 {
     color: rgb(93, 95, 239);
     margin-bottom: 20px;
   }
-
 
 
   .demo-form {
@@ -505,5 +655,70 @@ h5 {
   font-size: 12px;
   color: rgba(166, 166, 166, 1);
   margin-bottom: 5px;
+}
+
+.wxlogin {
+  width: 100%;
+  max-width: 100%;
+  height: 100vh;
+  // background: #ffffff;
+  border-radius: 10px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  justify-content: normal;
+  box-sizing: border-box;
+}
+
+
+.h5Login {
+  width: 100%;
+  height: 11.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1.9375rem;
+  font-size: 1.375rem;
+  font-weight: 500;
+  color: rgba(65, 67, 79, 1);
+}
+
+.identity {
+  color: rgba(250, 251, 255, 1);
+  background-color: rgba(93, 95, 239, 1);
+  border-radius: 10px;
+  line-height: 25px;
+  width: 512rpx;
+  height: 88rpx;
+  font-size: 36rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.radios {
+  display: flex;
+  justify-content: center;
+  font-size: 28rpx;
+  margin-top: 48rpx;
+  height: 300rpx;
+
+  .radio {
+    display: flex;
+    justify-content: center;
+
+    .agreement {
+      color: rgba(93, 95, 239, 1);
+    }
+  }
+}
+
+.add {
+  line-height: 19px;
+  color: rgba(169, 169, 169, 1);
+  font-size: 0.8125rem;
+  margin-top: 10.375rem;
 }
 </style>

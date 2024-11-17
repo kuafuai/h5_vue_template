@@ -76,7 +76,13 @@
   </view>
 
 </template>
-
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
 import {onLoad} from "@dcloudio/uni-app";
 import {ref} from "vue";
@@ -286,6 +292,16 @@ const oninput12 = (value, fieldName) => {
 </script>
 
 <style scoped lang="scss">
+::v-deep .title view {
+  width: 100%;
+  max-width: 320px;
+  font-size: 0.9375rem;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  color: rgba(93, 95, 239, 1);
+  margin-bottom: 8px !important;
+}
 ::v-deep.is-input-error-border .uni-easyinput__placeholder-class {
   color: #999;
 }
@@ -315,7 +331,8 @@ const oninput12 = (value, fieldName) => {
 }
 
 ::v-deep .uni-easyinput__placeholder-class {
-  font-size: 12px;
+  // font-size: 12px;
+  font-size:0.75rem !important;
   color: rgba(166, 166, 166, 1)
 }
 

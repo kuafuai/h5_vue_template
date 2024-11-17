@@ -2,7 +2,7 @@
   <view>
     <view v-if="description != null && description != {}" class="margin-top" :column="4">
       <view class="all">
-        全部信息：
+        {{ $t('description.all_info') }}：
       </view>
       <view class="all_content">
         <slot name="description-items" :description="description">
@@ -15,7 +15,7 @@
     <view v-else class="list_box">
       <view class="nodata">
         <img src="../static/noData.png" style="width:200px;height:auto" alt="">
-        <view class="noText">暂无数据～</view>
+        <view class="noText">{{$t('description,no_text')}}</view>
       </view>
     </view>
   </view>
@@ -23,11 +23,11 @@
 </template>
 
 <script setup>
-import { getCurrentInstance } from "vue"
+import {getCurrentInstance} from "vue"
 
-const { proxy } = getCurrentInstance();
-import { defineProps, ref } from 'vue';
-import { onLoad } from "@dcloudio/uni-app";
+const {proxy} = getCurrentInstance();
+import {defineProps, ref} from 'vue';
+import {onLoad,onShow} from "@dcloudio/uni-app";
 
 const props = defineProps({
   api: {
@@ -39,17 +39,45 @@ const props = defineProps({
     }
   },
 });
-const description = ref({})
+const description = defineModel()
 const refresh = async () => {
-  console.log()
-  var response = await props.api.split('.').reduce((acc, item) => acc[item], proxy.$api)(props.params);
-  description.value = response.data.records[0];
+  console.log("详情页面刷新", description.value)
+
+  if (!isEmpty(props.params) && (description.value == null || isEmpty(description.value))) {
+    let response = await props.api.split('.').reduce((acc, item) => acc[item], proxy.$api)(props.params);
+    console.log("详情页面描述【response】", response)
+    description.value = response.data.records[0];
+  }
+
 }
 
+
+watch(() => description.value, (value) => {
+  console.log("watch", value)
+  if (value != null && !isEmpty(value)) {
+    refresh()
+  }
+})
+
+const isEmpty = (obj) => Object.keys(obj).length == 0;
+
+watch(() => props.params, (value) => {
+  console.log("watch", value)
+  if (!isEmpty(value) && (description.value == null || isEmpty(description.value))) {
+    refresh()
+  }
+}, {immediate: true, deep: true})
+
 onLoad(async () => {
-  refresh()
+  // refresh()
 });
 
+onMounted(() => {
+  refresh()
+})
+onShow(() => {
+  refresh()
+})
 // }
 defineExpose({
   refresh
@@ -64,11 +92,10 @@ defineExpose({
   width: 100%;
   //height: 100%;
   //height: 92.3vh;
-  padding:0.9357rem 0.9357rem;
+  padding: 0.9357rem 0.9357rem;
   box-sizing: border-box;
 
   .all_content {
-    
     ::v-deep .uni-section:first-child {
       border-radius: 10px 10px 0px 0px;
     }
@@ -83,28 +110,37 @@ defineExpose({
       color: rgba(56, 56, 56, 1) !important;
     }
 
+
     ::v-deep .uni-section .uni-section-header__content-sub {
-      display: flex !important;
+      //display: flex !important;
       justify-content: flex-start !important;
       font-size: 0.875rem !important;
       color: rgba(166, 166, 166, 1) !important;
     }
 
+    ::v-deep .uni-section-header {
+      display: block !important;
+    }
+
+
   }
-  .tops{
+  ::v-deep .uni-section .uni-section-header{
+    display: block !important;
+  }
+  .tops {
     ::v-deep .uni-section:last-child {
       border-radius: 0 0 0 0 !important;
     }
   }
+
   .all {
-    height: 66 rpx;
-    line-height: 66 rpx;
+    height: 66rpx;
+    line-height: 66rpx;
     margin-bottom: 10px;
     font-size: 0.875rem !important;
     color: rgba(128, 128, 128, 1)
   }
 }
-
 
 
 //.list_box {
@@ -153,6 +189,7 @@ defineExpose({
     font-size: 20px;
     font-weight: 500;
     color: rgba(144, 150, 178, 1);
+
     .noText {
       margin-top: 18.8px;
     }
@@ -160,9 +197,9 @@ defineExpose({
 
   .list {
     // flex: 1;
-    margin: 30 rpx 0;
+    margin: 30rpx 0;
     box-sizing: border-box;
-    border-radius: 15 rpx;
+    border-radius: 15rpx;
     background: white;
     color: #fff !important;
 

@@ -1,22 +1,31 @@
 package com.kuafu.login.domain;
 
+import com.kuafu.login.domain.SelectVo;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public enum LoginReverence {
 
-    AuthStatus("保存认证状态的信息", "AuthStatus"),
-    ApplicationStatus("保存申请状态的信息", "ApplicationStatus"),
-    ReviewStatus("保存审核状态的信息", "ReviewStatus"),
-    CommunicationStatus("保存沟通状态的信息", "CommunicationStatus"),
-    WechatExchangeStatus("保存交换微信状态的信息", "WechatExchangeStatus"),
-    UserInfo("保存用户的信息", "UserInfo"),
-    BuinessPerson("保存投资人信息", "BuinessPerson"),
-    ProjectInfo("保存项目信息", "ProjectInfo"),
-    ProjectFollowInfo("保存项目跟进信息", "ProjectFollowInfo"),
-    FollowCommunicateInfo("保存项目跟进沟通记录", "FollowCommunicateInfo"),
-    ContactInfo("保存联系记录", "ContactInfo"),
+            userInfo("用户信息管理","userInfo"),
+        taskInfo("任务信息管理","taskInfo"),
+        hazardInfo("隐患信息管理","hazardInfo"),
+        acceptanceReport("验收报告管理","acceptanceReport"),
+        enterpriseInformation("企业信息管理","enterpriseInformation"),
+        categoryMenu("（基本信息）隐患依据管理","categoryMenu"),
+        categoryResult("（基本信息）隐患依据管理","categoryResult"),
+        hazardBasic("（基本信息）隐患依据管理","hazardBasic"),
+        hazardCollect("（基本信息）隐患收藏管理","hazardCollect"),
+        hazardLevelStatus("（基本信息）隐患等级管理","hazardLevelStatus"),
+        hazardAcceptanceStatus("（基本信息）隐患验收状态管理","hazardAcceptanceStatus"),
+        correlationBasisStatus("（基本信息）关联依据状态管理","correlationBasisStatus"),
+        hazardTypeStatus("（基本信息）隐患类型管理","hazardTypeStatus"),
+        rectificationProgressStatus("（基本信息）整改进度管理","rectificationProgressStatus"),
+        userRoleStatus("（基本信息）整改进度管理","userRoleStatus"),
+        correctionDeadlineEnums("（基本信息）整改期限管理","correctionDeadlineEnums"),
+        checkTypeEnums("（基本信息）检查类型管理","checkTypeEnums"),
+        taskStatusEnums("（基本信息）任务状态枚举管理","taskStatusEnums"),
     ;
 
 
@@ -39,7 +48,7 @@ public enum LoginReverence {
     public static List<SelectVo> all() {
         final LoginReverence[] values = LoginReverence.values();
         return Arrays.stream(values).map(r -> {
-            return new SelectVo(r.getValue(), r.getLabel(), r.getLabel());
+            return new SelectVo(r.getValue(), r.getLabel(),r.getLabel());
         }).collect(Collectors.toList());
     }
 }

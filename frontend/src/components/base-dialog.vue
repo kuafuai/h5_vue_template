@@ -1,20 +1,46 @@
 <template>
-  <view class="all_dialog">
-    <uni-popup
-        :showClose="true"
-        ref="popup"
-        :animation="true"
-        :type="type"
-        :class="popupClass"
-    >
-      <view style="height: 100%;overflow-y: auto;">
-        <slot name="dialog"/>
-      </view>
+  <view v-if="comp_type === 'base'">
+
+    <view class="all_dialog">
+      <uni-popup
+          :showClose="true"
+          ref="popup"
+          :animation="true"
+          :type="type"
+          :class="popupClass"
+      >
+        <view style="height: 100%;overflow-y: hidden;width:100%;">
+          <slot name="dialog"/>
+        </view>
+      </uni-popup>
+    </view>
+  </view>
+  <view v-if="comp_type === 'popup' ">
+    <!-- 提示窗示例 -->
+    <uni-popup ref="popup" type="dialog">
+      <uni-popup-dialog :type="toast.msgType" :cancelText="$t('dialog.cancel_text')" :confirmText="$t('dialog.confirm_text')" :title="$t('dialog.dialog_title')" :content="props.content"
+                        @confirm="dialogConfirm"
+                        @close="dialogClose"></uni-popup-dialog>
     </uni-popup>
   </view>
 </template>
-
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
+import {getCurrentInstance} from "vue"
+import { onHide } from "@dcloudio/uni-app";
+import { defineProps, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+const {proxy} = getCurrentInstance();
+const emits = defineEmits(['success', 'fail'])
+
+
 
 const props = defineProps({
   text: {
@@ -25,11 +51,45 @@ const props = defineProps({
     type: String,
     required: false,
     default: "center"
+  },
+  comp_type: {
+    type: String,
+    required: false,
+    default: "base"
+  },
+  content: {
+    type: String,
+    required: false,
+    default: "您确定要提交吗？"
   }
 });
-import {defineProps, ref} from "vue";
-import {useRoute, useRouter} from "vue-router";
 
+onUnmounted(() => {
+  console.log(12345678909876543)
+})
+onHide(()=>{
+  console.log("onhide")
+})
+
+
+const toast = {
+  type: 'center',
+  msgType: 'success',
+  messageText: proxy.$tt('common.success_text'),
+  value: ''
+}
+
+function dialogConfirm() {
+  console.log('点击确认')
+  proxy.messageText = `点击确认了 ${toast.msgType} 窗口`
+  emits('success')
+}
+
+
+function dialogClose() {
+  console.log('点击关闭')
+  emits('fail')
+}
 
 console.log(props.type)
 // 根据 type 动态设置不同的 class
@@ -75,9 +135,64 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+::v-deep uni-transition >view:first-child{
+  padding-bottom: 0px !important;
+}
 .all_dialog {
   width: 100vm;
   z-index: 99999;
+}
+
+@mixin flex {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  /* #endif */
+  flex-direction: row;
+}
+
+@mixin height {
+  /* #ifndef APP-NVUE */
+  height: 100%;
+  /* #endif */
+  /* #ifdef APP-NVUE */
+  flex: 1;
+  /* #endif */
+}
+
+.box {
+  @include flex;
+}
+
+.dialog,
+.share {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  /* #endif */
+  flex-direction: column;
+}
+
+.dialog-box {
+  padding: 10px;
+}
+
+::v-deep .all{
+  padding: 0 !important;
+}
+
+.dialog .button,
+.share .button {
+  /* #ifndef APP-NVUE */
+  width: 100%;
+  /* #endif */
+  margin: 0;
+  margin-top: 10px;
+  padding: 3px 0;
+  flex: 1;
+}
+
+.dialog-text {
+  font-size: 14px;
+  color: #333;
 }
 
 //.dialog {
@@ -136,6 +251,9 @@ button {
   overflow: auto;
   width: 100%;
   border-radius: 20px 20px 0px 0px;
+}
+::v-deep .uni-popup__wrapper{
+  width: auto !important;
 }
 
 ::v-deep .type-other .uni-popup__wrapper {

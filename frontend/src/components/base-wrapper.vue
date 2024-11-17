@@ -1,23 +1,23 @@
 <template>
   <view :class="wrapperClass+' box'">
-    <slot />
+    <slot/>
   </view>
 </template>
 
 <script setup>
 // import { ref, watch, getCurrentInstance } from 'vue';
 
-const { proxy } = getCurrentInstance();
+const {proxy} = getCurrentInstance();
 const type = ref(import.meta.env.VITE_APP_TYPE);
 
 const props = defineProps({
-  display: { type: String, default: '' },
-  direction: { type: String, default: '' },
-  x: { type: String, default: '' },
-  y: { type: String, default: '' },
-  h_full: { type: Boolean, default: false },
-  w_full: { type: Boolean, default: false },
-  bg_color: { type: String, default: '' }
+  display: {type: String, default: ''},
+  direction: {type: String, default: ''},
+  x: {type: String, default: ''},
+  y: {type: String, default: ''},
+  h_full: {type: Boolean, default: false},
+  w_full: {type: Boolean, default: false},
+  bg_color: {type: String, default: ''}
 });
 
 const wrapperClass = ref('');
@@ -27,7 +27,7 @@ watch(
     () => {
       getWrapperClass();
     },
-    { deep: true }
+    {deep: true}
 );
 
 function getWrapperClass() {
@@ -81,18 +81,19 @@ getWrapperClass();
 
 <style scoped>
 .height-100 {
-  height: 100%;
+  min-height: 100%;
 }
 
 .width-100 {
-  width: 100% ;
+  width: 100%;
 }
-.box{
+
+.box {
   display: flex;
   flex-direction: column;
   /* height: 100%; */
   background: rgb(245, 247, 250);
-  padding: 0 0 2rem 0;
+  /* padding: 0 0 2rem 0; */
   /* box-sizing: border-box; */
   /*overflow: hidden;*/
 }

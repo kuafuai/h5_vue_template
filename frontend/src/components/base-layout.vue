@@ -1,5 +1,6 @@
 <template>
-  <view :class="wrapper_class" v-bind="$attrs">
+  <!--  v-bind="$attrs"-->
+  <view :class="wrapper_class">
     <slot/>
   </view>
 </template>

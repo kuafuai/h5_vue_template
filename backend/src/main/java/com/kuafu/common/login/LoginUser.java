@@ -33,6 +33,8 @@ public class LoginUser implements UserDetails {
 
     private String relevanceTable;
 
+    private Integer tenantId;
+
     public String getRelevanceTable() {
         return relevanceTable;
     }
@@ -75,6 +77,14 @@ public class LoginUser implements UserDetails {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Integer getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Integer tenantId) {
+        this.tenantId = tenantId;
     }
 
     public String getToken() {

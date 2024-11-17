@@ -1,24 +1,31 @@
 <template>
   <view class="all">
     <uni-forms ref="formRef" :modelValue="form" :rules="rules" label-width="auto" style="
-  background-color: white;padding: 20px ;box-sizing:border-box" @submit.prevent="onSubmit">
+  background-color: white;padding: 20px ;box-sizing:border-box;border-radius: 10px 10px;" @submit.prevent="onSubmit">
       <slot name="form-items"></slot>
       <uni-forms-item>
-        <button type="primary" @click="onSubmit" class="up">提交</button>
-        <button @click="onResetForm" class="reset">重置</button>
+        <view style="display:flex;flex-direction:row">
+          <button type="primary" @click="onSubmit" class="up">{{ $t('form.submit') }}</button>
+          <button @click="onResetForm" class="reset">{{ $t('form.reset') }}</button>
+        </view>
       </uni-forms-item>
     </uni-forms>
   </view>
 </template>
 
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
 import {getCurrentInstance, ref} from "vue"
-
-const {proxy} = getCurrentInstance();
-
-// Importing to define props and emit
 import {defineProps, defineEmits, toRefs} from 'vue';
-import {onLoad} from "@dcloudio/uni-app";
+import {onLoad, onReady, onShow} from "@dcloudio/uni-app";
+const {proxy} = getCurrentInstance();
+// Importing to define props and emit
 // import {ElMessage} from 'element-plus';
 // Defining props to receive form and rules from parent
 const props = defineProps({
@@ -35,6 +42,10 @@ const props = defineProps({
     type: String,
     required: true
   },
+  query_module: {
+    type: String,
+    required: true
+  },
   model: {
     type: String,
     required: true,
@@ -46,33 +57,76 @@ const props = defineProps({
   },
   params: {
     type: Object,
-    required: true
+    required: false,
+    default: {}
+  },
+  // 缓存哪个字段的值
+  cache_field: {
+    type: Array,
+    required: false,
+    default: []
+  },
+  unique_id: {
+    type: String,
+    required: false,
+    default: ""
   }
 
 });
 const emit = defineEmits(['success', "fail", "message_perfect"]);
+defineExpose({
+  load_form,
+});
+const isEmpty = (obj) => Object.keys(obj).length === 0;
+
+// 保留其实的form
+const origin_form = JSON.parse(JSON.stringify(props.form))
 
 // Defining the reset function
 const onResetForm = () => {
   for (const key in props.form) {
-    if (props.form.hasOwnProperty(key)) {
+    if (origin_form.hasOwnProperty(key)) {
+      props.form[key] = origin_form[key];
+    } else {
       props.form[key] = null;
     }
   }
   // proxy.$refs.formRef.value.resetFields();
   // ElMessage.info('Form reset successfully!');
 };
+
+watch(() => props.params, (tal,val) => {
+  console.log("watch",tal, val);
+  if(!isEmpty(tal)){
+    getFormData();
+  }
+},{immediate: true});
+
 // Handle form submission
-const handleSubmit = async () => {
+async function handleSubmit() {
   try {
 
     var apiName = "add";
     if (props.model != "add") {
       apiName = "update"
     }
+
+
     let res = await proxy.$api[props.table_module][apiName](props.form);
     console.log(res.data)
-    let form_message = await proxy.$api[props.table_module]["get"](res.data);
+    if (props.cache_field != null && props.cache_field.length > 0) {
+      let cache_value = {}
+      for (var i = 0; i < props.cache_field.length; i++) {
+        var item = props.cache_field[i]
+        cache_value[item] = props.form[item]
+      }
+      console.log("cache_value", cache_value)
+      // 保存到缓存中
+      uni.setStorageSync(props.unique_id, cache_value);
+    }
+
+
+    let form_message = await proxy.$api[props.query_module]["get"](res.data);
     console.log(form_message)
 
 
@@ -94,66 +148,136 @@ const handleSubmit = async () => {
     emit("fail")
   }
 }
+
 onLoad(async () => {
-  console.log(1212131313)
-  //   根据查询条件搜索
+  getFormData();
+})
+
+async function getFormData() {
   if (props.model != "add") {
-    // console.log(121212)
+
     let form = null
+
     // 如果id不为null，使用id查询
-    if (props.id != null && props.id != '') {
-      let res = await proxy.$api[props.table_module]["get"](props.id);
+    if (props.id != null && props.id !== '') {
+      let res = await proxy.$api[props.query_module]["get"](props.id);
       form = res.data
     }
     // 如果param不为null，使用param查询,只取第一个
-    else if (props.params != null) {
-      let res = await proxy.$api[props.table_module]["page"](props.params);
+    else if (!isEmpty(props.params)) {
+      let res = await proxy.$api[props.query_module]["page"](props.params);
       form = res.data.records[0]
     }
-
-    // var form = res.data
-    // var flag = true;
-    // for (let key in form) {
-    //   if (form.hasOwnProperty(key)) {
-    //     if (form[key] == null || form[key] == "") {
-    //       flag = false;
-    //       break
-    //     }
-    //   }
-    // }
-
+    //
     if (form != null) {
       for (let key in form) {
         if (form.hasOwnProperty(key)) {
           props.form[key] = form[key]
-          // console.log(`${key}: ${person[key]}`);
         }
       }
     }
+  }
+}
 
+onShow(() => {
+  console.log("onshow")
+  // 保留之前的数据
+  if (props.cache_field != null && props.cache_field.length > 0) {
+    let cache_form = uni.getStorageSync(props.unique_id)
+    console.log(cache_form)
+    if (cache_form != null) {
+      for (let key in cache_form) {
+        console.log("onshow-for", key)
+        var item = props.form[key]
+        if (item == undefined || item == null || item == '') {
+          props.form[key] = cache_form[key]
+        }
+      }
+    }
+    console.log("执行", props.form)
   }
 })
+
 // Defining the submit function
-const onSubmit = () => {
+function onSubmit() {
 
+  console.log(props.rules, 'sadsadsadsadsaaddsa')
   // Use the form reference to validate the form
-  proxy.$refs.formRef.validate().then(res => {
-    console.log("121212")
-    handleSubmit()
+  setTimeout(() => {
+    proxy.$refs.formRef.validate(props.rules).then(res => {
+      console.log("proxy.$refs.formRef.validate()", proxy.$refs.formRef.validate())
+      console.log("表单验证成功：", res);
 
-  }).catch(err => {
-    console.log('表单错误信息：', err);
-  })
-  ;
-};
+      console.log("121212")
+      handleSubmit()
 
+    }).catch(err => {
+      console.log('表单错误信息：', err);
+    })
+  }, 100);
+}
+
+
+
+/*onReady(() => {
+  console.log("onReady", props.rules)
+proxy.$refs.formRef.value.setRules(props.rules)
+})*/
+
+function load_form(item){
+
+  for (let key in item) {
+    if (item.hasOwnProperty(key)) {
+      props.params[key] = item[key]
+    }
+  }
+
+  getFormData()
+}
 
 </script>
 
+
 <style scoped lang="scss">
+::v-deep uni-button {
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 1);
+  border: 1px solid #dcdfe6;
+  color: rgb(166, 166, 166);
+  font-size: 0.875rem;
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+  height: 100rpx;
+  width: 100%;
+}
+
+::v-deep uni-button::after {
+  border: none
+}
+
+::v-deep.uni-forms-item__content base-select {
+  width: 100%;
+}
+
+::v-deep .uni-forms-item__label {
+  width: 100% !important;
+}
+
+::v-deep .uni-forms {
+  width: 100%;
+  background: white;
+  padding: 40rpx;
+  margin-bottom: 0.4375rem !important;
+  box-sizing: border-box
+}
+
 .all {
-  height: 100%;
-  overflow: auto;
+  //height: 100%;
+  // overflow: auto;
+  background: rgb(245, 247, 250) !important;
+  padding: 0.9357rem 0.9357rem;
+  box-sizing: border-box;
 }
 
 ::v-deep .uni-forms-item__error {
@@ -170,11 +294,12 @@ const onSubmit = () => {
   width: 100%;
   display: flex;
   flex-direction: column !important;
-
+  margin-bottom: 12px !important;
 }
 
 ::v-deep .uni-forms-item__content {
   display: flex !important;
+  flex-direction: column;
 }
 
 ::v-deep .uni-popup__wrapper {
@@ -201,7 +326,8 @@ const onSubmit = () => {
 
 ::v-deep.uni-easyinput__placeholder-class {
   color: rgba(166, 166, 166, 1);
-  font-size: 14px;
+  // font-size: 14px;
+  font-size: 0.875rem;
 }
 
 ::v-deep uni-text {
@@ -216,7 +342,7 @@ const onSubmit = () => {
 .up,
 .reset {
   border-radius: 100px;
-  width:10rem;
+  width: 9rem;
   height: 3.2rem;
   font-size: 0.9375rem;
   color: rgba(255, 255, 255, 1);
@@ -259,6 +385,10 @@ base-upload里面的样式
 .uni-file-picker:hover {
   border-color: #005bb5; /* 鼠标悬停时边框颜色变为深蓝 */
 }
+
+/*::v-deep .uni-forms-item__content {*/
+/*  display: flex !important;*/
+/*}*/
 
 ::v-deep .uni-file-picker__files {
   align-items: center !important;

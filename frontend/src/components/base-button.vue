@@ -1,23 +1,32 @@
 <template>
   <view class="container" v-if="model != 'base'">
     <button v-if="model == 'float'" class="btnDialog" :type="type" @click="click">
-      <img style="height:81%" src="../static/add.png" alt="">
+      <image style="height:61%" src="../static/add.png" alt="" mode="widthFix" />
+      <!--      <view style="display: flex;-->
+      <!--  align-items: center;-->
+      <!--  justify-content: center;">+</view>-->
+    </button>
+    <button v-if="model == 'update'" class="btnDialog" :type="type" @click="click">
+      <image style="height:41%" src="../static/update.png" alt="" mode="widthFix" />
       <!--      <view style="display: flex;-->
       <!--  align-items: center;-->
       <!--  justify-content: center;">+</view>-->
     </button>
     <button v-if="model == 'flex'" class="btnDialog" :type="type" @click="click">
-      <img style="width:100%" src="../static/options.png" alt="">
+      <image style="width:100%" src="../static/options.png" alt="" mode="widthFix" />
     </button>
-    <button v-if="model == 'slot'" class="btnDialog" :type="type" @click="click"><img style="width:100%"
-        src="../static/options.png" alt="">
+    <button v-if="model == 'slot'" class="btnDialog" :type="type" @click="click"><image style="width:100%"
+                                                                                        src="../static/options.png"
+                                                                                        alt="" mode="widthFix" />
     </button>
   </view>
-  <button class="base-buttom" v-if="model == 'base'" :type="type" @click="click">{{ title }}</button>
+  <button class="base-buttom" v-if="model == 'base'" :type="type" @click="click"
+          :disabled="isChoose.length === 0 && type === 'more'">{{ title }}
+  </button>
 </template>
 
 <script setup>
-import { defineProps, ref } from "vue";
+import {defineProps, ref} from "vue";
 
 const props = defineProps({
   model: {
@@ -32,6 +41,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  isChoose: {
+    type: Array,
+    default: "",
+  }
 });
 const emits = defineEmits(["click"]);
 const click = () => {
@@ -44,6 +57,7 @@ const click = () => {
 
 <style scoped lang="scss">
 .base-buttom {
+  color: white;
   background-color: rgba(93, 95, 239, 1);
   margin: 0.625rem;
   display: flex;
@@ -68,7 +82,7 @@ const click = () => {
   display: flex;
   width: 3.5rem;
   height: 3.5rem;
-  bottom: 15%;
+  bottom: 22%;
   //height: 44px;
 
   .btnDialog {

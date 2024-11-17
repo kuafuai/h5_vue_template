@@ -17,7 +17,7 @@ public class TenantContextHolder {
     @Resource
     private TokenService tokenService;
 
-    private static final boolean enableTenant = true;
+    private static final boolean enableTenant = false;
     public static final String TENANT_TABLE_FIELD_NAME = "xxxxx";
     private static final Logger log = LoggerFactory.getLogger(CustomTenantHandler.class);
 

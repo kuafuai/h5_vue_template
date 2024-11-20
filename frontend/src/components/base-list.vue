@@ -187,9 +187,6 @@ function apiMethod(params, headers) {
   if (headers) {
     data = Object.assign(data, headers.value);
   }
-  console.log(props.api.split(".").reduce((acc, item) => acc[item], proxy.$api)(
-      data
-  ))
   return props.api.split(".").reduce((acc, item) => acc[item], proxy.$api)(
       data
   );

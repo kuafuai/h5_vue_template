@@ -91,8 +91,15 @@ public class UserInfoController {
 
     @GetMapping("get/select_list")
     @ApiOperation("查询下拉框的外键信息")
-    public BaseResponse get_select_list() {
-        List<UserInfo> list = this.userInfoService.list();
+    public BaseResponse get_select_list(UserInfoVO vo) {
+
+        LambdaQueryWrapper<UserInfo> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotEmpty(vo.getUserName())) {
+            queryWrapper.like(UserInfo::getUserName, vo.getUserName());
+        }
+
+        List<UserInfo> list = this.userInfoService.list(queryWrapper);
+
         final List<SelectVo> selectVoList = list.stream().map(p ->
                         new SelectVo(p.getUserInfoId(), p.getUserName() + "(" + p.getDepartmentName() + ")", p.getUserName() + "(" + p.getDepartmentName() + ")"))
                 .collect(Collectors.toList());

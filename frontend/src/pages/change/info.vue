@@ -22,6 +22,15 @@
                     size="36">
 
           </fui-text>
+
+          <fui-text v-if="baseInfo.changeType === 1" :text='"【 "+baseInfo.infoMap.ECR编号.infoValue+" 】"' type="black"
+                    size="36">
+          </fui-text>
+
+          <fui-text v-else :text='"【 "+baseInfo.infoMap.ECN编号.infoValue+" 】"' type="black"
+                    size="36">
+          </fui-text>
+
         </view>
         <view class="flex-between-start m-b-10 w-full">
           <view style="width: 30%">
@@ -102,19 +111,24 @@
             <base-image-preview v-if="baseInfo.infoMap.变更原因图片.infoValue !== ''"
                                 :src="baseInfo.infoMap.变更原因图片.infoValue" :width="50" :height="50"/>
           </view>
+        </view>
+
+        <view class="flex-between-start m-b-10 w-full">
 
           <view style="width: 30%" class="flex-start-center">
             <fui-text text="更改前图片："></fui-text>
             <base-image-preview v-if="baseInfo.infoMap.更改前图片.infoValue !== ''"
                                 :src="baseInfo.infoMap.更改前图片.infoValue" :width="50" :height="50"/>
           </view>
+        </view>
+
+        <view class="flex-between-start m-b-10 w-full">
 
           <view style="width: 30%" class="flex-start-center">
             <fui-text text="更改后图片："></fui-text>
             <base-image-preview v-if="baseInfo.infoMap.更改后图片.infoValue !== ''"
                                 :src="baseInfo.infoMap.更改后图片.infoValue" :width="50" :height="50"/>
           </view>
-
         </view>
 
 
@@ -131,7 +145,7 @@
                 <view class="w-full flex-start-start">
                   <p style="font-weight: 700">{{ item.taskName }}</p>
                   <view class="m-l-20">
-                    <uni-tag :text='item.finishTime?"完成":"处理中"' size="small"
+                    <uni-tag :class="setFlash(item)" :text='item.finishTime?"完成":"处理中"' size="small"
                              :type='item.finishTime?"success":"warning"'
                              @click="handle_process(item)"/>
                   </view>
@@ -163,7 +177,7 @@
                         </view>
 
                         <view v-else class="m-l-20">
-                          <uni-tag :text='subItem.finishTime?"完成":"处理中"' size="small"
+                          <uni-tag :class="setFlash(subItem)" :text='subItem.finishTime?"完成":"处理中"' size="small"
                                    :type='subItem.finishTime?"success":"warning"'
                                    @click="handle_process_sub_task(subItem, item.taskName)">
                           </uni-tag>
@@ -188,7 +202,7 @@
                   <view class="w-full m-y-10 flex-start-start" v-for="(sub,subIndex) in item.subTask" :key="subIndex">
                     <p style="font-weight: 700">{{ sub.taskName }}</p>
                     <view class="m-l-20">
-                      <uni-tag :text='sub.finishTime?"完成":"处理中"' size="small"
+                      <uni-tag :class="setFlash(sub)" :text='sub.finishTime?"完成":"处理中"' size="small"
                                :type='sub.finishTime?"success":"warning"'
                                @click="handle_process(sub)"/>
                     </view>
@@ -467,12 +481,15 @@
   </uni-popup>
 
   <uni-popup ref="submitPersonPopup" borderRadius="10px 10px 10px 10px" background-color="#fff">
-    <el-radio-group class="m-20" v-model="submitCheckForm.choosePerson">
-      <el-radio v-for="(item,index ) in submitPersons"
-                :key="index" :value="item.value"> {{ item.label }}
-      </el-radio>
-    </el-radio-group>
-    <view class="flex-center-center">
+    <el-form-item label="选择用户" class="m-x-20 m-t-30">
+      <el-select v-model="submitCheckForm.choosePerson" filterable remote :remote-method="load_site"
+                 :loading="site_loading"
+                 placeholder="通过用户名称模糊查询">
+        <el-option v-for="item in site_options" :key="item.value" :label="item.label" :value="item.value">
+        </el-option>
+      </el-select>
+    </el-form-item>
+    <view class="flex-center-center m-b-20">
       <button type="primary" size="mini" @click="submitSubmitPersonForm">确 定</button>
     </view>
   </uni-popup>
@@ -588,15 +605,17 @@ if (currentUser != null) {
 const baseInfo = ref({
   changeStartTime: '',
   infoMap: {
-    变更类型:{},
-    产品代号:{},
-    更改前说明:{},
+    变更类型: {},
+    产品代号: {},
+    更改前说明: {},
     更改后说明: {},
-    开发阶段:{},
-    变更原因:{},
+    开发阶段: {},
+    变更原因: {},
     变更原因图片: {},
-    更改后图片:{},
+    更改后图片: {},
     更改前图片: {},
+    ECN编号:{},
+    ECR编号:{}
   }
 });
 const flowRecordList = ref([])
@@ -631,6 +650,19 @@ function setColor(val) {
     return "#e58276";
   }
 }
+
+function setFlash(item) {
+  if (item.finishTime) {
+    return "ok";
+  } else {
+    if (allParams.value.currentUser.userId === item.assigneeId) {
+      return "flash"
+    } else {
+      return "ok";
+    }
+  }
+}
+
 
 const approveForm = ref({});
 
@@ -775,9 +807,39 @@ function chooseSubmitPerson(submissionName) {
   submitCheckForm.value.choosePersonObject = null;
 
   proxy.$refs.submitPersonPopup.open();
-  proxy.$api.userinfo.select_list({}).then(res => {
-    submitPersons.value = res.data;
-  })
+}
+
+const site_loading = ref(false);
+const site_options = ref([]);
+
+function load_site(query) {
+  if (query !== '') {
+    site_loading.value = true;
+    setTimeout(() => {
+
+      site_loading.value = false;
+
+      let params = {
+        userName: query
+      }
+
+      proxy.$api.userinfo.select_list(params).then(res => {
+
+        if (res.code === 0 && res.data.length > 0) {
+          site_options.value = res.data;
+          submitPersons.value = res.data;
+        }
+        else{
+          site_options.value = [];
+          submitPersons.value= [];
+        }
+      })
+
+    }, 200);
+  } else {
+    site_options.value = [];
+    submitPersons.value= [];
+  }
 }
 
 function submitSubmitPersonForm() {
@@ -919,6 +981,7 @@ onShow(() => {
   width: 600px;
   //height: 60%;
   max-width: 80%;
+  min-height: 100px;
 }
 
 .example-body {
@@ -956,6 +1019,22 @@ onShow(() => {
 
 .reject {
   background-color: red !important;
+}
+
+.flash {
+  animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 </style>

@@ -13,7 +13,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class ChangeManagerVO {
     private Integer changeId;
-    private String changeType;
+    private Integer changeType;
     private String changeTitle;
     private String changeCustomer;
     private String changeProjectName;

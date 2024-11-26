@@ -556,6 +556,10 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         List<Task> task = taskService.createTaskQuery().processInstanceId(flowTaskVo.getInstanceId()).list();
         if (CollectionUtils.isEmpty(task)) {
             throw new BusinessException("流程未启动或已执行完成，取消申请失败");
+        } else {
+            task.forEach(t -> {
+                taskService.addComment(t.getId(), t.getProcessInstanceId(), FlowComment.REJECT.getType(), flowTaskVo.getComment());
+            });
         }
         // 获取当前流程实例
         ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()

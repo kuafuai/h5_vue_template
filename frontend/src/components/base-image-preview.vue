@@ -1,10 +1,12 @@
 <template>
   <el-image
-      :src="realSrc"
+      :src="item"
       fit="cover"
       :style="`width:${realWidth};height:${realHeight};`"
-      :preview-src-list="realSrcList"
+      :preview-src-list="[item]"
       :preview-teleported="true"
+      v-for="(item,index) in realSrcList"
+      :key="index"
   >
     <template #error>
       <div class="image-slot">

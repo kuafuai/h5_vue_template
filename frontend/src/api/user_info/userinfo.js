@@ -43,10 +43,11 @@ export default {
             data: data
         });
     },
-    select_list(){
+    select_list(query){
         return service({
             url: BASE_API + "/get/select_list",
-            method: "get"
+            method: "get",
+            params: query
         });
     }
 };

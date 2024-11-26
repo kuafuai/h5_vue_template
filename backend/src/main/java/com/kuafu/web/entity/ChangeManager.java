@@ -21,7 +21,7 @@ public class ChangeManager {
     @TableId(value = "change_id", type = IdType.AUTO)
     private Integer changeId;
 
-    private String changeType;
+    private Integer changeType;
     private String changeTitle;
     private String changeCustomer;
     private String changeProjectName;

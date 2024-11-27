@@ -18,18 +18,15 @@
     <base-layout class="m-t-20 p-t-20 overflow-y-scroll" display="flex" direction="c">
       <view class="flex-c-start-start m-b-20 w-full">
         <view class="flex-around-start m-b-20">
-          <fui-text :text='baseInfo.changeType === 1 ? "[ECR]":"[ECN]"+" "+baseInfo.changeTitle' type="black"
-                    size="36">
+          <fui-text :text='baseInfo.changeType === 1 ? "[ECR]":"[ECN] "' type="black" size="36"></fui-text>
 
-          </fui-text>
+          <fui-text :text='baseInfo.changeTitle' type="black" size="36"></fui-text>
 
           <fui-text v-if="baseInfo.changeType === 1" :text='"【 "+baseInfo.infoMap.ECR编号.infoValue+" 】"' type="black"
-                    size="36">
-          </fui-text>
+                    size="36"></fui-text>
 
           <fui-text v-else :text='"【 "+baseInfo.infoMap.ECN编号.infoValue+" 】"' type="black"
-                    size="36">
-          </fui-text>
+                    size="36"></fui-text>
 
         </view>
         <view class="flex-between-start m-b-10 w-full">
@@ -143,7 +140,8 @@
                   :color="setColor(item.finishTime)"
               >
                 <view class="w-full flex-start-start">
-                  <p style="font-weight: 700">{{ item.taskName }}</p>
+                  <p v-if='item.taskName === "审批变更" || item.taskName === "发起人审核" || item.taskName=== "终极审核" ' style="font-weight: 700">审核</p>
+                  <p v-else style="font-weight: 700">{{ item.taskName }}</p>
                   <view class="m-l-20">
                     <uni-tag :class="setFlash(item)" :text='item.finishTime?"完成":"处理中"' size="small"
                              :type='item.finishTime?"success":"warning"'
@@ -200,7 +198,8 @@
                 </view>
                 <view v-else>
                   <view class="w-full m-y-10 flex-start-start" v-for="(sub,subIndex) in item.subTask" :key="subIndex">
-                    <p style="font-weight: 700">{{ sub.taskName }}</p>
+                    <p v-if='sub.taskName === "审批变更" || sub.taskName === "发起人审核" || sub.taskName=== "终极审核" ' style="font-weight: 700">审核</p>
+                    <p v-else style="font-weight: 700">{{ sub.taskName }}</p>
                     <view class="m-l-20">
                       <uni-tag :class="setFlash(sub)" :text='sub.finishTime?"完成":"处理中"' size="small"
                                :type='sub.finishTime?"success":"warning"'
@@ -385,7 +384,8 @@
         <button style="color:#ffffff;backgroundColor:#989d98;borderColor:#6b736b" size="mini"
                 @click="proxy.$refs.approvePopup.close();">取 消
         </button>
-        <button type="primary" size="mini" @click="submitApproveForm">同 意</button>
+        <button v-if="approveForm.show_type === 1" type="primary" size="mini" @click="submitApproveForm">同 意</button>
+        <button v-else type="primary" size="mini" @click="submitApproveForm">确 定</button>
       </view>
     </view>
 
@@ -614,8 +614,8 @@ const baseInfo = ref({
     变更原因图片: {},
     更改后图片: {},
     更改前图片: {},
-    ECN编号:{},
-    ECR编号:{}
+    ECN编号: {},
+    ECR编号: {}
   }
 });
 const flowRecordList = ref([])
@@ -691,9 +691,23 @@ function handle_process(item) {
       approveForm.value.procInsId = allParams.value.procInsId;
       approveForm.value.instanceId = allParams.value.procInsId;
       approveForm.value.comment = '';
-      approveForm.value.show_type = 1;
+      approveForm.value.show_type = 3;
       proxy.$refs.approvePopup.open();
 
+    } else if (item.taskName === '发起人审核') {
+      approveForm.value.taskId = item.taskId;
+      approveForm.value.procInsId = allParams.value.procInsId;
+      approveForm.value.instanceId = allParams.value.procInsId;
+      approveForm.value.comment = '';
+      approveForm.value.show_type = 3;
+      proxy.$refs.approvePopup.open();
+    } else if (item.taskName === '终极审核') {
+      approveForm.value.taskId = item.taskId;
+      approveForm.value.procInsId = allParams.value.procInsId;
+      approveForm.value.instanceId = allParams.value.procInsId;
+      approveForm.value.comment = '';
+      approveForm.value.show_type = 1;
+      proxy.$refs.approvePopup.open();
     } else if (item.taskName === '指定输出提交物') {
 
       alreadySubmitPerson.value = {};
@@ -828,17 +842,16 @@ function load_site(query) {
         if (res.code === 0 && res.data.length > 0) {
           site_options.value = res.data;
           submitPersons.value = res.data;
-        }
-        else{
+        } else {
           site_options.value = [];
-          submitPersons.value= [];
+          submitPersons.value = [];
         }
       })
 
     }, 200);
   } else {
     site_options.value = [];
-    submitPersons.value= [];
+    submitPersons.value = [];
   }
 }
 

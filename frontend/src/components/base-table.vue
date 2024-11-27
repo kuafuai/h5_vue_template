@@ -7,7 +7,9 @@
                  @selection-change="selectionChange">
         <uni-tr>
           <template v-for="item in columns" :key="item">
-            <uni-th align="center" :width="item.width">{{ item.label }}</uni-th>
+            <uni-th align="center" :width="item.width">
+              <view :style='{width: item.width+"px"}'>{{ item.label }}</view>
+            </uni-th>
           </template>
         </uni-tr>
         <uni-tr v-for="(item, index) in pageRes.records" :key="index" style="height: 50px">
@@ -130,3 +132,11 @@ function change(e) {
 }
 
 </script>
+
+<style scoped>
+
+::v-deep .uni-table {
+  min-width: 100% !important;
+}
+
+</style>

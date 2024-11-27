@@ -88,7 +88,7 @@
 
             </uni-td>
             <uni-td align="center" style="display:flex;align-items: center;justify-content: center;box-sizing:border-box;">
-              <view style=""><button size="mini" type="default" 
+              <view style=""><button size="mini" type="default"
                 style="color:#ffffff;backgroundColor:#63b463;borderColor:#1AAD19;margin-top: 9px;" @click="handle_task_info(item)">详情
               </button></view>
               <!--              <button v-if="item.changeStatus === 1" size="mini" type="default" class="m-r-10"-->
@@ -149,7 +149,12 @@ async function handle_stop(item) {
 const table_width = ref(800);
 
 onResize(() => {
-  table_width.value = window.innerWidth - 300 + 12;
+  if (window.innerWidth > 900) {
+    table_width.value = window.innerWidth - 300 + 12;
+  }
+  else{
+    table_width.value = window.innerWidth;
+  }
 })
 const userInfo=ref('')
 onMounted(() => {
@@ -173,5 +178,5 @@ onShow(() => {
 ::v-deep .uni-left-window {
   height: 100%;
 }
-   
+
 </style>

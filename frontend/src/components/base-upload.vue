@@ -1,5 +1,5 @@
 <template>
-  <div class="upload-file">
+  <div class="upload-file" v-loading="loading" element-loading-text="上传中...">
     <el-upload
         multiple
         :action="uploadFileUrl"
@@ -8,6 +8,7 @@
         :limit="limit"
         :on-error="handleUploadError"
         :on-exceed="handleExceed"
+        :on-progress="handleProcess"
         :on-success="handleUploadSuccess"
         :show-file-list="false"
         :headers="headers"
@@ -69,6 +70,8 @@ const uploadList = ref([]);
 const baseUrl = import.meta.env.VITE_APP_BASE_API;
 const uploadFileUrl = ref(import.meta.env.VITE_APP_BASE_API + "/common/upload"); // 上传文件服务器地址
 const headers = ref({Authorization: "Bearer " + localStorage.getItem('h5_token')});
+
+const loading = ref(false)
 
 const fileList = ref([]);
 const showTip = computed(
@@ -141,6 +144,7 @@ function handleExceed() {
     title: `上传文件数量不能超过 ${props.limit} 个!`,
     icon: "none"
   })
+  loading.value = false;
 }
 
 
@@ -150,6 +154,7 @@ function handleUploadError(err) {
     title: `上传文件失败`,
     icon: "none"
   })
+  loading.value = false;
 }
 
 // 上传成功回调
@@ -162,6 +167,11 @@ function handleUploadSuccess(res, file) {
     proxy.$refs.fileUpload.handleRemove(file);
     uploadedSuccessfully();
   }
+  loading.value = false;
+}
+
+function handleProcess(params) {
+  loading.value = true;
 }
 
 // 删除文件

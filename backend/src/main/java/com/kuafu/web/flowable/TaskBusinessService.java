@@ -51,7 +51,19 @@ public class TaskBusinessService {
             ApproveNode node = list.get(0);
             return Arrays.asList(StringUtils.split(node.getApproveUserId(), ","));
         } else {
-            //todo 配置默认用户
+            return Lists.newArrayList("1");
+        }
+    }
+
+    public List<String> getUsersByApproveNodeByEnd() {
+        log.info("TaskBusinessService=====>查询最终审核用户");
+        LambdaQueryWrapper<ApproveNode> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ApproveNode::getApproveNodeName, "终极审核");
+        List<ApproveNode> list = approveNodeService.list(queryWrapper);
+        if (list != null && !list.isEmpty()) {
+            ApproveNode node = list.get(0);
+            return Arrays.asList(StringUtils.split(node.getApproveUserId(), ","));
+        } else {
             return Lists.newArrayList("1");
         }
     }
@@ -94,7 +106,7 @@ public class TaskBusinessService {
      */
     public void flowableEnd(DelegateExecution execution) {
         String procInsId = execution.getProcessInstanceId();
-        
+
         log.info("flowableEnd========{}, {}, {}", procInsId, execution, execution.getVariables());
 
         LambdaQueryWrapper<ChangeManager> parentQuery = new LambdaQueryWrapper<>();

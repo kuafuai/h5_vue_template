@@ -25,12 +25,12 @@
 
       <view class="w-full m-y-20">
         <base-table ref="refTableUserInfo" class="m-r-20" :columns="[
-          { prop: 'name', label: '人员姓名', width: '40' },
+          { prop: 'name', label: '人员姓名', width: '140' },
           { prop: 'name', label: '所属部门', width: '100' },
-          { prop: 'name', label: '管理员', width: '1' },
-          { prop: 'name', label: '只读管理员', width: '1' },
-          { prop: 'name', label: '变更发起人', width: '1' },
-          { prop: 'name', label: '交接任务', width: '1' }]" api="userinfo.page">
+          { prop: 'name', label: '管理员', width: '100' },
+          { prop: 'name', label: '只读管理员', width: '100' },
+          { prop: 'name', label: '变更发起人', width: '100' },
+          { prop: 'name', label: '交接任务', width: '100' }]" api="userinfo.page">
           <template #default="{ item }">
             <uni-td align="center">{{ item.userName }}</uni-td>
             <uni-td align="center">{{ item.departmentName }}</uni-td>

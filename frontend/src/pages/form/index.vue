@@ -33,7 +33,7 @@
 
       <view class="w-full m-y-20">
         <base-table ref="refTableUserInfo" class="m-r-20" api="form_setting.page" :columns="[
-            { prop: 'name', label: '表单名称', width: '20' },
+            { prop: 'name', label: '表单名称', width: '120' },
             { prop: 'name', label: '说明', width: '100' },
         ]">
           <template #default="{item}">

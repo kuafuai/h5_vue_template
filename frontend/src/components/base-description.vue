@@ -15,7 +15,7 @@
     <view v-else class="list_box">
       <view class="nodata">
         <img src="../static/noData.png" style="width:200px;height:auto" alt="">
-        <view class="noText">{{$t('description,no_text')}}</view>
+        <view class="noText">{{$t('description.no_text')}}</view>
       </view>
     </view>
   </view>

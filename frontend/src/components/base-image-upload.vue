@@ -36,23 +36,13 @@ import {onLoad, onShow} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance()
 // 通过 defineModel() 传递资源数组，支持外部传入
-const num = ref([])
 const resources = ref([])
-// const pre_url = import.meta.env.VITE_APP_SERVICE_API;
-const pre_url = import.meta.env.VITE_APP_BASE_API;
-// console.log("pre", pre_url);
 let image_model = defineModel()
-// console.log("初始值", image_model.value)
 let selectedFiles = ref([]);
 
-onShow(()=>{
-  // 失焦
-  selectedFiles.value=image_model.value
-
+onShow(() => {
 })
 onLoad(() => {
-  // console.log("1234321234321234321234321234", image_model.value)
-  // selectedFiles.value = image_model.value
 })
 
 const props = defineProps({
@@ -60,7 +50,6 @@ const props = defineProps({
     type: Number,
     default: 1,
   },
-
   title: {
     type: String,
     default: '选择文件',
@@ -72,6 +61,10 @@ const props = defineProps({
   size: {
     type: Number,
     default: 5,
+  },
+  mode: {
+    type: String,
+    default: 'sig',
   }
 });
 
@@ -88,50 +81,21 @@ function extractFileNameAndExtension(url) {
 
 // 监听 image_model 数组变化，只触发一次
 watch(image_model, (newValue) => {
-  console.log("image_model111", newValue)
-  resources.value=newValue
-  selectedFiles.value = newValue;
-  num.value=newValue
-  console.log(image_model.value,resources.value,selectedFiles.value)
+  if (newValue) {
+    const list = Array.isArray(newValue) ? newValue : image_model.value.split(",");
+    resources.value = list.map(item => {
+      if (typeof item === "string") {
+        item = {name: item, url: item};
+      }
+      return item;
+    });
+  } else {
+    resources.value = [];
+    selectedFiles.value = [];
+    return [];
+  }
+
 }, {deep: true, once: true});
-
-// // 监听外部传入的资源数组，如果发生变化则更新 selectedFiles
-// watch(resources.value, (newValue) => {
-//   if (newValue && newValue.length > 0) {
-//     console.log("resources.value变化", newValue)
-//     selectedFiles.value = newValue.map(resource => ({
-//       name: resource.name,
-//       extname: extractFileNameAndExtension(resource.url),
-//       url: resource.url,
-//     }));
-//     if (image_model.value == undefined || image_model.value == null) {
-//       image_model.value = []
-//       // console.log(image_model.value)
-//
-//     }
-//     image_model.value.splice(0, image_model.value.length);
-//
-//
-//     image_model.value.push(...resources.value)
-//     // console.log("resources.value变化后的元素", resources.value, selectedFiles.value, image_model.value)
-//   }
-//
-// }, {deep: true});
-
-// 监听外部传入的资源数组，如果发生变化则更新 selectedFiles
-// watch(image_model.value, (newValue) => {
-//   console.log("监听", image_model.value)
-//   if (newValue && newValue.length > 0) {
-//
-//     // selectedFiles.value = newValue.map(resource => ({
-//     //   name: resource.fileName,
-//     //   extname: extractFileNameAndExtension(resource.url),
-//     //   url: resource.url,
-//     // }));
-//     selectedFiles.value = newValue
-//   }
-// },{ deep: true });
-
 
 const handleFileChange = async (files) => {
   // 文件大小验证
@@ -145,29 +109,27 @@ const handleFileChange = async (files) => {
       });
       files.tempFiles = [];
       selectedFiles.value = [];
-      resources.value=[]
-      setTimeout(() => {
-        resources.value=num.value
-      }, 0);
+      resources.value = []
       return;
     }
   }
   selectedFiles.value = files.tempFiles;
-  console.log(selectedFiles.value,"selectedFiles");
+  console.log(selectedFiles.value, "selectedFiles");
 
   // 自动上传文件
   await uploadFiles();
 };
 
 const handelDelete = (e) => {
-  console.log(e,resources.value);
+  console.log(e, resources.value);
 
   resources.value.splice(e.index, 1)
-  image_model.value.splice(e.index, 1)
-  // image_model.value = resources.value.splice(e.index, 1)
-  // // resources.value=resources.value.splice(e.index, 1)
-  // // image_model.value = resources.value
-  // console.log("删除后的元素", resources.value, image_model.value)
+  if (props.mode === 'sig') {
+    image_model.value = listToString(resources.value, ",");
+  } else {
+    image_model.value.splice(e.index, 1)
+  }
+  console.log('=====', image_model.value)
 }
 
 const uploadFiles = async () => {
@@ -181,7 +143,7 @@ const uploadFiles = async () => {
 
   try {
     for (const file of selectedFiles.value) {
-      console.log(file,"file1111");
+      console.log(file, "file1111");
 
       await uploadFile(file);
     }
@@ -225,10 +187,14 @@ const uploadFile = (file) => {
             if (image_model.value == undefined) {
               image_model.value = []
             }
-            image_model.value=resources.value
-            selectedFiles.value=resources.value
-            // image_model.value = resources.value
-            console.log("select_image", resources.value,image_model.value, selectedFiles.value)
+            if (props.mode === 'sig') {
+              image_model.value = listToString(resources.value, ",");
+            } else {
+              image_model.value = resources.value
+            }
+            selectedFiles.value = resources.value
+
+            console.log('=====', image_model.value)
 
             resolve(res);
           } else {
@@ -244,6 +210,19 @@ const uploadFile = (file) => {
     });
   });
 };
+
+
+function listToString(list, separator) {
+  let strs = "";
+  separator = separator || ",";
+  for (let i in list) {
+    if (undefined !== list[i].url && list[i].url.indexOf("blob:") !== 0) {
+      strs += list[i].url + separator;
+    }
+  }
+  return strs != "" ? strs.substr(0, strs.length - 1) : "";
+}
+
 </script>
 
 <style scoped>

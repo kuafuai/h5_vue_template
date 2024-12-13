@@ -1,6 +1,6 @@
 <template>
   <view style="display:flex">
-    <view class="file-preview"  v-for="(item, index) in url">
+    <view class="file-preview"  v-for="(item, index) in fileList">
       <!-- 如果是图片类型，则显示图片 -->
       <view class="image_list">
         <image  v-if="isImage(item.url)" :src="item.url" mode="widthFix" alt="预览图片" class="preview-image" @click="previewImage(index)"/>
@@ -28,15 +28,42 @@
 import {ref, computed, watch, getCurrentInstance} from 'vue';
 
 const {proxy} = getCurrentInstance();
+const fileList = ref([]);
 const props = defineProps({
   url: {
-    type: Array,
+    type: [Array, String],
     required: true,
   },
 });
 
 
 const fileExtension = ref('');
+
+watch(
+    () => props.url,
+    val => {
+      if (val) {
+        let temp = 1;
+        // 首先将值转为数组
+        const list = Array.isArray(val) ? val : props.url.split(',');
+        // 然后将数组转为对象数组
+        fileList.value = list.map(item => {
+          if (typeof item === "string") {
+            item = {name: item, url: item};
+          }
+          item.uid = item.uid || new Date().getTime() + temp++;
+          return item;
+        });
+      } else {
+        fileList.value = [];
+        return [];
+      }
+    },
+    {
+      deep: true,
+      immediate: true
+    }
+);
 
 // // 监听 props.url 的变化
 // watch(
@@ -63,7 +90,7 @@ const previewImage = (index) => {
   console.log('点击了图片', index)
   uni.previewImage({
     current: index,
-    urls: props.url.map(item => item.url)
+    urls: fileList.value.map(item => item.url)
   })
 }
 

@@ -71,8 +71,11 @@ const questions = ref([]
 
 const get_question_url = async () => {
   if (props.is_group) {
-    console.log(121212121212)
-    var res = await proxy.$api[props.api][props.model](props.params)
+    let data = {}
+    if (props.params) {
+      Object.assign(data, props.params);
+    }
+    var res = await proxy.$api[props.api][props.model](data)
     console.log(res)
     questions.value = res.data
 

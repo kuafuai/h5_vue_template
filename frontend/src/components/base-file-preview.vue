@@ -1,14 +1,16 @@
 <template>
-  <view style="display:flex">
-    <view class="file-preview"  v-for="(item, index) in fileList">
+  <view class="flex">
+    <view class="file-preview" :style='{width: width+"px",height:height+"px",borderRadius:radius+"px"}'
+          v-for="(item, index) in fileList">
       <!-- 如果是图片类型，则显示图片 -->
       <view class="image_list">
-        <image  v-if="isImage(item.url)" :src="item.url" mode="widthFix" alt="预览图片" class="preview-image" @click="previewImage(index)"/>
+        <image v-if="isImage(item.url)" :src="item.url" mode="widthFix" alt="预览图片" class="preview-image"
+               @click="previewImage(index)"/>
 
         <view v-else class="file-preview-button">
           <view v-if="item!=null && item!=''">
             <button @click="openFile(item.url)" class="custom-button">
-              {{item.fileName}}
+              {{ item.fileName }}
             </button>
           </view>
           <view v-else>
@@ -25,7 +27,6 @@
 </template>
 
 <script setup>
-import {ref, computed, watch, getCurrentInstance} from 'vue';
 
 const {proxy} = getCurrentInstance();
 const fileList = ref([]);
@@ -34,6 +35,18 @@ const props = defineProps({
     type: [Array, String],
     required: true,
   },
+  width: {
+    type: Number,
+    default: 200
+  },
+  height: {
+    type: Number,
+    default: 200
+  },
+  radius: {
+    type: Number,
+    default: 5
+  }
 });
 
 
@@ -65,22 +78,8 @@ watch(
     }
 );
 
-// // 监听 props.url 的变化
-// watch(
-//     () => props.url,
-//     (newUrl) => {
-//       console.log('URL 发生变化:', newUrl);
-//       fileExtension.value = extractFileExtension(newUrl);
-//     },
-//     {immediate: true} // 立即执行一次，以处理初始值
-// );
-//
-// 计算属性：判断文件是否为图片类型
-// const isImage = computed(() => {
-//   const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
-//   return imageTypes.includes(fileExtension.value);
-// });
-const isImage =  (newUrl) => {
+
+const isImage = (newUrl) => {
   var fileExtension = extractFileExtension(newUrl);
   const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
   return imageTypes.includes(fileExtension);
@@ -134,12 +133,9 @@ const openFile = (url) => {
   justify-content: center;
   padding: 5px;
   /*border: 2px solid #e0e0e0;*/
-  border-radius: 10px;
   margin: 10px 0 0 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* 添加轻微阴影效果 */
   overflow: hidden;
-  width: 200rpx;
-  height:200rpx
 }
 
 .image_list {

@@ -5,8 +5,9 @@
     <swiper class="swiper-box" @change="change" :current="swiperDotIndex">
       <swiper-item v-for="(item, index) in data" :key="index">
         <view class="swiper-item" :class="'swiper-item' + index">
-<!--          <text style="color: #fff; font-size: 32px;">{{ item.content }}</text>-->
-          <image class="swiper-image" :src="item.imageUrl" mode="aspectFill" style="width: 100%; height: 200px;"></image>
+          <!--          <text style="color: #fff; font-size: 32px;">{{ item.content }}</text>-->
+          <image class="swiper-image" :src="item.imageUrl" mode="aspectFill"
+                 style="width: 100%; height: 200px;"></image>
         </view>
       </swiper-item>
     </swiper>
@@ -15,6 +16,7 @@
 
 <script setup>
 import {onLoad} from "@dcloudio/uni-app";
+import {defineProps} from "vue";
 
 const {proxy} = getCurrentInstance()
 
@@ -27,18 +29,17 @@ const change = (e) => {
   current.value = e.detail.current;
 }
 
-const clickItem = (index) => {
-  console.log('点击了第' + index + '项');
-};
-
-onLoad(async () => {
-  const response = await proxy.$api.message.messagePage({
-    type: 'carousel'
-  })
-  if (response.data) {
-    data.value = response.data.records
+const props = defineProps({
+  api: {
+    type: String,
+    default: '',
   }
-  console.log(response, "轮播图调用后端接口")
+});
+onLoad(async () => {
+  const res = await props.api.split(".").reduce((acc, item) => acc[item], proxy.$api)({type: 'carousel'})
+  if(res.data) {
+    data.value = res.data.records
+  }
 })
 
 </script>

@@ -10,6 +10,7 @@
 
 <script setup>
 import {onLoad} from "@dcloudio/uni-app";
+import {defineProps} from "vue";
 
 const {proxy} = getCurrentInstance()
 const data = ref([])
@@ -20,15 +21,19 @@ const getMore = () => {
   })
 }
 
+const props = defineProps({
+  api: {
+    type: String,
+    default: '',
+  }
+});
+
 
 onLoad(async () => {
-  const response = await proxy.$api.message.messagePage({
-    type: 'notification'
-  })
-  if (response.data) {
-    data.value = response.data.records
+  const res = await props.api.split(".").reduce((acc, item) => acc[item], proxy.$api)({type: 'notification'})
+  if(res.data) {
+    data.value = res.data.records
   }
-  console.log(response, "通知调用后端接口")
 })
 </script>
 <style scoped lang="scss">

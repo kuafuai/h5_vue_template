@@ -23,3 +23,13 @@ create table if not exists category
 );
 
 
+
+CREATE TABLE system_messages
+(
+    id        INTEGER PRIMARY KEY autoincrement, -- 主键ID，SQLite 使用 INTEGER PRIMARY KEY AUTOINCREMENT 实现自增
+    type      TEXT NOT NULL,                      -- 类型：notification(通知)、carousel(轮播图)、announcement(公告栏)
+    title     TEXT,                               -- 标题，NULL 默认为可为空
+    content   TEXT,                               -- 内容，适用于通知和公告栏
+    image_url TEXT,                               -- 适用于轮播图：图片URL
+    url       TEXT                                -- 适用于轮播图：跳转的URL
+);

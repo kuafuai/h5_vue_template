@@ -36,7 +36,7 @@ CREATE TABLE `system_messages`
     `url`         VARCHAR(255) COMMENT '适用于轮播图：跳转的URL',
     `create_time` DATE DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间', -- 创建时间
     `update_time` DATE DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-)
+);
 
 
 

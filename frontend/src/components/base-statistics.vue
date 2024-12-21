@@ -4,7 +4,11 @@
 
     <view v-if="!is_group">
       <!--    不分组执行的情况-->
-      <uni-section class="custom-section" :title="title" :sub-title="number"></uni-section>
+
+      <base-echarts v-if="questions.length > 0" :option="questions"
+                    :group_result_show_display="group_result_show_display"></base-echarts>
+
+      <uni-section v-else class="custom-section" :title="title" :sub-title="number"></uni-section>
     </view>
 
     <view v-if="is_group">
@@ -74,7 +78,6 @@ const get_question_url = async () => {
       Object.assign(data, props.params);
     }
     var res = await proxy.$api[props.api][props.model](data)
-    console.log(res)
     questions.value = res.data
   }
 }
@@ -87,7 +90,11 @@ onLoad(async () => {
   if (!props.is_group) {
     var res = await proxy.$api[props.api][props.model](data)
     if (res.data != null) {
-      number.value = String(res.data);
+      if (Array.isArray(res.data)) {
+        questions.value = res.data
+      } else {
+        number.value = String(res.data);
+      }
     }
   } else {
     get_question_url()

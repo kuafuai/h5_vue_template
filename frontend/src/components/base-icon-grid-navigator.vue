@@ -60,6 +60,9 @@ onLoad(async () => {
   width: 25px;
   height: 25px;
 }
+::v-deep .uni-section .uni-section-header__content {
+  font-weight: bold;
+}
 
 .text {
   font-size: 14px;

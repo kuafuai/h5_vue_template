@@ -11,7 +11,7 @@
       <!--  分组执行的情况 -->
       <view v-for="(question, index) in questions" :key="index" class="question-item">
         <view class="shu">
-          <img src="../static/shu.png" style="width:5px;height:18px;margin-right:7px" alt="" >
+          <img src="../static/shu.png" style="width:5px;height:18px;margin-right:7px" alt="">
           <text class="question-text">{{ question.name }}</text>
         </view>
         <view v-if="question.children && question.children.length > 0" class="option-list">
@@ -30,9 +30,7 @@
 </template>
 
 <script setup>
-import {defineProps, ref} from "vue";
 import {onLoad} from "@dcloudio/uni-app";
-import {getCurrentInstance} from "vue"
 
 const {proxy} = getCurrentInstance();
 const props = defineProps({
@@ -78,7 +76,6 @@ const get_question_url = async () => {
     var res = await proxy.$api[props.api][props.model](data)
     console.log(res)
     questions.value = res.data
-
   }
 }
 onLoad(async () => {
@@ -93,7 +90,6 @@ onLoad(async () => {
       number.value = String(res.data);
     }
   } else {
-    console.log(343434343434)
     get_question_url()
   }
 
@@ -148,12 +144,13 @@ onLoad(async () => {
   margin-bottom: 20px;
 }
 
-.shu{
+.shu {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start; 
+  justify-content: flex-start;
   align-items: center;
 }
+
 .question-text {
   font-weight: 400;
   font-size: 1.3rem;

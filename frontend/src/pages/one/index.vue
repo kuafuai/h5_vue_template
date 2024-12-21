@@ -42,13 +42,16 @@
   <view>===</view>
 
   <view>
-    <base-text-display v-for="(item, index) in test_list"  :text="index">
+    <base-text-display v-for="(item, index) in test_list" v-model="item.name">
     </base-text-display>
   </view>
 
   <base-text-display v-model="test_obj.name" horizontal="left"></base-text-display>
 
   <base-image-display v-model="test_obj.image" radius="10"></base-image-display>
+
+  <base-echarts :option="test_list" group_result_show_display="chart"></base-echarts>
+
 
 </template>
 <script setup>
@@ -71,10 +74,16 @@ const test_obj = ref({
 
 const test_list = ref([
   {
-    name: '1121111'
+    name: 'A',
+    value: 10
   },
   {
-    name: '21222233'
+    name: 'B',
+    value: 10
+  },
+  {
+    name: 'C',
+    value: 10
   },
 ])
 

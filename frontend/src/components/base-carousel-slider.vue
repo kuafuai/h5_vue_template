@@ -1,17 +1,17 @@
 <template>
-
-  <uni-swiper-dot class="uni-swiper-dot-box" @clickItem=clickItem :info="data" :current="current" :mode="mode"
-                  :dots-styles="dotsStyles" field="content">
-    <swiper class="swiper-box" @change="change" :current="swiperDotIndex">
-      <swiper-item v-for="(item, index) in data" :key="index">
-        <view class="swiper-item" :class="'swiper-item' + index">
-          <!--          <text style="color: #fff; font-size: 32px;">{{ item.content }}</text>-->
-          <image class="swiper-image" :src="item.imageUrl" mode="aspectFill"
-                 style="width: 100%; height: 200px;"></image>
-        </view>
-      </swiper-item>
-    </swiper>
-  </uni-swiper-dot>
+  <view>
+    <uni-swiper-dot class="uni-swiper-dot-box" @clickItem=clickItem :info="data" :current="current" :mode="mode"
+                    :dots-styles="dotsStyles" field="content">
+      <swiper class="swiper-box" @change="change" :current="swiperDotIndex">
+        <swiper-item v-for="(item, index) in data" :key="index">
+          <view class="swiper-item" :class="'swiper-item' + index">
+            <image class="swiper-image" :src="item.imageUrl" mode="aspectFill"
+                   style="width: 100%; height: 200px;"></image>
+          </view>
+        </swiper-item>
+      </swiper>
+    </uni-swiper-dot>
+  </view>
 </template>
 
 <script setup>
@@ -37,7 +37,7 @@ const props = defineProps({
 });
 onLoad(async () => {
   const res = await props.api.split(".").reduce((acc, item) => acc[item], proxy.$api)({type: 'carousel'})
-  if(res.data) {
+  if (res.data) {
     data.value = res.data.records
   }
 })

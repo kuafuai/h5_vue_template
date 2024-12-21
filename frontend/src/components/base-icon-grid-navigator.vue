@@ -41,12 +41,17 @@ const props = defineProps({
 
 const goToPage = (route) => {
   if (route) {
+    // 判断是否以 / 开头
+    if (!route.startsWith('/')) {
+      route = '/' + route;
+    }
     console.log("跳转到页面:", route);
-    proxy.$navigate("/pages/" + route + '/index', false)
+    proxy.$navigate("/pages" + route + '/index', false)
   } else {
     console.error("未指定页面地址");
-  }l
+  }
 }
+
 
 defineExpose({
   goToPage

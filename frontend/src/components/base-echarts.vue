@@ -27,10 +27,7 @@
   </view>
 </template>
 
-
-
 <script setup>
-import { ref, onMounted, watch, onBeforeUnmount, defineProps } from 'vue';
 import * as echarts from 'echarts';
 
 const props = defineProps({
@@ -53,7 +50,7 @@ const is_echarts_function = () => {
   is_echarts.value = props.group_result_show_display === 'chart';
 };
 
-is_echarts_function(props.option);
+is_echarts_function();
 
 // 初始化图表
 const initChart = () => {

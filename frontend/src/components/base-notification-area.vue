@@ -3,10 +3,11 @@
     <uni-notice-bar :v-show="data.length > 0"
                     class="custom-notice-bar"
                     show-get-more
-                    show-icon
                     scrollable
+                    show-icon
                     :speed="speed"
-                    :text="data[0]?.content || '暂无通知内容' " @getmore="getMore"
+                    :text="data[0]?.content || '暂无通知内容' "
+                    @getmore="getMore"
                     color="#000" background-color="#fff"/>
   </view>
 
@@ -37,7 +38,7 @@ const props = defineProps({
 
 onLoad(async () => {
   const res = await props.api.split(".").reduce((acc, item) => acc[item], proxy.$api)({type: 'notification'})
-  if(res.data) {
+  if (res.data) {
     data.value = res.data.records
   }
 })
@@ -45,7 +46,7 @@ onLoad(async () => {
 <style scoped lang="scss">
 /* 外部容器，留出两侧间距 */
 .notice-bar-container {
-  margin: 0 10px; /* 距离两侧10px */
+  margin: 5px 10px; /* 距离两侧10px */
 }
 
 ::v-deep .uni-icons {
@@ -58,5 +59,15 @@ onLoad(async () => {
   padding: 10px !important; /* 添加内部间距 */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* 添加阴影 */
 }
+
+/*!* 替换的小喇叭图标样式 *!
+.custom-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px; !* 图标与文字的间距 *!
+  display: inline-block;
+  vertical-align: middle;
+}*/
+
 
 </style>

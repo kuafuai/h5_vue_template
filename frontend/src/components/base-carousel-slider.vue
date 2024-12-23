@@ -1,21 +1,23 @@
 <template>
-
-  <uni-swiper-dot :v-show="data.length > 0" class="uni-swiper-dot-box" :info="displayData" :current="current" :mode="mode"
-                  :dots-styles="dotsStyles" field="content">
-    <swiper class="swiper-box"
-            @change="change"
-            :current="swiperDotIndex"
-            :interval="3000"
-            :autoplay="true">
-      <swiper-item v-for="(item, index) in displayData" :key="index">
-        <view class="swiper-item" :class="'swiper-item' + index">
-          <!--                    <text style="color: #fff; font-size: 32px;">{{ item.content }}</text>-->
-          <image class="swiper-image" :src="item.imageUrl" mode="aspectFill"
-                 style="width: 100%; height: 200px;" @click="clickItem(item)"></image>
-        </view>
-      </swiper-item>
-    </swiper>
-  </uni-swiper-dot>
+  <view>
+    <uni-swiper-dot :v-show="data.length > 0" class="uni-swiper-dot-box" :info="displayData" :current="current"
+                    :mode="mode"
+                    :dots-styles="dotsStyles" field="content">
+      <swiper class="swiper-box"
+              @change="change"
+              :current="swiperDotIndex"
+              :interval="3000"
+              :autoplay="true">
+        <swiper-item v-for="(item, index) in displayData" :key="index">
+          <view class="swiper-item" :class="'swiper-item' + index">
+            <!--                    <text style="color: #fff; font-size: 32px;">{{ item.content }}</text>-->
+            <image class="swiper-image" :src="item.imageUrl" mode="aspectFill"
+                   style="width: 100%; height: 200px;" @click="clickItem(item)"></image>
+          </view>
+        </swiper-item>
+      </swiper>
+    </uni-swiper-dot>
+  </view>
 </template>
 
 <script setup>
@@ -67,7 +69,7 @@ const clickItem = (item) => {
   border-radius: 8px; /* 圆角 */
   overflow: hidden; /* 确保内容不会溢出圆角 */
   /* 两侧留出间距 */
-  margin: 0 10px 10px;
+  margin: 5px 10px;
 }
 
 .swiper-item {

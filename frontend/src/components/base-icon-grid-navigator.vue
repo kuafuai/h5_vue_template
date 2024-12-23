@@ -41,12 +41,18 @@ const props = defineProps({
 
 const goToPage = (route) => {
   if (route) {
-    // 判断是否以 / 开头
-    if (!route.startsWith('/')) {
-      route = '/' + route;
+    // 判断是否是完整的网址
+    if (route.startsWith('http://') || route.startsWith('https://')) {
+      // 使用 window.location.href 进行站外跳转
+      window.location.href = route;
+    } else {
+      // 判断是否以 / 开头
+      if (!route.startsWith('/')) {
+        route = '/' + route;
+      }
+      console.log("跳转到页面:", route);
+      proxy.$navigate("/pages" + route + '/index', false);
     }
-    console.log("跳转到页面:", route);
-    proxy.$navigate("/pages" + route + '/index', false)
   } else {
     console.error("未指定页面地址");
   }

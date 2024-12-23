@@ -1,16 +1,21 @@
 <template>
-  <view>
-    <uni-swiper-dot class="uni-swiper-dot-box" @clickItem=clickItem :info="data" :current="current" :mode="mode"
-                    :dots-styles="dotsStyles" field="content">
-      <swiper class="swiper-box" @change="change" :current="swiperDotIndex">
-        <swiper-item v-for="(item, index) in data" :key="index">
-          <view class="swiper-item" :class="'swiper-item' + index">
-            <image class="swiper-image" :src="item.imageUrl" mode="aspectFill"
-                   style="width: 100%; height: 200px;"></image>
-          </view>
-        </swiper-item>
-      </swiper>
-    </uni-swiper-dot>
+ <view>
+  <uni-swiper-dot :v-show="data.length > 0" class="uni-swiper-dot-box" :info="displayData" :current="current" :mode="mode"
+                  :dots-styles="dotsStyles" field="content">
+    <swiper class="swiper-box"
+            @change="change"
+            :current="swiperDotIndex"
+            :interval="3000"
+            :autoplay="true">
+      <swiper-item v-for="(item, index) in displayData" :key="index">
+        <view class="swiper-item" :class="'swiper-item' + index">
+          <!--                    <text style="color: #fff; font-size: 32px;">{{ item.content }}</text>-->
+          <image class="swiper-image" :src="item.imageUrl" mode="aspectFill"
+                 style="width: 100%; height: 200px;" @click="clickItem(item)"></image>
+        </view>
+      </swiper-item>
+    </swiper>
+  </uni-swiper-dot>
   </view>
 </template>
 
@@ -18,6 +23,7 @@
 import {onLoad} from "@dcloudio/uni-app";
 import {defineProps} from "vue";
 
+const emits = defineEmits(['click_item'])
 const {proxy} = getCurrentInstance()
 
 const data = ref([])
@@ -33,14 +39,27 @@ const props = defineProps({
   api: {
     type: String,
     default: '',
+  },
+  displayCount: {
+    type: Number,
+    default: 3
   }
 });
+
+// 限制显示的数据条数
+const displayData = computed(() => {
+  return data.value.slice(0, props.displayCount);
+});
+
 onLoad(async () => {
   const res = await props.api.split(".").reduce((acc, item) => acc[item], proxy.$api)({type: 'carousel'})
   if (res.data) {
     data.value = res.data.records
   }
 })
+const clickItem = (item) => {
+  emits('click_item', item)
+}
 
 </script>
 <style scoped lang="scss">

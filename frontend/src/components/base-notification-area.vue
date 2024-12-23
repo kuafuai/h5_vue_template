@@ -1,9 +1,13 @@
 <template>
   <view class="notice-bar-container">
-
-    <uni-notice-bar class="custom-notice-bar" show-get-more show-icon scrollable
+    <uni-notice-bar :v-show="data.length > 0"
+                    class="custom-notice-bar"
+                    show-get-more
+                    show-icon
+                    scrollable
+                    :speed="speed"
                     :text="data[0]?.content || '暂无通知内容' " @getmore="getMore"
-    color="#000" background-color="#fff"/>
+                    color="#000" background-color="#fff"/>
   </view>
 
 </template>
@@ -12,19 +16,21 @@
 import {onLoad} from "@dcloudio/uni-app";
 import {defineProps} from "vue";
 
+const emits = defineEmits(['click_item'])
 const {proxy} = getCurrentInstance()
 const data = ref([])
 const getMore = () => {
-  uni.showToast({
-    title: '点击查看更多',
-    icon: 'none'
-  })
+  emits('click_item')
 }
 
 const props = defineProps({
   api: {
     type: String,
     default: '',
+  },
+  speed: {
+    type: Number,
+    default: 100
   }
 });
 
@@ -40,6 +46,10 @@ onLoad(async () => {
 /* 外部容器，留出两侧间距 */
 .notice-bar-container {
   margin: 0 10px; /* 距离两侧10px */
+}
+
+::v-deep .uni-icons {
+  color: black !important; /* 设置图标颜色为黑色 */
 }
 
 /* 自定义通知栏样式 */

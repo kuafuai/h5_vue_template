@@ -1,5 +1,5 @@
 <template>
-
+ <view>
   <uni-swiper-dot :v-show="data.length > 0" class="uni-swiper-dot-box" :info="displayData" :current="current" :mode="mode"
                   :dots-styles="dotsStyles" field="content">
     <swiper class="swiper-box"
@@ -16,6 +16,7 @@
       </swiper-item>
     </swiper>
   </uni-swiper-dot>
+  </view>
 </template>
 
 <script setup>

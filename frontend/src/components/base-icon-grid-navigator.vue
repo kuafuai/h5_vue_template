@@ -1,12 +1,12 @@
 <template>
   <!--  九宫格-->
-  <view>
+  <view class="white-box">
     <uni-section :title="title" titleFontSize="16px" stype="" padding>
       <uni-grid :column="column" :highlight="true" @change="change" :showBorder="false" :square="false">
         <uni-grid-item v-for="(item, index) in navigations" :index="index" :key="index" @click="goToPage(item.page)">
           <view class="grid-item-box" style="background-color: #fff;">
             <image :src="item.icon" mode="aspectFill" style="width: 40px; height: 40px;"></image>
-            <text class="text">{{ item.title }}</text>
+            <text class="text">{{ getTruncatedContent(item.title) }}</text>
           </view>
         </uni-grid-item>
       </uni-grid>
@@ -58,6 +58,11 @@ const goToPage = (route) => {
   }
 }
 
+// 文本截断函数，限制最大字符数
+const getTruncatedContent = (content) => {
+  const maxLength = 6;
+  return content && content.length > maxLength ? content.slice(0, maxLength) + '...' : content;
+};
 
 defineExpose({
   goToPage
@@ -71,6 +76,7 @@ onLoad(async () => {
   width: 25px;
   height: 25px;
 }
+
 ::v-deep .uni-section .uni-section-header__content {
   font-weight: bold;
 }
@@ -78,6 +84,20 @@ onLoad(async () => {
 .text {
   font-size: 14px;
   margin-top: 5px;
+  white-space: nowrap; /* 防止文本换行 */
+  overflow: hidden; /* 隐藏溢出的内容 */
+  text-overflow: ellipsis; /* 添加省略号 */
+  width: 100%; /* 确保容器宽度足够 */
+  display: inline-block; /* 必须设置为 inline-block 才能有效 */
+  text-align: center; /* 水平居中 */
+}
+
+.white-box {
+  background-color: #fff; /* 白色背景 */
+  border-radius: 10px; /* 圆角 */
+  padding: 10px; /* 内边距 */
+  margin: 5px 10px; /* 外边距，控制左右距离 */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
 }
 
 .example-body {
@@ -99,7 +119,10 @@ onLoad(async () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 15px 0;
+  padding: 10px 0;
+  margin: 8px 10px; /* 控制每个项之间的间距 */
+  background-color: #fff;
+  border-radius: 8px; /* 可选：设置圆角 */
 }
 
 .grid-item-box-row {

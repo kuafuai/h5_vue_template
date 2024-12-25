@@ -7,7 +7,7 @@
                     show-icon
                     :speed="speed"
                     :text="data[0]?.content || '暂无通知内容' "
-                    @getmore="getMore"
+                    @getmore="getMore(data[0])"
                     color="#000" background-color="#fff"/>
   </view>
 
@@ -20,8 +20,8 @@ import {defineProps} from "vue";
 const emits = defineEmits(['click_item'])
 const {proxy} = getCurrentInstance()
 const data = ref([])
-const getMore = () => {
-  emits('click_item')
+const getMore = (item) => {
+  emits('click_item',item)
 }
 
 const props = defineProps({

@@ -9,6 +9,12 @@
         document.write(
             '<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' +
             (coverSupport ? ', viewport-fit=cover' : '') + '" />')
+
+        Object.defineProperty(navigator, 'userAgent', {
+            value: 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1',
+            writable: false, // 防止被修改
+            configurable: false // 防止再次定义
+        });
     </script>
     <title></title>
     <!--preload-links-->

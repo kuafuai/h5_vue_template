@@ -41,23 +41,14 @@ const props = defineProps({
 });
 const description = defineModel()
 const refresh = async () => {
-  console.log("详情页面刷新", description.value)
 
-  if (!isEmpty(props.params) && (description.value == null || isEmpty(description.value))) {
+  if (!isEmpty(props.params)) {
     let response = await props.api.split('.').reduce((acc, item) => acc[item], proxy.$api)(props.params);
     console.log("详情页面描述【response】", response)
     description.value = response.data.records[0];
   }
 
 }
-
-
-watch(() => description.value, (value) => {
-  console.log("watch", value)
-  if (value != null && !isEmpty(value)) {
-    refresh()
-  }
-})
 
 const isEmpty = (obj) => Object.keys(obj).length == 0;
 
@@ -68,23 +59,16 @@ watch(() => props.params, (value) => {
   }
 }, {immediate: true, deep: true})
 
-onLoad(async () => {
-  // refresh()
-});
-
 onMounted(() => {
   refresh()
 })
 onShow(() => {
   refresh()
 })
-// }
+
 defineExpose({
   refresh
 })
-// export default {
-//   name: "BaseDescription"
-// }
 </script>
 
 <style scoped lang="scss">

@@ -2,6 +2,7 @@ package com.kuafu.login.service;
 
 import com.kuafu.common.util.StringUtils;
 import com.kuafu.web.handler.CustomTenantHandler;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +12,7 @@ import javax.annotation.Resource;
  * 微信小程序注册事物
  */
 @Component
+@ConditionalOnProperty(prefix = "login", name = "enable")
 public class WechatRegisterService {
     @Resource
     private LoginBusinessService loginBusinessService;

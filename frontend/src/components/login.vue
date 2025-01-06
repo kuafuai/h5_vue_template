@@ -168,7 +168,7 @@ const to_page = () => {
   proxy.$navigate(props.register_page)
 }
 const form = ref({
-  phone: "test",
+  phone: "18852718858",
   password: "123456",
 });
 // 验证码登陆的信息

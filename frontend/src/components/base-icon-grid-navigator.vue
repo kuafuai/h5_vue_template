@@ -93,6 +93,7 @@ onLoad(async () => {
 }
 
 .white-box {
+  width: 100%;
   background-color: #fff; /* 白色背景 */
   border-radius: 10px; /* 圆角 */
   padding: 10px; /* 内边距 */

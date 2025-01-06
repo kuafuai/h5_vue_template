@@ -5,10 +5,10 @@
       <login
           @loginSuccess="loginSuccess_9102"
           ref="login_passwd_ref"
-          login_type="passwd"
+          login_type="wechat"
           show_title="登录"
           @loginFail="loginFail_9102"
-          relevanceTable="userInfo"
+          relevanceTable="userInformation"
       >
 
       </login>
@@ -57,7 +57,7 @@ if (currentUser != null) {
 const loginSuccess_9102 = (
     item
 ) => {
-  proxy.$navigate("/pages/user_info/index?userId=" + item.userId, false)
+  proxy.$navigate("/pages/one/index?userId=" + item.userId, false)
 
 }
 const loginFail_9102 = () => {

@@ -173,7 +173,7 @@ const form = ref({
 });
 // 验证码登陆的信息
 const form_sms = ref({
-  phone: '',
+  phone: '18852718858',
   code: null
 });
 
@@ -223,6 +223,10 @@ const sendcode = async () => {
       title: proxy.$tt('login.verification_code_success_text'),
       icon: "success"
     })
+    console.log(res);
+    if(res.code === 0 && res.data){
+      form_sms.value.code = res.data;
+    }
     countdown.value = 60;
     intervalId.value = setInterval(() => {
       if (countdown.value > 0) {

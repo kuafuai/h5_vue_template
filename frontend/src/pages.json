@@ -9,6 +9,12 @@
   },
   "pages": [
     {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
       "path": "pages/one/index",
       "style": {
         "navigationBarTitleText": ""

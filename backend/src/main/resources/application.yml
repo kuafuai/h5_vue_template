@@ -47,7 +47,8 @@ mybatis-plus:
 
 login:
   sms:
-    code_timeout: {CODE_TIMEOUT:5}
+    debug: ${SMS_DEBUG:true}
+    code_timeout: ${CODE_TIMEOUT:5}
   enable: ${LOGIN_ENABLE:true}
   table: Login
   select:

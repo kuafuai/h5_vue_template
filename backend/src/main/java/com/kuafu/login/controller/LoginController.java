@@ -92,9 +92,9 @@ public class LoginController {
         Authentication returnAuth = authenticationManager.authenticate(authenticationToken);
         LoginUser loginUser = (LoginUser) returnAuth.getPrincipal();
         String token = tokenService.createToken(loginUser);
-        if(TenantContextHolder.getEnableTenant()) {
+        if (TenantContextHolder.getEnableTenant()) {
             Integer tenantId = loginBusinessService.getUserTenantIdByLoginUser(loginUser);
-            if(tenantId != null) {
+            if (tenantId != null) {
                 loginUser.setTenantId(tenantId);
             }
         }
@@ -172,9 +172,15 @@ public class LoginController {
 
         final String numbers = RandomUtil.randomNumbers(6);
         log.info("获取的验证码是{}", numbers);
-        messageTemplate.sendMessage(phone,numbers);
-        cache.setCacheObject(LOGIN_CACHE_PRE + phone, numbers, loginSmsConfig.getCode_timeout(), TimeUnit.MINUTES);
-        return ResultUtils.success();
+        if (!loginSmsConfig.isDebug()) {
+            messageTemplate.sendMessage(phone, numbers);
+        }
+        cache.setCacheObject(LOGIN_CACHE_PRE + phone, numbers, loginSmsConfig.getCodeTimeout(), TimeUnit.MINUTES);
+        if (loginSmsConfig.isDebug()) {
+            return ResultUtils.success(numbers);
+        } else {
+            return ResultUtils.success();
+        }
     }
 
     @PostMapping("/login/sms")
@@ -190,7 +196,6 @@ public class LoginController {
         LoginRelevanceConfig.remove();
         return ResultUtils.success(token);
     }
-
 
 
 }

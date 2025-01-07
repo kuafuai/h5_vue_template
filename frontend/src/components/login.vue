@@ -3,7 +3,7 @@
   <view v-if="login_type === 'passwd'" class="login">
     <view class="hello">
       <view class="nihao">{{ $t('login.nihao') }}</view>
-      <view class="code"> {{ $t('login.code') }}</view>
+      <view class="code"> {{ $t('login.code') }} {{left_title}}</view>
     </view>
     <view class="title">
       <h2>{{ show_title }}</h2>
@@ -118,12 +118,12 @@
       </label>
     </view>
     <view class="add">
-      {{props.end_content}}
+      {{end_content_show}}
     </view>
   </view>
 
   <view class="bottom" v-if="login_type === 'passwd' || login_type === 'sms' || login_type === 'h5'">
-    {{props.end_content}}
+    {{end_content_show}}
   </view>
 </template>
 
@@ -164,6 +164,21 @@ const props = defineProps({
   title: {type: String, required: false, default: "码上飞CodeFlying"},
   end_content: {type: String, required: false, default: "本应用由AI智能软件开发平台CodeFlying自动开发"}
 });
+
+
+const end_content_show = ref('')
+let left_title = import.meta.env.VITE_APP_NAME;
+let app_vip = import.meta.env.VITE_APP_VIP === 'true'
+if(app_vip){
+  end_content_show.value=''
+}
+else{
+  end_content_show.value=props.end_content
+  left_title = "CodeFlying!"
+}
+
+
+
 const to_page = () => {
   proxy.$navigate(props.register_page)
 }

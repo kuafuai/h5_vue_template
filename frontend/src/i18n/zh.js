@@ -1,7 +1,7 @@
 export default {
     login: {
         nihao: "嘿！你好",
-        code: "欢迎来到CodeFlying!",
+        code: "欢迎来到",
         enter_user_name: "请输入用户名",
         enter_pass_wd: "请输入密码",
         enter_phone: "请输入手机号",

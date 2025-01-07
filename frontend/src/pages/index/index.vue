@@ -5,7 +5,7 @@
       <login
           @loginSuccess="loginSuccess_9102"
           ref="login_passwd_ref"
-          login_type="wechat"
+          login_type="passwd"
           show_title="登录"
           @loginFail="loginFail_9102"
           relevanceTable="userInformation"

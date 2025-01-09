@@ -17,17 +17,24 @@
     </view>
     <base-layout class="m-t-20 p-t-20 overflow-y-scroll" display="flex" direction="c">
       <view class="flex-c-start-start m-b-20 w-full">
-        <view class="flex-around-start m-b-20">
-          <fui-text :text='baseInfo.changeType === 1 ? "[ECR]":"[ECN] "' type="black" size="36"></fui-text>
 
-          <fui-text :text='baseInfo.changeTitle' type="black" size="36"></fui-text>
+        <view class="flex-between-start w-full">
 
-          <fui-text v-if="baseInfo.changeType === 1" :text='"【 "+baseInfo.infoMap.ECR编号.infoValue+" 】"' type="black"
-                    size="36"></fui-text>
+          <view class="flex-around-start m-b-20">
+            <fui-text :text='baseInfo.changeType === 1 ? "[ECR]":"[ECN] "' type="black" size="36"></fui-text>
 
-          <fui-text v-else :text='"【 "+baseInfo.infoMap.ECN编号.infoValue+" 】"' type="black"
-                    size="36"></fui-text>
+            <fui-text :text='baseInfo.changeTitle' type="black" size="36"></fui-text>
 
+            <fui-text v-if="baseInfo.changeType === 1" :text='"【 "+baseInfo.infoMap.ECR编号.infoValue+" 】"' type="black"
+                      size="36"></fui-text>
+
+            <fui-text v-else :text='"【 "+baseInfo.infoMap.ECN编号.infoValue+" 】"' type="black"
+                      size="36"></fui-text>
+
+          </view>
+          <view style="width: 22%">
+            <el-button type="success" round @click="handle_print">打印</el-button>
+          </view>
         </view>
         <view class="flex-between-start m-b-10 w-full">
           <view style="width: 30%">
@@ -371,6 +378,9 @@
         <uni-forms-item label="处理意见" required name="comment">
           <uni-easyinput type="textarea" v-model="approveForm.comment" placeholder="请输入处理意见"/>
         </uni-forms-item>
+        <uni-forms-item v-if="approveForm.show_type !== 2" label="附件" name="fileUrl">
+          <base-upload v-model="approveForm.fileUrl" :limit="2"/>
+        </uni-forms-item>
       </uni-forms>
       <view class="flex-center-center">
         <button style="color:#ffffff;backgroundColor:#e87658;borderColor:#cb6455"
@@ -691,6 +701,9 @@ function handle_process(item) {
       approveForm.value.procInsId = allParams.value.procInsId;
       approveForm.value.instanceId = allParams.value.procInsId;
       approveForm.value.comment = '';
+      approveForm.value.fileUrl = '';
+      approveForm.value.taskName = item.taskName;
+      approveForm.value.variables = {};
       approveForm.value.show_type = 3;
       proxy.$refs.approvePopup.open();
 
@@ -699,6 +712,9 @@ function handle_process(item) {
       approveForm.value.procInsId = allParams.value.procInsId;
       approveForm.value.instanceId = allParams.value.procInsId;
       approveForm.value.comment = '';
+      approveForm.value.fileUrl = '';
+      approveForm.value.taskName = item.taskName;
+      approveForm.value.variables = {};
       approveForm.value.show_type = 3;
       proxy.$refs.approvePopup.open();
     } else if (item.taskName === '终极审核') {
@@ -706,6 +722,9 @@ function handle_process(item) {
       approveForm.value.procInsId = allParams.value.procInsId;
       approveForm.value.instanceId = allParams.value.procInsId;
       approveForm.value.comment = '';
+      approveForm.value.fileUrl = '';
+      approveForm.value.taskName = item.taskName;
+      approveForm.value.variables = {};
       approveForm.value.show_type = 1;
       proxy.$refs.approvePopup.open();
     } else if (item.taskName === '指定输出提交物') {
@@ -782,6 +801,10 @@ async function submitApproveForm() {
       title: '处理中'
     });
 
+    if(approveForm.value.show_type !== 2) {
+      approveForm.value.variables[approveForm.value.taskName] = approveForm.value.fileUrl;
+    }
+    console.log(approveForm.value)
     let res = await proxy.$api.change_manager.completeApprove(approveForm.value);
 
     uni.hideLoading();
@@ -966,6 +989,55 @@ async function handleClick(tab, event) {
     handle_load_records();
   }
 }
+
+
+function handle_print(){
+  proxy.$api.change_manager.print(allParams.value.changeId).then((baseRes)=>{
+
+    console.log(baseRes);
+    const iframe = document.createElement('iframe');
+    const f = document.body.appendChild(iframe);
+    iframe.id = 'myIframe';
+    iframe.setAttribute('style', 'position:absolute;width:0;height:0;top:-10px;left:-10px;');
+
+    const  w =  f.contentWindow || f.contentDocument;
+
+    iframe.onload = function () {
+
+      toPrint(w);
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+      }, 100);
+    }
+
+    setTimeout(() => {
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      doc.open();
+      doc.write(baseRes.data);
+      doc.close();
+    }, 100);
+
+  });
+}
+
+function toPrint(frameWindow){
+  try {
+    setTimeout(() => {
+      frameWindow.focus();
+      try {
+        if (!frameWindow.document.execCommand('print', false, null)) {
+          frameWindow.print();
+        }
+      } catch {
+        frameWindow.print();
+      }
+      frameWindow.close();
+    }, 10);
+  } catch (err) {
+    console.error('打印错误:', err);
+  }
+}
+
 
 function file_split(val) {
   return val.split(",");

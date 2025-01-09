@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
+import java.util.Base64;
 
 @Slf4j
 public class ImageUtils {
@@ -70,4 +71,10 @@ public class ImageUtils {
             IOUtils.closeQuietly(in);
         }
     }
+
+    public static String encodeBytesToBase64(String url) {
+        byte[] imageBytes = readFile(url);
+        return Base64.getEncoder().encodeToString(imageBytes);
+    }
+
 }

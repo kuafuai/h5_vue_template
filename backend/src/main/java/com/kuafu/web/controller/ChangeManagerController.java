@@ -184,6 +184,12 @@ public class ChangeManagerController {
         return entity != null ? ResultUtils.success(entity) : ResultUtils.error(ErrorCode.OPERATION_ERROR);
     }
 
+    @GetMapping("print/{id}")
+    public BaseResponse print(@PathVariable(value = "id") Integer id) {
+
+        return ResultUtils.success(changeManagerBusinessService.print(id));
+    }
+
 
     @GetMapping("get/showKey")
     public BaseResponse getShowKey() {

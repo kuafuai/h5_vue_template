@@ -137,5 +137,11 @@ export default {
             url: BASE_API + "/get/showKey",
             method: "get"
         });
+    },
+    print(id) {
+        return service({
+            url: BASE_API + "/print/" + id,
+            method: "get"
+        });
     }
 };

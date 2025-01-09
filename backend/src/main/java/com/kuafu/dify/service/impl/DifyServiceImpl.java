@@ -11,6 +11,7 @@ import com.kuafu.common.exception.BusinessException;
 import com.kuafu.dify.config.DifyConfig;
 import com.kuafu.dify.entity.DifyFileVO;
 import com.kuafu.dify.request.DifyRequest;
+import com.kuafu.dify.response.DifyResponse;
 import com.kuafu.dify.service.DifyService;
 import com.kuafu.llm.model.ChatResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -152,7 +153,7 @@ public class DifyServiceImpl implements DifyService {
      * @return
      */
     @Override
-    public ChatResponse callApiBlock(DifyRequest difyRequest, String conversationId, String userId) {
+    public DifyResponse callApiBlock(DifyRequest difyRequest, String conversationId, String userId) {
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
@@ -198,10 +199,10 @@ public class DifyServiceImpl implements DifyService {
             if (event.equals("message")) {
                 String conversation_id = jsonObject.get("conversation_id").getAsString();
                 String answer = jsonObject.get("answer").getAsString();
-                ChatResponse chatResponse = new ChatResponse();
-                chatResponse.setAnswer(answer);
-                chatResponse.setConversionId(conversation_id);
-                return chatResponse;
+                DifyResponse difyResponse = new DifyResponse();
+                difyResponse.setAnswer(answer);
+                difyResponse.setConversationId(conversation_id);
+                return difyResponse;
             } else {
                 System.out.println(jsonObject);
             }

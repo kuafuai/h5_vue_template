@@ -10,8 +10,11 @@ import com.kuafu.dify.entity.DownLoadFileRequest;
 import com.kuafu.dify.manager.DifyManager;
 import com.kuafu.dify.request.ChatbotRequest;
 import com.kuafu.dify.request.DifyRequest;
+import com.kuafu.dify.response.DifyResponse;
 import com.kuafu.dify.service.DifyService;
 import com.kuafu.llm.config.PromptConfig;
+import com.kuafu.llm.model.ChatResponse;
+import com.kuafu.web.service.IDifyConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +23,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
@@ -48,7 +54,7 @@ public class ChatbotController {
      * @return
      */
     @PostMapping(value = "")
-    public SseEmitter stream(@RequestBody ChatbotRequest chatbotRequest) {
+    public SseEmitter stream(@RequestBody ChatbotRequest chatbotRequest, HttpServletRequest request) {
 
         // 用于创建一个 SSE 连接对象
         SseEmitter emitter = new SseEmitter(3600000L);
@@ -76,11 +82,76 @@ public class ChatbotController {
 
         DifyRequest difyRequest = difyManager.getDifyRequest(chatbotRequest);
 
-        difyManager.callDifyStream(difyRequest, conversationId, userId, emitter);
+        if("false".equals(difyConfig.getIsTenant())) {
+            difyManager.callDifyStream(difyRequest, conversationId, userId, emitter);
+        }
+        if("true".equals(difyConfig.getIsTenant())) {
+            difyManager.callDifyTenantStream(difyRequest, conversationId, userId, emitter);
+        }
 
         // 在后台线程中模拟实时数据
         return emitter;
     }
+
+    /**
+     * 对话流
+     *
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/chat_block")
+    public ChatResponse block(@RequestBody ChatbotRequest chatbotRequest, HttpServletRequest request) {
+
+        String conversationId = chatbotRequest.getConversationId();
+        String query = chatbotRequest.getQuery();
+        String userId = chatbotRequest.getUserId();
+        if (StringUtils.isEmpty(conversationId)) {
+            query = PromptConfig.PROMPT + "\n" + query;
+        }
+
+        String docContent = null;
+
+        String url = chatbotRequest.getFileUrl();
+        if(StringUtils.isNotBlank(url)) {
+            String filePath = difyManager.getFilePathByUrl(url);
+            docContent = difyManager.getFileContentByFilePath(filePath);
+
+        }
+
+        query = docContent + "\n" + query;
+
+        log.info("content : {}", query);
+        // todo 从数据库中查询
+//        chatbotRequest.setPrompt("你是青青草原懒羊羊，也称懒大王");
+
+        DifyRequest difyRequest = difyManager.getDifyRequest(chatbotRequest);
+        DifyResponse difyResponse = new DifyResponse();
+
+        if("false".equals(difyConfig.getIsTenant())) {
+            difyResponse = difyManager.cattDifyBlock(difyRequest, conversationId, userId);
+        }
+        if("true".equals(difyConfig.getIsTenant())) {
+            difyResponse = difyManager.callDifyTenantBlock(difyRequest, conversationId, userId);
+        }
+        ChatResponse chatResponse = new ChatResponse();
+
+        // 处理聊天气泡
+        String answer = difyResponse.getAnswer();
+        chatResponse.setConversionId(difyResponse.getConversationId());
+
+        String[] split = answer.split("##########");
+        if(split.length > 1) {
+            chatResponse.setAnswer(difyResponse.getAnswer());
+
+//            chatResponse.setQuestions();
+        }
+
+
+
+        // 在后台线程中模拟实时数据
+        return chatResponse;
+    }
+
 
     @PostMapping(value = "download")
     public BaseResponse downLoadWord(@RequestBody DownLoadFileRequest downLoadFileRequest) throws IOException {

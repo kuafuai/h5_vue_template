@@ -38,7 +38,7 @@ CREATE TABLE `system_messages`
 );
 
 
-CREATE TABLE requirement
+CREATE TABLE dify_requirement
 (
     id              INT AUTO_INCREMENT PRIMARY KEY, -- 主键ID
     content         TEXT         NULL,              -- 内容

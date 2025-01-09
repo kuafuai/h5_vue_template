@@ -22,17 +22,18 @@ public class DifyConfig {
     @Resource
     private ConfigService configService;
 
-    private String apiKey = "app-hkccEmKICf7D8yv1gcDDgclP"; // 从配置文件中获取
+    private String apiKey;
 
-    private String baseUrl = "http://60.204.199.245:6680/v1";
+    private String baseUrl;
 
-    private String apiUrl = "http://60.204.199.245:6680/v1/chat-messages";  // 从配置文件中获取
+    private String apiUrl;
 
-    private String uploadUrl = "http://60.204.199.245:6680/v1/file/upload";  // 从配置文件中获取
+    private String uploadUrl;
 
-    private String prompt = "你是一名小助手";
+    private String prompt;
 
-    @PostConstruct
+    private String isTenant;
+
     public void initFromDatabase() {
         Map<String, String> configMap = configService.loadDifyConfig();
 
@@ -41,6 +42,7 @@ public class DifyConfig {
         this.apiUrl = configMap.getOrDefault("apiUrl", this.apiUrl);
         this.uploadUrl = configMap.getOrDefault("uploadUrl", this.uploadUrl);
         this.prompt = configMap.getOrDefault("prompt", this.prompt);
+        this.isTenant = configMap.getOrDefault("isTenant", this.isTenant);
 
         System.out.println("DifyConfig initialized: " + this);
     }

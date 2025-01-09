@@ -12,6 +12,11 @@ import java.util.List;
 @Data
 public class DifyResponse {
 
+    private String answer;
+
+    private Integer appId;
+
+    private String conversationId;
 
     @ApiModelProperty("输出项")
     private List<OutputItem> outputs;

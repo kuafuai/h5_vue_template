@@ -34,7 +34,7 @@ CREATE TABLE system_messages
     url       TEXT                               -- 适用于轮播图：跳转的URL
 );
 
-CREATE TABLE requirement
+CREATE TABLE dify_requirement
 (
     id              INTEGER PRIMARY KEY autoincrement, -- 主键ID
     content         TEXT,                     -- 内容

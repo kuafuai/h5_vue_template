@@ -24,4 +24,7 @@ public class ChatbotRequest implements Serializable {
 
     @ApiModelProperty("文件地址")
     private String fileUrl;
+
+    @ApiModelProperty("应用ID")
+    private Integer appId;
 }

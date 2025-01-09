@@ -16,8 +16,6 @@ public class DifyRequest implements Serializable {
 
     @JsonProperty("query")
     private String query;
-    @JsonProperty("response_mode")
-    private String responseMode;
 
     @JsonProperty("conversation_id")
     private String conversationId;

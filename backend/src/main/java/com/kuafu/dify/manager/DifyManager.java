@@ -12,7 +12,11 @@ import com.kuafu.dify.entity.DifyFileVO;
 import com.kuafu.dify.entity.OutputItem;
 import com.kuafu.dify.request.ChatbotRequest;
 import com.kuafu.dify.request.DifyRequest;
+import com.kuafu.dify.response.DifyResponse;
 import com.kuafu.dify.service.DifyService;
+import com.kuafu.dify.service.DifyTenantService;
+import com.kuafu.llm.model.ChatResponse;
+import com.kuafu.web.dify.ConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +44,12 @@ public class DifyManager {
     @Resource
     private DifyConfig difyConfig;
 
+    @Resource
+    private DifyTenantService difyTenantService;
+
+    @Resource
+    private ConfigService configService;
+
     /**
      * 构建 DifyRequest
      *
@@ -53,6 +63,14 @@ public class DifyManager {
         if (StringUtils.isEmpty(query)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "内容不能为空");
         }
+        // 刷新 prompt
+        Integer appId = chatbotRequest.getAppId();
+        if(appId == null) {
+            configService.loadDifyConfig();
+        }else {
+            configService.loadDifyConfig(appId);
+        }
+        difyConfig.initFromDatabase();
 
         String prompt = chatbotRequest.getPrompt();
         if (StringUtils.isNotEmpty(prompt)) {
@@ -62,9 +80,7 @@ public class DifyManager {
         }
 
         difyRequest.setQuery(query);
-
         difyRequest.setInputs(params);
-        difyRequest.setResponseMode(RESPONSE_MODE_BLOCKING);
         difyRequest.setUserId(chatbotRequest.getUserId());
 
 
@@ -97,6 +113,33 @@ public class DifyManager {
 
         difyService.callApiStream(difyRequest, conversationId, userId, sseEmitter);
     }
+
+
+    public DifyResponse cattDifyBlock(DifyRequest difyRequest, String conversationId, String userId) {
+
+        return difyService.callApiBlock(difyRequest, conversationId, userId);
+    }
+
+    /**
+     * 流式调用
+     *
+     * @param difyRequest
+     * @param conversationId
+     * @param userId
+     * @param sseEmitter
+     * @return
+     * @throws IOException
+     */
+    public void callDifyTenantStream(DifyRequest difyRequest, String conversationId, String userId, SseEmitter sseEmitter) {
+
+        difyTenantService.callApiStream(difyRequest, conversationId, userId, sseEmitter);
+    }
+
+    public DifyResponse callDifyTenantBlock(DifyRequest difyRequest, String conversationId, String userId) {
+
+       return difyTenantService.callApiBlock(difyRequest, conversationId, userId);
+    }
+
 
     /**
      * 返回结果转Output
@@ -205,8 +248,8 @@ public class DifyManager {
         String fileName = getFileNameByUrl(filePath);
         try {
 //            String pathFileName = FileUploadUtils.getPathFileName(uploadPath, fileName);
-             absPath= FileUploadUtils.getAbsoluteFile(uploadPath, fileName).getAbsolutePath();
-             file  = new File(absPath);
+            absPath = FileUploadUtils.getAbsoluteFile(uploadPath, fileName).getAbsolutePath();
+            file = new File(absPath);
         } catch (Exception e) {
             e.printStackTrace();
         }

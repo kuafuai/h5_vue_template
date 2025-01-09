@@ -9,13 +9,18 @@
     <scroll-view
         class="chat-history"
         scroll-y
-        :scroll-into-view="`msg-${messages.length - 1}`">
+        :scroll-into-view="`msg-${messages.length - 1}`"
+        scroll-with-animation>
       <div class="chat">
         <view v-for="(msg, index) in messages" :key="index" :id="`msg-${index}`" class="message-item">
           <!-- AI 聊天内容：头像在左，内容在右 -->
-          <view v-if="msg.role === 'ai'" class="message-ai">
+          <view v-if="msg.role === 'ai'" class="message-ai"
+                :key="index"
+                :id="`msg-${index}`">
             <view class="avatar ai-avatar"></view> <!-- AI 头像 -->
             <view class="message-content ai-content" v-html="msg.content"></view> <!-- AI 聊天内容 -->
+            <button class="export-btn" @click="exportToWord(msg.content, index)">导出 Word</button>
+
           </view>
 
           <!-- 用户聊天内容：头像在右，内容在左 -->
@@ -27,8 +32,16 @@
       </div>
     </scroll-view>
 
+    <slot name="default" :item="fileInput">
+<!--      <base-select data="data" api="dify_config.page" title="智能体名称"/>-->
+    </slot>
     <!-- 输入框区域 -->
     <view class="input-area">
+      <base-upload v-model="fileInput"/>
+
+
+    <view class="input-container">
+
       <!-- 输入框 -->
       <input
           v-model="inputText"
@@ -39,7 +52,7 @@
       />
 
       <!-- 文件选择器 -->
-      <uni-file-picker
+<!--      <uni-file-picker
           v-model="fileInput"
           fileMediatype="all"
           mode="grid"
@@ -47,11 +60,11 @@
           @progress="progress"
           @success="success"
           @fail="fail"
-      />
-      <!--      <base-upload/>-->
+      />-->
 
       <!-- 发送按钮 -->
       <button class="send-icon" @click="sendMessage"></button>
+    </view>
     </view>
 
   </view>
@@ -60,57 +73,84 @@
 <script setup>
 import {nextTick, ref} from 'vue'
 import {fetchEventSource} from "@microsoft/fetch-event-source";
+import BaseUpload from "@/components/base-upload.vue";
+import BaseSelect from "@/components/base-select.vue";
 
 const BASE_API = import.meta.env.VITE_APP_BASE_API;
+const {proxy} = getCurrentInstance()
 
 const ctrl = new AbortController()
 const conversationId = ref()
-let times = 0
 const token = uni.getStorageSync("h5_token");
 const messages = ref([])
 const inputText = ref('')
 const isSending = ref(false)
-const {proxy} = getCurrentInstance()
 const chatbotRequest = ref({
   query: '',
   conversationId: null,
-  userId: '1'
+  userId: '1',
+  fileUrl: ''
 })
+const data = {text: 'aaa', value: '1'}
 const fileInput = ref()
 // 用于实时接收数据的 SseEmitter
 let eventSource = null
+const emits = defineEmits(["send_message", "send_message"]);
 
-// 返回上一页
-const goBack = () => {
-  uni.navigateBack()
-}
 
-// 触发文件上传
-const triggerFileUpload = () => {
-  document.querySelector('input[type="file"]').click()
-}
+const downLoadFileRequest = ref({
+  content: '',
+  conversationId: conversationId,
+  difyId: null
+})
 
-// 处理文件上传
-const handleFileUpload = (event) => {
-  const file = event.target.files[0]
-  if (file) {
-    // 处理文件上传逻辑
-    console.log('上传的文件:', file)
+const exportToWord = async (text, index) => {
+
+  if(text != null) {
+    downLoadFileRequest.value.content = text
+    const res = await proxy.$api.chatbot.downLoadWord(JSON.stringify(downLoadFileRequest.value))
+
+    const byteCharacters = atob(res.data);
+    const byteNumbers = new Array(byteCharacters.length).fill(0).map((_, i) => byteCharacters.charCodeAt(i));
+    const byteArray = new Uint8Array(byteNumbers);
+
+    const blob = new Blob([byteArray], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url // 创建下载链接
+    link.download = 'chat_message.docx';    // 设置文件名
+    link.click()
+    // 释放内存
+    window.URL.revokeObjectURL(url);
   }
+
+  console.log("text and index", text, index)
 }
 
 // 发送消息
-const sendMessage = () => {
+const sendMessage = (text) => {
+
+  console.log(fileInput.value)
   if (!inputText.value.trim() || isSending.value) return
   isSending.value = true  // 设置为发送中状态
 
-  console.log(inputText.value)
-  let text_query=JSON.parse(JSON.stringify(inputText.value))+""
+  let text_query = JSON.parse(JSON.stringify(inputText.value))
   messages.value.push({role: 'user', content: text_query})
+
+  if(fileInput.value) {
+    chatbotRequest.value.fileUrl = fileInput.value
+  }
+
+  // 更新 message 内容并自动滚动到最新的消息
+  nextTick(() => {
+    const chatHistory = document.querySelector('.chat-history')
+    chatHistory.scrollTop = chatHistory.scrollHeight
+  })
 
   // 开始通过 SSE 调用后端接口
   startSseConnection(inputText.value)
   inputText.value = ''
+  fileInput.value = ''
 }
 
 // 使用 SSE 连接后端并处理数据
@@ -121,7 +161,7 @@ const startSseConnection = (query) => {
 
   chatbotRequest.value.query = inputText.value
   console.log("chatbotRequest", chatbotRequest.value)
-  if(conversationId.value) {
+  if (conversationId.value) {
     chatbotRequest.value.conversationId = conversationId.value
   }
 
@@ -143,9 +183,9 @@ const startSseConnection = (query) => {
         const newMessage = JSON.parse(event.data)
 
         console.log(newMessage)
-        if (newMessage.event === 'workflow_started'){
+        if (newMessage.event === 'workflow_started') {
           messages.value.push({role: 'ai', content: ""})
-          if(newMessage.conversation_id != null) {
+          if (newMessage.conversation_id != null) {
             conversationId.value = newMessage.conversation_id
           }
         }
@@ -153,12 +193,16 @@ const startSseConnection = (query) => {
 
           messages.value[messages.value.length - 1].content += newMessage.answer
         }
-        if(newMessage.event === "message_end") {
+        if (newMessage.event === "message_end") {
           isSending.value = false
         }
-        /*else {
-          ctrl?.abort()
-        }*/
+
+        // 更新 message 内容并自动滚动到最新的消息
+        nextTick(() => {
+          const chatHistory = document.querySelector('.chat-history')
+          chatHistory.scrollTop = chatHistory.scrollHeight
+        })
+
       } catch (e) {
         console.log("eeeee", e)
         ctrl?.abort()
@@ -174,19 +218,6 @@ const startSseConnection = (query) => {
     },
   })
 
-
-/*  eventSource.onmessage = (event) => {
-    const data = event.data
-    console.log('收到AI回复:', data)
-
-    // 模拟打字机效果
-    typeWriterEffect(data)
-  }*/
-/*
-  eventSource.onerror = (error) => {
-    console.error('SSE 错误:', error)
-    eventSource.close()  // 关闭连接
-  }*/
 }
 
 // 获取上传状态
@@ -195,23 +226,7 @@ function select(selectedFile) {
   // 构建请求 URL
   console.log("selectedFile = ", selectedFile)
   console.log("selectedFile.tempFiles[0] = ", selectedFile.tempFiles[0])
-  formData.append('file', selectedFile.tempFiles[0]);
   console.log('选择文件：', selectedFile)
-}
-
-// 获取上传进度
-function progress(e) {
-  console.log('上传进度：', e)
-}
-
-// 上传成功
-function success(e) {
-  console.log('上传成功')
-}
-
-// 上传失败
-function fail(e) {
-  console.log('上传失败：', e)
 }
 
 // 打字机效果
@@ -244,17 +259,22 @@ const typeWriterEffect = (content) => {
 .chat-page {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   background-color: #f7f8fa;
+  overflow: hidden; /* 防止溢出 */
 }
 
 .navbar {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: 54px;
   display: flex;
   align-items: center;
-  height: 54px;
   background-color: #4072ee;
   color: white;
   padding: 0 10px;
+  z-index: 10; /* 确保位于其他内容之上 */
 }
 
 .title {
@@ -268,6 +288,8 @@ const typeWriterEffect = (content) => {
   flex: 1;
   padding: 10px;
   overflow-y: auto;
+  margin-top: 54px; /* 避开导航栏 */
+  margin-bottom: 60px; /* 避开输入框 */
 }
 
 .message-item {
@@ -342,23 +364,42 @@ const typeWriterEffect = (content) => {
 }
 
 
+/* 底部聊天框 */
 .input-area {
   display: flex;
   align-items: center;
   padding: 10px;
   background-color: #ffffff;
   border-top: 1px solid #e5e5e5;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  z-index: 10; /* 确保位于其他内容之上 */
+}
+
+/* 输入框容器 */
+.input-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
 }
 
 .input-box {
   flex: 1;
   height: 40px;
-  padding: 5px 15px;
-  border: 1px solid #e5e5e5;
+
+/*  padding: 5px 15px;
+  border: 1px solid #e5e5e5;*/
   border-radius: 20px;
   background-color: #f9f9f9;
   font-size: 14px;
   outline: none;
+
+  width: 90%;
+  padding: 5px 15px; /* 为按钮留出空间 */
+  border: 1px solid #ccc;
 }
 
 .icons {
@@ -375,11 +416,18 @@ const typeWriterEffect = (content) => {
   border: none;
   border-radius: 50%;
   background: #3058ba url('../static/send.png') no-repeat center;
-  width: 40px;
-  height: 40px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
+
+  position: absolute;
+  right: 10px; /* 按钮距离输入框右侧的距离 */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  color: #fff;
+  font-size: 16px;
 }
 
 .send-icon:active {
@@ -389,15 +437,6 @@ const typeWriterEffect = (content) => {
 
 
 /*
-.send-icon {
-
-  margin-left: 10px;
-  background: url('../static/send.png') no-repeat center;
-  background-size: contain;
-}
-
-*/
-
 .chat {
   flex: 1;
   max-height: 580px;
@@ -439,6 +478,27 @@ const typeWriterEffect = (content) => {
       background-color: #dfdfdf;
     }
   }
+}
+*/
+
+
+/* word 导出按钮*/
+.export-btn {
+  height: 30px;
+  width: 100%;
+  margin-top: 10px; /* 留出空间 */
+  padding: 5px 10px;
+  background-color: #4072ee;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  align-self: flex-start; /* 对齐到左侧 */
+}
+
+.export-btn:hover {
+  background-color: #3058ba;
 }
 
 </style>

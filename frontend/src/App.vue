@@ -16,6 +16,6 @@ html, body {
   touch-action: manipulation; /* 禁用双击放大 */
 }
 page{
-  height: 100vh !important;
+  height: 100% !important;
 }
 </style>

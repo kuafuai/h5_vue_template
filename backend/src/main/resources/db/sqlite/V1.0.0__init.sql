@@ -3,7 +3,7 @@ create table if not exists static_resources
 (
     resource_id              INTEGER
         primary key autoincrement,
-    resource_name            VARCHAR(255) ,
+    resource_name            VARCHAR(255),
     resource_path            VARCHAR(500) not null,
     related_table_name       VARCHAR(255),
     related_table_key        INTEGER,
@@ -15,7 +15,7 @@ create table if not exists category
 (
     id                     integer primary key autoincrement, -- id
     name                   varchar(255) not null,             -- 列别名称
-    parent_id              integer     ,             -- 父级类别id
+    parent_id              integer,                           -- 父级类别id
     create_time            date,
     update_time            date,
     relevance_table        varchar(255),                      -- 表分类
@@ -27,9 +27,18 @@ create table if not exists category
 CREATE TABLE system_messages
 (
     id        INTEGER PRIMARY KEY autoincrement, -- 主键ID，SQLite 使用 INTEGER PRIMARY KEY AUTOINCREMENT 实现自增
-    type      TEXT NOT NULL,                      -- 类型：notification(通知)、carousel(轮播图)、announcement(公告栏)
-    title     TEXT,                               -- 标题，NULL 默认为可为空
-    content   TEXT,                               -- 内容，适用于通知和公告栏
-    image_url TEXT,                               -- 适用于轮播图：图片URL
-    url       TEXT                                -- 适用于轮播图：跳转的URL
+    type      TEXT NOT NULL,                     -- 类型：notification(通知)、carousel(轮播图)、announcement(公告栏)
+    title     TEXT,                              -- 标题，NULL 默认为可为空
+    content   TEXT,                              -- 内容，适用于通知和公告栏
+    image_url TEXT,                              -- 适用于轮播图：图片URL
+    url       TEXT                               -- 适用于轮播图：跳转的URL
+);
+
+CREATE TABLE requirement
+(
+    id              INTEGER PRIMARY KEY autoincrement, -- 主键ID
+    content         TEXT,                     -- 内容
+    conversation_id INTEGER,                           -- 对话ID
+    dify_id         INTEGER,                           -- 应用ID
+    type            VARCHAR(128)                       -- 类型 TEXT FILE
 );

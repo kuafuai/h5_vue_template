@@ -33,10 +33,12 @@
 
           </view>
           <view style="width: 22%">
-            <el-button type="success" round @click="handle_print">打印</el-button>
+            <el-button type="success" round @click="handle_print">导出PDF</el-button>
 
-            <el-button round @click="handle_follow_person"><uni-icons type="star" size="15"></uni-icons>
-              关注人</el-button>
+            <el-button round @click="handle_follow_person">
+              <uni-icons type="star" size="15"></uni-icons>
+              关注人
+            </el-button>
           </view>
         </view>
         <view class="flex-between-start m-b-10 w-full">
@@ -150,7 +152,8 @@
                   :color="setColor(item.finishTime)"
               >
                 <view class="w-full flex-start-start">
-                  <p v-if='item.taskName === "审批变更" || item.taskName === "发起人审核" || item.taskName=== "终极审核" ' style="font-weight: 700">审核</p>
+                  <p v-if='item.taskName === "审批变更" || item.taskName === "发起人审核" || item.taskName=== "终极审核" '
+                     style="font-weight: 700">审核</p>
                   <p v-else style="font-weight: 700">{{ item.taskName }}</p>
                   <view class="m-l-20">
                     <uni-tag :class="setFlash(item)" :text='item.finishTime?"完成":"处理中"' size="small"
@@ -208,7 +211,8 @@
                 </view>
                 <view v-else>
                   <view class="w-full m-y-10 flex-start-start" v-for="(sub,subIndex) in item.subTask" :key="subIndex">
-                    <p v-if='sub.taskName === "审批变更" || sub.taskName === "发起人审核" || sub.taskName=== "终极审核" ' style="font-weight: 700">审核</p>
+                    <p v-if='sub.taskName === "审批变更" || sub.taskName === "发起人审核" || sub.taskName=== "终极审核" '
+                       style="font-weight: 700">审核</p>
                     <p v-else style="font-weight: 700">{{ sub.taskName }}</p>
                     <view class="m-l-20">
                       <uni-tag :class="setFlash(sub)" :text='sub.finishTime?"完成":"处理中"' size="small"
@@ -818,7 +822,7 @@ async function submitApproveForm() {
       title: '处理中'
     });
 
-    if(approveForm.value.show_type !== 2) {
+    if (approveForm.value.show_type !== 2) {
       approveForm.value.variables[approveForm.value.taskName] = approveForm.value.fileUrl;
     }
     console.log(approveForm.value)
@@ -1008,36 +1012,39 @@ async function handleClick(tab, event) {
 }
 
 
-function handle_print(){
-  proxy.$api.change_manager.print(allParams.value.changeId).then((baseRes)=>{
+function handle_print() {
+  proxy.$download.downloadGet("/changeManager/print/" + allParams.value.changeId, {}, `变更_${new Date().getTime()}.pdf`)
 
-    console.log(baseRes);
-    const iframe = document.createElement('iframe');
-    const f = document.body.appendChild(iframe);
-    iframe.id = 'myIframe';
-    iframe.setAttribute('style', 'position:absolute;width:0;height:0;top:-10px;left:-10px;');
 
-    const  w =  f.contentWindow || f.contentDocument;
-
-    iframe.onload = function () {
-
-      toPrint(w);
-      setTimeout(() => {
-        document.body.removeChild(iframe);
-      }, 100);
-    }
-
-    setTimeout(() => {
-      const doc = iframe.contentDocument || iframe.contentWindow.document;
-      doc.open();
-      doc.write(baseRes.data);
-      doc.close();
-    }, 100);
-
-  });
+  // proxy.$api.change_manager.print(allParams.value.changeId).then((baseRes)=>{
+  //
+  //   console.log(baseRes);
+  //   const iframe = document.createElement('iframe');
+  //   const f = document.body.appendChild(iframe);
+  //   iframe.id = 'myIframe';
+  //   iframe.setAttribute('style', 'position:absolute;width:0;height:0;top:-10px;left:-10px;');
+  //
+  //   const  w =  f.contentWindow || f.contentDocument;
+  //
+  //   iframe.onload = function () {
+  //
+  //     toPrint(w);
+  //     setTimeout(() => {
+  //       document.body.removeChild(iframe);
+  //     }, 100);
+  //   }
+  //
+  //   setTimeout(() => {
+  //     const doc = iframe.contentDocument || iframe.contentWindow.document;
+  //     doc.open();
+  //     doc.write(baseRes.data);
+  //     doc.close();
+  //   }, 100);
+  //
+  // });
 }
 
-function toPrint(frameWindow){
+function toPrint(frameWindow) {
   try {
     setTimeout(() => {
       frameWindow.focus();
@@ -1057,14 +1064,14 @@ function toPrint(frameWindow){
 
 const followPerson = ref();
 
-function handle_follow_person(){
+function handle_follow_person() {
   followPerson.value = null;
   proxy.$refs.submitFollowPersonPopup.open();
 }
 
-async function submitFollowPersonForm(){
+async function submitFollowPersonForm() {
   proxy.$refs.submitFollowPersonPopup.close();
-  if(followPerson.value){
+  if (followPerson.value) {
     let data = {
       "personId": followPerson.value,
       "changeId": allParams.value.changeId

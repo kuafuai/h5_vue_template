@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 
@@ -109,6 +111,30 @@ public class FileUploadUtils {
 //                FilenameUtils.getBaseName(file.getOriginalFilename()), Seq.getId(Seq.uploadSeqType), getExtension(file));
         return StringUtils.format("{}/{}_{}.{}", DateUtils.datePath(),
                 FilenameUtils.getBaseName(UUID.randomUUID().toString().replace("-", "")), Seq.getId(Seq.uploadSeqType), getExtension(file));
+    }
+
+    public static String writeHtml(String html) {
+        String baseDir = AppConfig.getUploadPath();
+        String fileName = StringUtils.format("{}/{}_{}.{}",
+                DateUtils.datePath(),
+                FilenameUtils.getBaseName(UUID.randomUUID().toString().replace("-", "")),
+                Seq.getId(Seq.uploadSeqType), "html");
+
+        String pdfFileName = StringUtils.format("{}/{}_{}.{}",
+                DateUtils.datePath(),
+                FilenameUtils.getBaseName(UUID.randomUUID().toString().replace("-", "")),
+                Seq.getId(Seq.uploadSeqType), "pdf");
+
+        try {
+            File absFile = getAbsoluteFile(baseDir, fileName);
+            Files.write(absFile.toPath(), html.getBytes(StandardCharsets.UTF_8));
+
+            return baseDir + File.separator + fileName + "  " + baseDir + File.separator + pdfFileName;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static File getAbsoluteFile(String uploadDir, String fileName) throws IOException {

@@ -46,6 +46,22 @@ export default {
             this.saveAs(blob, filename);
         });
     },
+    downloadGet(url, params, filename) {
+        let realUrl = baseURL + url;
+        axios({
+            method: 'get',
+            url: realUrl,
+            params: params,
+            responseType: 'blob',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("h5_token"),
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }).then((res) => {
+            const blob = new Blob([res.data])
+            this.saveAs(blob, filename);
+        });
+    },
     saveAs(text, name, opts) {
         saveAs(text, name, opts);
     }

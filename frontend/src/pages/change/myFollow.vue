@@ -10,7 +10,7 @@
             变更管理平台
           </uni-breadcrumb-item>
           <uni-breadcrumb-item>
-            我参与的变更
+            我关注的变更
           </uni-breadcrumb-item>
         </uni-breadcrumb>
       </view>

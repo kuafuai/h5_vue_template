@@ -189,9 +189,9 @@ public class ChangeManagerController {
     }
 
     @GetMapping("print/{id}")
-    public BaseResponse print(@PathVariable(value = "id") Integer id) {
+    public void print(@PathVariable(value = "id") Integer id, HttpServletResponse response) {
 
-        return ResultUtils.success(changeManagerBusinessService.print(id));
+        changeManagerBusinessService.print(id, response);
     }
 
 

@@ -3,8 +3,11 @@ package com.kuafu.web.flowable;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.kuafu.common.file.FileUploadUtils;
+import com.kuafu.common.file.FileUtils;
 import com.kuafu.common.file.ImageUtils;
 import com.kuafu.common.login.SecurityUtils;
+import com.kuafu.common.shell.ShellExecutor;
 import com.kuafu.common.util.DateUtils;
 import com.kuafu.common.util.StringUtils;
 import com.kuafu.flowable.constant.FLowStop;
@@ -24,9 +27,13 @@ import com.kuafu.web.service.IUserInfoService;
 import com.kuafu.web.vo.ChangeManagerVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -423,7 +430,7 @@ public class ChangeManagerBusinessService {
         }
     }
 
-    public String print(Integer changeId) {
+    public void print(Integer changeId, HttpServletResponse response) {
         //查询出基本信息
         ChangeManager entity = this.changeManagerService.getById(changeId);
 
@@ -435,7 +442,21 @@ public class ChangeManagerBusinessService {
         List<FlowTaskDto> parentList = flowTaskService.getFlowRecordByInsId(entity.getFlowableInstanceId());
 
 
-        return String.format(getHtmlFormatter(), getBaseHtml(entity), getFormContent(map), getApprove(parentList));
+        String html = String.format(getHtmlFormatter(), getBaseHtml(entity), getFormContent(map), getApprove(parentList));
+        String filePathCommand = FileUploadUtils.writeHtml(html);
+
+        ShellExecutor shellExecutor = ShellExecutor.execute("wkhtmltopdf " + filePathCommand, ".");
+        shellExecutor.start();
+
+        String[] filePaths = StringUtils.split(filePathCommand, " ");
+        try {
+            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            response.setContentLengthLong(FileUtils.sizeOf(filePaths[1]));
+            FileUtils.setAttachmentResponseHeader(response, entity.getChangeTitle() + ".pdf");
+            FileUtils.writeBytes(filePaths[1], response.getOutputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String getBaseHtml(ChangeManager entity) {

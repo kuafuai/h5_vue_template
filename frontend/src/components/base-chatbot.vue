@@ -304,8 +304,7 @@ const startSseConnection = (query) => {
           }
         }
         if (newMessage.event === "message") {
-          messages.value[messages.value.length - 1].content +=
-            newMessage.answer;
+          messages.value[messages.value.length - 1].content += newMessage.answer;
         }
         if (newMessage.event === "message_end") {
           isSending.value = false;

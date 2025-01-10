@@ -143,5 +143,19 @@ export default {
             url: BASE_API + "/print/" + id,
             method: "get"
         });
+    },
+    followPerson(data){
+        return service({
+            url: BASE_API + "/followPerson",
+            method: "get",
+            params: data
+        });
+    },
+    myFollow(query) {
+        return service({
+            url: BASE_API + "/myFollow",
+            method: "post",
+            data: query
+        });
     }
 };

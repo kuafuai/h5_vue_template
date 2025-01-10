@@ -83,6 +83,13 @@
       }
     },
     {
+      "path": "pages/change/myFollow",
+      "style": {
+        "leftWindow": true,
+        "navigationBarTitleText": "我的关注"
+      }
+    },
+    {
       "path": "pages/change/change",
       "style": {
         "leftWindow": true,

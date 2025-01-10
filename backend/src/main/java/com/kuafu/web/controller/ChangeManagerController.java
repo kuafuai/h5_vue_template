@@ -51,6 +51,10 @@ public class ChangeManagerController {
 
     private final IUserInfoService userInfoService;
 
+    private final IChangeFollowService followService;
+
+    private final IChangeFollowAllService followAllService;
+
     @PostMapping("page")
     @ApiOperation("分页")
     public BaseResponse page(@RequestBody ChangeManagerPageVO pageVO) {
@@ -469,4 +473,53 @@ public class ChangeManagerController {
 
         return ResultUtils.success(value);
     }
+
+    @GetMapping("followPerson")
+    public BaseResponse followPerson(@RequestParam(name = "changeId") Integer changeId,
+                                     @RequestParam(name = "personId") Integer personId) {
+
+        LambdaQueryWrapper<ChangeFollow> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ChangeFollow::getFollowChangeId, changeId);
+        queryWrapper.eq(ChangeFollow::getFollowPersonId, personId);
+
+        long count = followService.count(queryWrapper);
+        if (count > 0) {
+            return ResultUtils.success("已经添加过，请勿重复添加");
+        } else {
+            ChangeFollow changeFollow = new ChangeFollow();
+            changeFollow.setFollowPersonId(personId);
+            changeFollow.setFollowChangeId(changeId);
+
+            followService.save(changeFollow);
+
+            return ResultUtils.success("关注成功");
+        }
+    }
+
+    @PostMapping("myFollow")
+    @ApiOperation("分页")
+    public BaseResponse myFollow(@RequestBody ChangeManagerPageVO pageVO) {
+        IPage<ChangeFollowAll> page = new Page<>(pageVO.getCurrent(), pageVO.getPageSize());
+
+        LambdaQueryWrapper<ChangeFollowAll> queryWrapper = new LambdaQueryWrapper<>();
+
+        if (StringUtils.isNotEmpty(pageVO.getChangeTitle())) {
+            queryWrapper.like(ChangeFollowAll::getChangeTitle, pageVO.getChangeTitle());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeCustomer())) {
+            queryWrapper.like(ChangeFollowAll::getChangeCustomer, pageVO.getChangeCustomer());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeProjectName())) {
+            queryWrapper.like(ChangeFollowAll::getChangeProjectName, pageVO.getChangeProjectName());
+        }
+
+
+        queryWrapper.eq(ChangeFollowAll::getFollowPersonId, SecurityUtils.getUserId());
+
+        queryWrapper.orderByDesc(ChangeFollowAll::getChangeId);
+
+        return ResultUtils.success(followAllService.page(page, queryWrapper));
+    }
+
+
 }

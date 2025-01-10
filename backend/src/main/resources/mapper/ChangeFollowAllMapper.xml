@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuafu.web.mapper.ChangeFollowAllMapper">
+
+
+    <select id="selectList" resultType="com.kuafu.web.entity.ChangeFollowAll">
+        select cm.*, cf.follow_person_id
+        from change_follow cf
+                 left join change_manager cm on cf.follow_change_id = cm.change_id
+
+            ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectPage" resultType="com.kuafu.web.entity.ChangeFollowAll">
+        select cm.*, cf.follow_person_id
+        from change_follow cf
+                 left join change_manager cm on cf.follow_change_id = cm.change_id
+
+            ${ew.customSqlSegment}
+    </select>
+
+</mapper>

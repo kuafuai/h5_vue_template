@@ -41,6 +41,16 @@ export const dynamicRoutes = [
         }
     },
     {
+        path: '/pages/change/myFollow',
+        meta: {
+            title: '关注的变更',
+            shownot: false,
+            adminShow: true,
+            changeShow: true,
+            icon:'icon-biangeng'
+        }
+    },
+    {
         path: '/pages/submission/index',
         meta: {
             title: '提交物管理',

@@ -34,6 +34,9 @@
           </view>
           <view style="width: 22%">
             <el-button type="success" round @click="handle_print">打印</el-button>
+
+            <el-button round @click="handle_follow_person"><uni-icons type="star" size="15"></uni-icons>
+              关注人</el-button>
           </view>
         </view>
         <view class="flex-between-start m-b-10 w-full">
@@ -501,6 +504,20 @@
     </el-form-item>
     <view class="flex-center-center m-b-20">
       <button type="primary" size="mini" @click="submitSubmitPersonForm">确 定</button>
+    </view>
+  </uni-popup>
+
+  <uni-popup ref="submitFollowPersonPopup" borderRadius="10px 10px 10px 10px" background-color="#fff">
+    <el-form-item label="选择用户" class="m-x-20 m-t-30">
+      <el-select v-model="followPerson" filterable remote :remote-method="load_site"
+                 :loading="site_loading"
+                 placeholder="通过用户名称模糊查询">
+        <el-option v-for="item in site_options" :key="item.value" :label="item.label" :value="item.value">
+        </el-option>
+      </el-select>
+    </el-form-item>
+    <view class="flex-center-center m-b-20">
+      <button type="primary" size="mini" @click="submitFollowPersonForm">确 定</button>
     </view>
   </uni-popup>
 
@@ -1038,6 +1055,26 @@ function toPrint(frameWindow){
   }
 }
 
+const followPerson = ref();
+
+function handle_follow_person(){
+  followPerson.value = null;
+  proxy.$refs.submitFollowPersonPopup.open();
+}
+
+async function submitFollowPersonForm(){
+  proxy.$refs.submitFollowPersonPopup.close();
+  if(followPerson.value){
+    let data = {
+      "personId": followPerson.value,
+      "changeId": allParams.value.changeId
+    }
+    let res = await proxy.$api.change_manager.followPerson(data);
+    uni.showModal({
+      content: res.data
+    });
+  }
+}
 
 function file_split(val) {
   return val.split(",");

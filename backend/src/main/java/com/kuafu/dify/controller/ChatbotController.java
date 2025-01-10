@@ -14,7 +14,6 @@ import com.kuafu.dify.response.DifyResponse;
 import com.kuafu.dify.service.DifyService;
 import com.kuafu.llm.config.PromptConfig;
 import com.kuafu.llm.model.ChatResponse;
-import com.kuafu.web.service.IDifyConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
@@ -23,9 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;

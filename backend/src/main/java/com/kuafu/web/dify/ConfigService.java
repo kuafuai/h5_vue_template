@@ -1,5 +1,6 @@
 package com.kuafu.web.dify;
 
+import com.google.common.collect.Maps;
 import com.kuafu.common.domin.ErrorCode;
 import com.kuafu.common.exception.BusinessException;
 import com.kuafu.dify.constant.DifyConstant;
@@ -12,4 +13,7 @@ import java.util.Map;
 @Service
 public class ConfigService {
 
+    public Map<String, String> loadDifyConfig(Integer... appID){
+        return Maps.newHashMap();
+    }
 }

@@ -13,7 +13,7 @@ import java.util.Map;
 @Service
 public class ConfigService {
 
-    public Map<String, String> loadDifyConfig(Integer... appID){
+    public Map<String, String> loadDifyConfig(Integer... appId){
         return Maps.newHashMap();
     }
 }

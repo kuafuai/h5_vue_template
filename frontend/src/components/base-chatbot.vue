@@ -1,122 +1,142 @@
 <template>
   <view class="chat-page">
     <scroll-view
-      class="chat-history"
-      scroll-y
-      :scroll-into-view="lastMessageId"
-      scroll-with-animation
+        ref="scrollView"
+        :scroll-into-view="lastMessageId"
+        class="chat-history"
+        scroll-y
+        :scroll-with-animation="true"
     >
-      <div class="chat">
-        <view
+      <view
           v-for="(msg, index) in messages"
           :key="index"
           :id="`msg-${index}`"
           class="message-item"
-        >
-          <!-- AI 聊天内容：头像在左，内容在右 -->
+      >
+        <!-- AI 聊天内容：头像在左，内容在右 -->
+        <view v-if="msg.role === 'ai'" class="message-ai">
           <view
-            v-if="msg.role === 'ai'"
-            class="message-ai"
-            :key="index"
-            :id="`msg-${index}`"
-          >
-            <view
               class="message-content ai-content"
               v-html="msg.content"
-            ></view>
-            <!-- AI 聊天内容 -->
-          </view>
-
-          <!-- 用户聊天内容：头像在右，内容在左 -->
-          <view v-else class="message-user">
-            <view class="message-content user-content">{{ msg.content }}</view>
-            <!-- 用户聊天内容 -->
-          </view>
+          ></view>
+          <!-- AI 聊天内容 -->
         </view>
-      </div>
+
+        <!-- 用户聊天内容：头像在右，内容在左 -->
+        <view v-else class="message-user">
+<!--          <view class="message-file">
+            <view class="message-file-icon">
+              <image src="../static/wenjianleixing.png" alt=""/>
+            </view>
+            &lt;!&ndash;            <view class="message-file-name">{{ storedFileName }}</view>&ndash;&gt;
+          </view>-->
+
+          <view class="message-content user-content">{{ msg.content }}</view>
+          <!-- 用户聊天内容 -->
+        </view>
+      </view>
+
     </scroll-view>
-    <view :class="showOptions?'fixed-bottom-container on':'fixed-bottom-container'">
+    <!-- 一键到底部按钮 -->
+    <view class="scroll-to-bottom-btn" @click="scrollToBottom">
+      <image src="../static/xiangxia.png" alt="到达底部"/>
+    </view>
+    <view
+        :class="
+        showOptions ? 'fixed-bottom-container on' : 'fixed-bottom-container'
+      "
+        :style="uploadedFile ? { height: '32vh' } : {}"
+    >
       <!-- 输入框区域 -->
       <view class="input-area" :style="{ bottom: inputAreaBottom + 'px' }">
         <!-- <base-upload v-model="fileInput"/> -->
 
+        <!-- 文件显示区域 -->
+        <view v-if="uploadedFile" class="file-display">
+          <image class="file-icon" src="../static/wenjianleixing.png"></image>
+          <text class="file-name">{{ uploadedFile.name }}</text>
+          <view class="delete-icon" @click="deleteFile">
+            <image src="../static/shanchu.png" alt=""/>
+          </view>
+        </view>
         <view class="input-container">
           <!-- 输入框 -->
           <input
-            v-model="inputText"
-            :placeholder="inputPlaceholder"
-            @focus="setPlaceholder"
-            @confirm="sendMessage"
-            :disabled="isSending"
-            @blur="onInputBlur"
+              v-model="inputText"
+              :placeholder="inputPlaceholder"
+              @focus="setPlaceholder"
+              @confirm="sendMessage"
+              :disabled="isSending"
+              @blur="onInputBlur"
           />
 
           <!-- 发送按钮 -->
-          <!-- <view class="send-icon" @click="sendMessage"> -->
-          <view
-            class="send-icon"
-            @click="currentClickHandler"
-            :class="isFocused ? 'send-iconFocused' : 'send-icon'"
+          <view class="send-icon" @click="sendMessage">
+            <view
+                class="send-icon"
+                @click="currentClickHandler"
+                :class="[
+    isFocused ? 'send-iconFocused' : 'send-icon',
+    uploadedFile ? 'send-iconFocused' : 'send-icon' 
+  ]"
+            >
+              <image
+                  :src="finalIconSrc"
+                  class="icon-image"
+                  :class="{
+  'icon-image': !isFocused && !uploadedFile /* 默认样式 */,
+  'icon-imageFocused': isFocused || uploadedFile /* 聚焦时样式或有文件时样式 */,
+  rotate: !isFocused && !uploadedFile && showOptions /* 点击时旋转，但仅在没有文件上传的情况下 */,
+}"
+              />
+            </view>
+          </view>
+        </view>
+        <!-- 功能区域 -->
+        <view v-if="showOptions" class="options-container">
+          <view class="option">
+            <view class="option-icon">
+              <image src="../static/wenjian.png" mode="widthFix"/>
+            </view>
+            <view class="option-text">文件</view>
+          </view>
 
+          <view class="option" @click="toggleModal">
+            <view class="option-icons">
+              <image
+                  src="../static/qiehuanzhinengti.png" mode="widthFix"
+              />
+            </view>
+            <view class="option-text">切换智能体</view>
+          </view>
+        </view>
+      </view>
+      <!-- 弹窗遮罩层 -->
+      <view v-if="showModal" class="modal-mask" @click="closeModal"></view>
+      <view v-if="showModal" class="modal-content">
+        <scroll-view scroll-y class="modal-body">
+          <view
+              v-for="(item, index) in aiOptions"
+              :key="index"
+              class="modal-item"
+              :class="{ selected: selectedIndex === index }"
+              @click="selectOption(index)"
           >
-            <img
-              :src="iconSrc"
-              class="icon-image"
-              :class="{
-                'icon-image': !isFocused /* 默认样式 */,
-                'icon-imageFocused': isFocused /* 获取焦点时样式 */,
-                rotate:
-                  !isFocused && showOptions /* 点击时旋转，但仅在默认状态下 */,
-              }"
-            />
+            {{ item }}
           </view>
-        </view>
+        </scroll-view>
       </view>
-      <!-- 功能区域 -->
-      <view v-if="showOptions" class="options-container">
-        <view class="option">
-          <view class="option-icon">
-            <img src="../static/wenjian.png" class="icon-image" />
-          </view>
-          <view class="option-text">文件</view>
-        </view>
-        <view class="option" @click="toggleModal">
-          <view class="option-icon">
-            <img
-              src="../static/qiehuanzhinengti.png"
-              style="width: 25px; height: 25px"
-              class="icon-image"
-            />
-          </view>
-          <view class="option-text">切换智能体</view>
-        </view>
-      </view>
-    </view>
-    <!-- 弹窗遮罩层 -->
-    <view v-if="showModal" class="modal-mask" @click="closeModal"></view>
-    <view v-if="showModal" class="modal-content">
-      <scroll-view scroll-y class="modal-body">
-        <view
-          v-for="(item, index) in aiOptions"
-          :key="index"
-          class="modal-item"
-          :class="{ selected: selectedIndex === index }"
-          @click="selectOption(index)"
-        >
-          {{ item }}
-        </view>
-      </scroll-view>
     </view>
   </view>
 </template>
 
 <script setup>
-import { nextTick, ref } from "vue";
-import { fetchEventSource } from "@microsoft/fetch-event-source";
-import BaseUpload from "@/components/base-upload.vue";
-import BaseSelect from "@/components/base-select.vue";
+import {nextTick, ref, watch} from "vue";
+import {fetchEventSource} from "@microsoft/fetch-event-source";
+// import BaseUpload from "@/components/base-upload.vue";
+// import BaseSelect from "@/components/base-select.vue";
 const BASE_API = import.meta.env.VITE_APP_BASE_API;
-const { proxy } = getCurrentInstance();
+const {proxy} = getCurrentInstance();
 const ctrl = new AbortController();
 const conversationId = ref();
 const token = uni.getStorageSync("h5_token");
@@ -132,6 +152,7 @@ const chatbotRequest = ref({
   userId: "1",
   fileUrl: "",
 });
+const fileList = ref()
 const aiOptions = ref([
   "码上飞",
   "泰罗智能体",
@@ -150,6 +171,7 @@ const closeModal = () => {
   showModal.value = false;
 };
 
+
 // 选择选项
 const selectOption = (index) => {
   selectedIndex.value = index;
@@ -157,7 +179,7 @@ const selectOption = (index) => {
   closeModal(); // 选择后关闭弹窗
 };
 const selectedIndex = ref(0);
-const data = { text: "aaa", value: "1" };
+const data = {text: "aaa", value: "1"};
 const inputAreaBottom = ref(12);
 // 切换功能区域的显示与隐藏
 const toggleOptions = () => {
@@ -173,6 +195,18 @@ const defaultIcon = "../static/tianjia.png"; // 默认图片
 const focusedIcon = "../static/send.png"; // 获取焦点时的图片
 const iconSrc = ref(defaultIcon);
 const isFocused = ref(false);
+const lastMessageId = ref("");
+const storedFileName = ref("");
+const finalIconSrc = computed(() => {
+  // 优先级：uploadedFile > isFocused > 默认 iconSrc
+  if (uploadedFile.value) {
+    return focusedIcon; // 文件上传成功时，显示发送图标
+  } else if (isFocused.value) {
+    return focusedIcon.value; // 输入框聚焦时，使用 iconSrc 逻辑
+  } else {
+    return defaultIcon; // 默认图片
+  }
+});
 const setPlaceholder = () => {
   inputPlaceholder.value = "有什么问题尽管问";
   iconSrc.value = focusedIcon;
@@ -186,16 +220,70 @@ const onInputBlur = () => {
   }
 };
 const currentClickHandler = computed(() => {
-  return isFocused.value || isTyping.value ? sendMessage : toggleOptions;
+  return uploadedFile.value || isFocused.value || isTyping.value
+      ? sendMessage
+      : toggleOptions;
 });
-onMounted(() => {
-  messages.value.push({
-    role: "ai",
-    content:
-      "halo，我是你的新朋友小飞飞，初次见面很开心，我拥有自动生成端到端应用程序的能力，小白三分钟也能开发出一款属于自己的APP哦，还在等什么，快来体验！",
+
+const fileInput = ref("");
+const uploadedFile = ref(null);
+// 选择文件
+const chooseFile = () => {
+  uni.chooseImage({
+    count: 1, // 限制只能选择一个文件
+    success: (res) => {
+      console.log("文件选择成功", res);
+      const tempFilePath = res.tempFilePaths[0]; // 获取临时文件路径
+
+      // 设置临时文件信息到 uploadedFile
+      uploadedFile.value = {
+        name: res.tempFiles[0].name || "未命名文件",
+        path: tempFilePath,
+      };
+
+      // 调用上传文件方法
+      uploadFile(tempFilePath);
+    },
+    fail: (err) => {
+      console.error("文件选择失败", err);
+    },
   });
-});
-const fileInput = ref();
+};
+
+// 上传文件
+const uploadFile = (filePath) => {
+  uni.uploadFile({
+    url: import.meta.env.VITE_APP_BASE_API + "/common/upload", // 替换为你的实际上传接口
+    filePath: filePath,
+    name: "file", // 文件字段名
+    success: (res) => {
+      // 解析服务器返回的信息
+      const response = JSON.parse(res.data);
+
+      // 更新 uploadedFile 对象，保存服务器返回的文件信息
+      uploadedFile.value = {
+        ...uploadedFile.value,
+        // url: response.data.url,
+        // id: response.data.id,
+      };
+      if (response.data) {
+        fileInput.value = response.data.url;
+      }
+      console.log("res", res);
+
+      console.log("上传成功", uploadedFile.value);
+    },
+    fail: (err) => {
+      console.error("上传失败", err);
+    },
+  });
+};
+
+// 删除文件
+const deleteFile = () => {
+  // 删除已保存的文件信息
+  uploadedFile.value = null;
+};
 // 用于实时接收数据的 SseEmitter
 let eventSource = null;
 const emits = defineEmits(["send_message", "send_message"]);
@@ -210,13 +298,13 @@ const exportToWord = async (text, index) => {
   if (text != null) {
     downLoadFileRequest.value.content = text;
     const res = await proxy.$api.chatbot.downLoadWord(
-      JSON.stringify(downLoadFileRequest.value)
+        JSON.stringify(downLoadFileRequest.value)
     );
 
     const byteCharacters = atob(res.data);
     const byteNumbers = new Array(byteCharacters.length)
-      .fill(0)
-      .map((_, i) => byteCharacters.charCodeAt(i));
+        .fill(0)
+        .map((_, i) => byteCharacters.charCodeAt(i));
     const byteArray = new Uint8Array(byteNumbers);
 
     const blob = new Blob([byteArray], {
@@ -233,41 +321,56 @@ const exportToWord = async (text, index) => {
 
   console.log("text and index", text, index);
 };
+watch(
+    messages,
+    (newMessages) => {
+      scrollToBottom();
+    },
+    {deep: true}
+);
 
+// 更新 message 内容并自动滚动到最新的消息
+const scrollToBottom = () => {
+  nextTick(() => {
+    const chatHistory = document.querySelector(".chat-history");
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+  });
+};
+onMounted(() => {
+  scrollToBottom();
+  messages.value.push({
+    role: "ai",
+    content:
+        "halo，我是你的新朋友小飞飞，初次见面很开心，我拥有自动生成端到端应用程序的能力，小白三分钟也能开发出一款属于自己的APP哦，还在等什么，快来体验！",
+  });
+});
 // 发送消息
 const sendMessage = (text) => {
   console.log(fileInput.value);
+
+
   if (!inputText.value.trim() || isSending.value) return;
   isSending.value = true; // 设置为发送中状态
 
-  let text_query = JSON.parse(JSON.stringify(inputText.value));
-  messages.value.push({ role: "user", content: text_query });
 
   if (fileInput.value) {
+    console.log("====", fileInput.value);
+    storedFileName.value = getFileName(fileInput.value);
     chatbotRequest.value.fileUrl = fileInput.value;
   }
-  const lastMessageId = computed(() => {
-    if (messages.value.length === 0) return "";
-    return `msg-${messages.value.length - 1}`;
-  });
-  // 更新 message 内容并自动滚动到最新的消息
-  const scrollToBottom = () => {
-    nextTick(() => {
-      const chatHistory = document.querySelector(".chat-history");
-      chatHistory.scrollTop = chatHistory.scrollHeight;
-    });
-  };
-  watch(messages, (newMessages) => {
-    if (newMessages.length) {
-      scrollToBottom();
-    }
-  });
+
+  let text_query = JSON.parse(JSON.stringify(inputText.value));
+  messages.value.push({role: "user", content: text_query, fileName: storedFileName.value,});
+
   // 开始通过 SSE 调用后端接口
   startSseConnection(inputText.value);
   inputText.value = "";
   fileInput.value = "";
-};
 
+};
+const getFileName = (fileUrl) => {
+  return fileUrl.split("/").pop(); // 提取路径最后一部分作为文件名
+};
 // 使用 SSE 连接后端并处理数据
 const startSseConnection = (query) => {
   if (eventSource) {
@@ -295,19 +398,22 @@ const startSseConnection = (query) => {
     onmessage: (event) => {
       try {
         const newMessage = JSON.parse(event.data);
-
-        console.log(newMessage);
         if (newMessage.event === "workflow_started") {
-          messages.value.push({ role: "ai", content: "" });
+          messages.value.push({role: "ai", content: ""});
           if (newMessage.conversation_id != null) {
             conversationId.value = newMessage.conversation_id;
           }
         }
         if (newMessage.event === "message") {
-          messages.value[messages.value.length - 1].content += newMessage.answer;
+          messages.value[messages.value.length - 1].content +=
+              newMessage.answer;
+          // console.log('msg-' + (messages.value.length - 1), "'msg-'+messages.value.length - 1")
+          // lastMessageId.value = 'msg-' + (messages.value.length - 1)
         }
         if (newMessage.event === "message_end") {
           isSending.value = false;
+
+          lastMessageId.value = 'msg-' + (messages.value.length - 1)
         }
 
         // 更新 message 内容并自动滚动到最新的消息
@@ -342,7 +448,7 @@ function select(selectedFile) {
 
 // 打字机效果
 const typeWriterEffect = (content) => {
-  const aiMessage = { role: "ai", content: "" };
+  const aiMessage = {role: "ai", content: ""};
   messages.value.push(aiMessage);
 
   let i = 0;
@@ -371,9 +477,9 @@ const typeWriterEffect = (content) => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  flex: 1;
   background-color: #fff;
   overflow: hidden;
+  flex: 1;
   /* 防止溢出 */
 }
 
@@ -410,13 +516,55 @@ const typeWriterEffect = (content) => {
   background-color: #fff;
   z-index: 1000;
   height: 60px;
-  /* 确保层级最高 */
 }
-.on{
+
+.on {
   width: 100%;
   background-color: #fff;
   z-index: 1000;
   height: 25vh;
+}
+
+.file-display {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 3px;
+  margin-bottom: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 1);
+  width: 45%;
+}
+
+.file-icon {
+  width: 30px;
+  height: 35px;
+  margin-right: 2px;
+  flex: 2;
+}
+
+.file-name {
+  flex: 6;
+  font-size: 14px;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.delete-icon {
+  flex: 1;
+}
+
+.delete-icon image {
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
+  position: absolute;
+  top: 4px;
+  right: 4px;
 }
 
 .message-item {
@@ -435,9 +583,11 @@ const typeWriterEffect = (content) => {
 /* 用户消息样式：头像在右，聊天内容在左 */
 .message-user {
   display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  margin-right: 8px;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: auto; /* 将盒子右对齐 */
+  margin-right: 8px; /* 与屏幕右边留一点间距 */
+  max-width: 80%;
 }
 
 .message-content {
@@ -453,6 +603,31 @@ const typeWriterEffect = (content) => {
   word-wrap: break-word;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   /* 添加阴影 */
+}
+
+.message-file {
+  display: flex;
+  align-items: center;
+  margin-bottom: 7px;
+  background-color: #f9f9f9; /* 文件展示背景色 */
+  padding: 5px 5px 5px 6px;
+  border-radius: 8px;
+  max-width: 100%;
+}
+
+.message-file-icon image {
+  margin-right: 8px;
+  width: 30px;
+  height: 30px;
+}
+
+.message-file-name {
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap; /* 禁止换行 */
+  overflow: hidden; /* 超出内容隐藏 */
+  text-overflow: ellipsis; /* 超出部分显示省略号 */
+  max-width: 200px;
 }
 
 /* AI 的聊天内容样式 */
@@ -476,6 +651,7 @@ const typeWriterEffect = (content) => {
 .input-area {
   display: flex;
   justify-content: center;
+  flex-direction: column;
   /* 居中显示输入框 */
   align-items: center;
   left: 0;
@@ -484,6 +660,8 @@ const typeWriterEffect = (content) => {
   transition: bottom 0.3s ease;
   padding: 0 9px;
   margin-bottom: 10px;
+  align-items: flex-start;
+  transition: padding-top 0.3s ease;
 }
 
 /* 输入框容器 */
@@ -503,6 +681,15 @@ const typeWriterEffect = (content) => {
   /* 添加阴影 */
   overflow: hidden;
   padding: 0 10px;
+  transition: height 0.3s ease;
+}
+
+input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: 14px;
 }
 
 /* 输入框 */
@@ -570,18 +757,21 @@ const typeWriterEffect = (content) => {
 }
 
 .icon-imageFocused {
+  background-image: url(../static/send.png) !important;
+  background-size: 100% 100%; /* 背景图片占据整个盒子 */
+  background-repeat: no-repeat; /* 防止背景图片重复 */
   width: 20px !important;
   height: 20px !important;
-  padding: 0 10px;
+  padding: 0; /* 去除内边距，确保背景图片充满盒子 */
 }
 
 .icon-image {
-  width: 60%;
-  /* 图片占按钮的60%大小 */
-  height: 60%;
-  /* 图片占按钮的60%大小 */
-  object-fit: contain;
-  /* 确保图片内容完整显示 */
+  background-image: url(../static/tianjia.png);
+  background-size: 100% 100%; /* 背景图片占据整个盒子 */
+  background-repeat: no-repeat; /* 防止背景图片重复 */
+  width: 100%; /* 盒子宽度占父容器大小 */
+  height: 100%; /* 盒子高度占父容器大小 */
+  object-fit: cover; /* 确保图片比例显示并填满盒子 */
 }
 
 .rotate {
@@ -620,6 +810,7 @@ const typeWriterEffect = (content) => {
   max-width: 600px;
   padding: 0 10px;
   margin-bottom: 14px;
+  margin-top:0.8rem;
 }
 
 .option {
@@ -639,7 +830,27 @@ const typeWriterEffect = (content) => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.icon-image {
+.option-icon image{
+  width:40%;
+  height:25px;
+}
+
+.option-icons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 75px;
+  height: 75px;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.option-icons image{
+  width:30%;
+  height:25px;
+}
+
+.icon-image  {
   width: 28px;
   /* 图标宽度 */
   height: 28px;
@@ -746,4 +957,37 @@ const typeWriterEffect = (content) => {
     transform: translateY(0);
   }
 }
+
+.hidden-file-input {
+  display: none;
+}
+
+.scroll-to-bottom-btn {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.scroll-to-bottom-btn image {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.scroll-to-bottom-btn.hidden {
+  opacity: 0;
+  pointer-events: none; /* 隐藏按钮时无法点击 */
+}
 </style>
+
+    

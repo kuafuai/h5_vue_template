@@ -44,6 +44,7 @@ public class ChatbotController {
     private DifyConfig difyConfig;
 
 
+
     /**
      * 对话流
      *
@@ -79,10 +80,10 @@ public class ChatbotController {
 
         DifyRequest difyRequest = difyManager.getDifyRequest(chatbotRequest);
 
-        if("false".equals(difyConfig.getIsTenant())) {
+        if("dify".equals(difyConfig.getLlmType())) {
             difyManager.callDifyStream(difyRequest, conversationId, userId, emitter);
         }
-        if("true".equals(difyConfig.getIsTenant())) {
+        if("codeflying".equals(difyConfig.getLlmType())) {
             difyManager.callDifyTenantStream(difyRequest, conversationId, userId, emitter);
         }
 
@@ -124,10 +125,10 @@ public class ChatbotController {
         DifyRequest difyRequest = difyManager.getDifyRequest(chatbotRequest);
         DifyResponse difyResponse = new DifyResponse();
 
-        if("false".equals(difyConfig.getIsTenant())) {
+        if("llm".equals(difyConfig.getLlmType())) {
             difyResponse = difyManager.cattDifyBlock(difyRequest, conversationId, userId);
         }
-        if("true".equals(difyConfig.getIsTenant())) {
+        if("codeflying".equals(difyConfig.getLlmType())) {
             difyResponse = difyManager.callDifyTenantBlock(difyRequest, conversationId, userId);
         }
         ChatResponse chatResponse = new ChatResponse();

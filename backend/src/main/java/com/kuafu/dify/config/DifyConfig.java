@@ -32,7 +32,7 @@ public class DifyConfig {
 
     private String prompt;
 
-    private String isTenant;
+    private String llmType;
 
     public void initFromDatabase() {
         Map<String, String> configMap = configService.loadDifyConfig();
@@ -42,7 +42,7 @@ public class DifyConfig {
         this.apiUrl = configMap.getOrDefault("apiUrl", this.apiUrl);
         this.uploadUrl = configMap.getOrDefault("uploadUrl", this.uploadUrl);
         this.prompt = configMap.getOrDefault("prompt", this.prompt);
-        this.isTenant = configMap.getOrDefault("isTenant", this.isTenant);
+        this.llmType = configMap.getOrDefault("llmType", this.llmType);
 
         System.out.println("DifyConfig initialized: " + this);
     }

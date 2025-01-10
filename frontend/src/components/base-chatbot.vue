@@ -1,0 +1,993 @@
+<template>
+  <view class="chat-page">
+    <scroll-view
+        ref="scrollView"
+        :scroll-into-view="lastMessageId"
+        class="chat-history"
+        scroll-y
+        :scroll-with-animation="true"
+    >
+      <view
+          v-for="(msg, index) in messages"
+          :key="index"
+          :id="`msg-${index}`"
+          class="message-item"
+      >
+        <!-- AI 聊天内容：头像在左，内容在右 -->
+        <view v-if="msg.role === 'ai'" class="message-ai">
+          <view
+              class="message-content ai-content"
+              v-html="msg.content"
+          ></view>
+          <!-- AI 聊天内容 -->
+        </view>
+
+        <!-- 用户聊天内容：头像在右，内容在左 -->
+        <view v-else class="message-user">
+<!--          <view class="message-file">
+            <view class="message-file-icon">
+              <image src="../static/wenjianleixing.png" alt=""/>
+            </view>
+            &lt;!&ndash;            <view class="message-file-name">{{ storedFileName }}</view>&ndash;&gt;
+          </view>-->
+
+          <view class="message-content user-content">{{ msg.content }}</view>
+          <!-- 用户聊天内容 -->
+        </view>
+      </view>
+
+    </scroll-view>
+    <!-- 一键到底部按钮 -->
+    <view class="scroll-to-bottom-btn" @click="scrollToBottom">
+      <image src="../static/xiangxia.png" alt="到达底部"/>
+    </view>
+    <view
+        :class="
+        showOptions ? 'fixed-bottom-container on' : 'fixed-bottom-container'
+      "
+        :style="uploadedFile ? { height: '32vh' } : {}"
+    >
+      <!-- 输入框区域 -->
+      <view class="input-area" :style="{ bottom: inputAreaBottom + 'px' }">
+        <!-- <base-upload v-model="fileInput"/> -->
+
+        <!-- 文件显示区域 -->
+        <view v-if="uploadedFile" class="file-display">
+          <image class="file-icon" src="../static/wenjianleixing.png"></image>
+          <text class="file-name">{{ uploadedFile.name }}</text>
+          <view class="delete-icon" @click="deleteFile">
+            <image src="../static/shanchu.png" alt=""/>
+          </view>
+        </view>
+        <view class="input-container">
+          <!-- 输入框 -->
+          <input
+              v-model="inputText"
+              :placeholder="inputPlaceholder"
+              @focus="setPlaceholder"
+              @confirm="sendMessage"
+              :disabled="isSending"
+              @blur="onInputBlur"
+          />
+
+          <!-- 发送按钮 -->
+          <view class="send-icon" @click="sendMessage">
+            <view
+                class="send-icon"
+                @click="currentClickHandler"
+                :class="[
+    isFocused ? 'send-iconFocused' : 'send-icon',
+    uploadedFile ? 'send-iconFocused' : 'send-icon' 
+  ]"
+            >
+              <image
+                  :src="finalIconSrc"
+                  class="icon-image"
+                  :class="{
+  'icon-image': !isFocused && !uploadedFile /* 默认样式 */,
+  'icon-imageFocused': isFocused || uploadedFile /* 聚焦时样式或有文件时样式 */,
+  rotate: !isFocused && !uploadedFile && showOptions /* 点击时旋转，但仅在没有文件上传的情况下 */,
+}"
+              />
+            </view>
+          </view>
+        </view>
+        <!-- 功能区域 -->
+        <view v-if="showOptions" class="options-container">
+          <view class="option">
+            <view class="option-icon">
+              <image src="../static/wenjian.png" mode="widthFix"/>
+            </view>
+            <view class="option-text">文件</view>
+          </view>
+
+          <view class="option" @click="toggleModal">
+            <view class="option-icons">
+              <image
+                  src="../static/qiehuanzhinengti.png" mode="widthFix"
+              />
+            </view>
+            <view class="option-text">切换智能体</view>
+          </view>
+        </view>
+      </view>
+      <!-- 弹窗遮罩层 -->
+      <view v-if="showModal" class="modal-mask" @click="closeModal"></view>
+      <view v-if="showModal" class="modal-content">
+        <scroll-view scroll-y class="modal-body">
+          <view
+              v-for="(item, index) in aiOptions"
+              :key="index"
+              class="modal-item"
+              :class="{ selected: selectedIndex === index }"
+              @click="selectOption(index)"
+          >
+            {{ item }}
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script setup>
+import {nextTick, ref, watch} from "vue";
+import {fetchEventSource} from "@microsoft/fetch-event-source";
+// import BaseUpload from "@/components/base-upload.vue";
+// import BaseSelect from "@/components/base-select.vue";
+const BASE_API = import.meta.env.VITE_APP_BASE_API;
+const {proxy} = getCurrentInstance();
+const ctrl = new AbortController();
+const conversationId = ref();
+const token = uni.getStorageSync("h5_token");
+const messages = ref([]);
+const inputText = ref("");
+const showOptions = ref(false);
+const isSending = ref(false);
+const isTyping = ref(false); // 是否正在输入文字
+const showModal = ref(false);
+const chatbotRequest = ref({
+  query: "",
+  conversationId: null,
+  userId: "1",
+  fileUrl: "",
+});
+const fileList = ref()
+const aiOptions = ref([
+  "码上飞",
+  "泰罗智能体",
+  "迪迦智能体",
+  "盖亚智能体",
+  "赛文智能体",
+  "杰克智能体",
+  "奥特曼智能体",
+]);
+const toggleModal = () => {
+  showModal.value = !showModal.value;
+};
+
+// 关闭弹窗
+const closeModal = () => {
+  showModal.value = false;
+};
+
+
+// 选择选项
+const selectOption = (index) => {
+  selectedIndex.value = index;
+  console.log("当前选中：", aiOptions.value[index]);
+  closeModal(); // 选择后关闭弹窗
+};
+const selectedIndex = ref(0);
+const data = {text: "aaa", value: "1"};
+const inputAreaBottom = ref(12);
+// 切换功能区域的显示与隐藏
+const toggleOptions = () => {
+  if (!isFocused.value) {
+    // 仅在未获取焦点时允许旋转
+    showOptions.value = !showOptions.value;
+  }
+  inputAreaBottom.value = showOptions.value ? 120 : 20;
+  inputPlaceholder.value = "有什么问题尽管问";
+};
+const inputPlaceholder = ref("有什么问题尽管问");
+const defaultIcon = "../static/tianjia.png"; // 默认图片
+const focusedIcon = "../static/send.png"; // 获取焦点时的图片
+const iconSrc = ref(defaultIcon);
+const isFocused = ref(false);
+const lastMessageId = ref("");
+const storedFileName = ref("");
+const finalIconSrc = computed(() => {
+  // 优先级：uploadedFile > isFocused > 默认 iconSrc
+  if (uploadedFile.value) {
+    return focusedIcon; // 文件上传成功时，显示发送图标
+  } else if (isFocused.value) {
+    return focusedIcon.value; // 输入框聚焦时，使用 iconSrc 逻辑
+  } else {
+    return defaultIcon; // 默认图片
+  }
+});
+const setPlaceholder = () => {
+  inputPlaceholder.value = "有什么问题尽管问";
+  iconSrc.value = focusedIcon;
+  isFocused.value = true;
+};
+const onInputBlur = () => {
+  if (!inputText.value.trim()) {
+    inputPlaceholder.value = "有什么问题尽管问"; // 恢复默认占位符
+    isFocused.value = false;
+    iconSrc.value = "../static/tianjia.png"; // 恢复默认图标
+  }
+};
+const currentClickHandler = computed(() => {
+  return uploadedFile.value || isFocused.value || isTyping.value
+      ? sendMessage
+      : toggleOptions;
+});
+
+const fileInput = ref("");
+const uploadedFile = ref(null);
+// 选择文件
+const chooseFile = () => {
+  uni.chooseImage({
+    count: 1, // 限制只能选择一个文件
+    success: (res) => {
+      console.log("文件选择成功", res);
+      const tempFilePath = res.tempFilePaths[0]; // 获取临时文件路径
+
+      // 设置临时文件信息到 uploadedFile
+      uploadedFile.value = {
+        name: res.tempFiles[0].name || "未命名文件",
+        path: tempFilePath,
+      };
+
+      // 调用上传文件方法
+      uploadFile(tempFilePath);
+    },
+    fail: (err) => {
+      console.error("文件选择失败", err);
+    },
+  });
+};
+
+// 上传文件
+const uploadFile = (filePath) => {
+  uni.uploadFile({
+    url: import.meta.env.VITE_APP_BASE_API + "/common/upload", // 替换为你的实际上传接口
+    filePath: filePath,
+    name: "file", // 文件字段名
+    success: (res) => {
+      // 解析服务器返回的信息
+      const response = JSON.parse(res.data);
+
+      // 更新 uploadedFile 对象，保存服务器返回的文件信息
+      uploadedFile.value = {
+        ...uploadedFile.value,
+        // url: response.data.url,
+        // id: response.data.id,
+      };
+      if (response.data) {
+        fileInput.value = response.data.url;
+      }
+      console.log("res", res);
+
+      console.log("上传成功", uploadedFile.value);
+    },
+    fail: (err) => {
+      console.error("上传失败", err);
+    },
+  });
+};
+
+// 删除文件
+const deleteFile = () => {
+  // 删除已保存的文件信息
+  uploadedFile.value = null;
+};
+// 用于实时接收数据的 SseEmitter
+let eventSource = null;
+const emits = defineEmits(["send_message", "send_message"]);
+
+const downLoadFileRequest = ref({
+  content: "",
+  conversationId: conversationId,
+  difyId: null,
+});
+
+const exportToWord = async (text, index) => {
+  if (text != null) {
+    downLoadFileRequest.value.content = text;
+    const res = await proxy.$api.chatbot.downLoadWord(
+        JSON.stringify(downLoadFileRequest.value)
+    );
+
+    const byteCharacters = atob(res.data);
+    const byteNumbers = new Array(byteCharacters.length)
+        .fill(0)
+        .map((_, i) => byteCharacters.charCodeAt(i));
+    const byteArray = new Uint8Array(byteNumbers);
+
+    const blob = new Blob([byteArray], {
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url; // 创建下载链接
+    link.download = "chat_message.docx"; // 设置文件名
+    link.click();
+    // 释放内存
+    window.URL.revokeObjectURL(url);
+  }
+
+  console.log("text and index", text, index);
+};
+watch(
+    messages,
+    (newMessages) => {
+      scrollToBottom();
+    },
+    {deep: true}
+);
+
+// 更新 message 内容并自动滚动到最新的消息
+const scrollToBottom = () => {
+  nextTick(() => {
+    const chatHistory = document.querySelector(".chat-history");
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+  });
+};
+onMounted(() => {
+  scrollToBottom();
+  messages.value.push({
+    role: "ai",
+    content:
+        "halo，我是你的新朋友小飞飞，初次见面很开心，我拥有自动生成端到端应用程序的能力，小白三分钟也能开发出一款属于自己的APP哦，还在等什么，快来体验！",
+  });
+});
+// 发送消息
+const sendMessage = (text) => {
+  console.log(fileInput.value);
+
+
+  if (!inputText.value.trim() || isSending.value) return;
+  isSending.value = true; // 设置为发送中状态
+
+
+  if (fileInput.value) {
+    console.log("====", fileInput.value);
+    storedFileName.value = getFileName(fileInput.value);
+    chatbotRequest.value.fileUrl = fileInput.value;
+  }
+
+  let text_query = JSON.parse(JSON.stringify(inputText.value));
+  messages.value.push({role: "user", content: text_query, fileName: storedFileName.value,});
+
+  // 开始通过 SSE 调用后端接口
+  startSseConnection(inputText.value);
+  inputText.value = "";
+  fileInput.value = "";
+
+};
+const getFileName = (fileUrl) => {
+  return fileUrl.split("/").pop(); // 提取路径最后一部分作为文件名
+};
+// 使用 SSE 连接后端并处理数据
+const startSseConnection = (query) => {
+  if (eventSource) {
+    eventSource.close(); // 如果已有连接，则关闭之前的连接
+  }
+
+  chatbotRequest.value.query = inputText.value;
+  console.log("chatbotRequest", chatbotRequest.value);
+  if (conversationId.value) {
+    chatbotRequest.value.conversationId = conversationId.value;
+  }
+
+  const jsonData = JSON.stringify(chatbotRequest.value);
+  fetchEventSource(BASE_API + "/chatbot", {
+    method: "POST",
+    openWhenHidden: true,
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
+      Authorization: `Bearer ${token}`,
+    },
+    signal: ctrl.signal,
+    body: jsonData,
+    onmessage: (event) => {
+      try {
+        const newMessage = JSON.parse(event.data);
+        if (newMessage.event === "workflow_started") {
+          messages.value.push({role: "ai", content: ""});
+          if (newMessage.conversation_id != null) {
+            conversationId.value = newMessage.conversation_id;
+          }
+        }
+        if (newMessage.event === "message") {
+          messages.value[messages.value.length - 1].content +=
+              newMessage.answer;
+          // console.log('msg-' + (messages.value.length - 1), "'msg-'+messages.value.length - 1")
+          // lastMessageId.value = 'msg-' + (messages.value.length - 1)
+        }
+        if (newMessage.event === "message_end") {
+          isSending.value = false;
+
+          lastMessageId.value = 'msg-' + (messages.value.length - 1)
+        }
+
+        // 更新 message 内容并自动滚动到最新的消息
+        nextTick(() => {
+          const chatHistory = document.querySelector(".chat-history");
+          chatHistory.scrollTop = chatHistory.scrollHeight;
+        });
+      } catch (e) {
+        console.log("eeeee", e);
+        ctrl?.abort();
+        isSending.value = false;
+      }
+    },
+    onerror: (err) => {
+      console.error("SSE 错误:", err);
+      isSending.value = false;
+    },
+    onclose: () => {
+      isSending.value = false;
+    },
+  });
+};
+
+// 获取上传状态
+function select(selectedFile) {
+  fileInput.value = selectedFile;
+  // 构建请求 URL
+  console.log("selectedFile = ", selectedFile);
+  console.log("selectedFile.tempFiles[0] = ", selectedFile.tempFiles[0]);
+  console.log("选择文件：", selectedFile);
+}
+
+// 打字机效果
+const typeWriterEffect = (content) => {
+  const aiMessage = {role: "ai", content: ""};
+  messages.value.push(aiMessage);
+
+  let i = 0;
+  aiMessage.content = "";
+
+  const interval = setInterval(() => {
+    aiMessage.content += content[i];
+    i++;
+
+    // 更新 message 内容并自动滚动到最新的消息
+    nextTick(() => {
+      const chatHistory = document.querySelector(".chat-history");
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+    });
+
+    if (i === content.length) {
+      clearInterval(interval);
+      isSending.value = false; // 回复完成后恢复发送按钮状态
+    }
+  }, 100); // 每100毫秒显示一个字符，模拟打字机效果
+};
+</script>
+
+<style scoped>
+.chat-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #fff;
+  overflow: hidden;
+  flex: 1;
+  /* 防止溢出 */
+}
+
+.navbar {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  background-color: #4072ee;
+  color: white;
+  padding: 0 10px;
+  z-index: 10;
+  /* 确保位于其他内容之上 */
+}
+
+.title {
+  flex: 1;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.chat-history {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  /* 避开输入框 */
+}
+
+.fixed-bottom-container {
+  width: 100%;
+  background-color: #fff;
+  z-index: 1000;
+  height: 60px;
+}
+
+.on {
+  width: 100%;
+  background-color: #fff;
+  z-index: 1000;
+  height: 25vh;
+}
+
+.file-display {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 3px;
+  margin-bottom: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 1);
+  width: 45%;
+}
+
+.file-icon {
+  width: 30px;
+  height: 35px;
+  margin-right: 2px;
+  flex: 2;
+}
+
+.file-name {
+  flex: 6;
+  font-size: 14px;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.delete-icon {
+  flex: 1;
+}
+
+.delete-icon image {
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+.message-item {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+/* AI 消息样式：头像在左，聊天内容在右 */
+.message-ai {
+  display: flex;
+  justify-content: start;
+  width: 100%;
+  margin: 8px 0 8px 8px;
+}
+
+/* 用户消息样式：头像在右，聊天内容在左 */
+.message-user {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: auto; /* 将盒子右对齐 */
+  margin-right: 8px; /* 与屏幕右边留一点间距 */
+  max-width: 80%;
+}
+
+.message-content {
+  padding: 10px 15px;
+  border-radius: 10px;
+  /* 圆角效果 */
+  font-size: 15px;
+  line-height: 20px;
+  max-width: 80%;
+  /* 限制消息最大宽度 */
+  text-align: center;
+  /* 居中文本 */
+  word-wrap: break-word;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* 添加阴影 */
+}
+
+.message-file {
+  display: flex;
+  align-items: center;
+  margin-bottom: 7px;
+  background-color: #f9f9f9; /* 文件展示背景色 */
+  padding: 5px 5px 5px 6px;
+  border-radius: 8px;
+  max-width: 100%;
+}
+
+.message-file-icon image {
+  margin-right: 8px;
+  width: 30px;
+  height: 30px;
+}
+
+.message-file-name {
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap; /* 禁止换行 */
+  overflow: hidden; /* 超出内容隐藏 */
+  text-overflow: ellipsis; /* 超出部分显示省略号 */
+  max-width: 200px;
+}
+
+/* AI 的聊天内容样式 */
+.ai-content {
+  background-color: #f5f5f5;
+  color: #333;
+  text-align: left;
+  /* 左对齐文本 */
+}
+
+/* 用户的聊天内容样式 */
+.user-content {
+  background-color: #4072ee;
+  color: white;
+  text-align: left;
+  /* 左对齐文本 */
+  border: 1px solid #3058ba;
+}
+
+/* 底部聊天框 */
+.input-area {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  /* 居中显示输入框 */
+  align-items: center;
+  left: 0;
+  bottom: 12px;
+  width: 95%;
+  transition: bottom 0.3s ease;
+  padding: 0 9px;
+  margin-bottom: 10px;
+  align-items: flex-start;
+  transition: padding-top 0.3s ease;
+}
+
+/* 输入框容器 */
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 95%;
+  /* 适配屏幕宽度 */
+  max-width: 500px;
+  height: 40px;
+  border-radius: 15px;
+  /* 圆角效果 */
+  background-color: #ffffff;
+  /* 背景色 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* 添加阴影 */
+  overflow: hidden;
+  padding: 0 10px;
+  transition: height 0.3s ease;
+}
+
+input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+/* 输入框 */
+.input-box {
+  flex: 10;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  padding: 0 10px;
+  border-radius: 15px;
+  /* 圆角效果 */
+  background-color: transparent;
+  /* 背景透明 */
+}
+
+/deep/ .uni-input-wrapper {
+  width: 90% !important;
+}
+
+/* 发送按钮图标 */
+.send-icon {
+  flex: 1;
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
+  /* 按钮背景色 */
+  border-radius: 50%;
+  /* 圆形按钮 */
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  /* 缩放动画效果 */
+  position: absolute;
+  right: 4px;
+  /* 靠右侧显示 */
+  display: flex;
+  /* 让内容居中对齐 */
+  justify-content: center;
+  align-items: center;
+}
+
+.send-icon:active {
+  transform: scale(0.95);
+  /* 点击时缩小 */
+}
+
+.send-iconFocused {
+  flex: 1;
+  width: 28px;
+  height: 28px;
+  background-color: #3273f3;
+  /* 按钮背景色 */
+  border-radius: 50%;
+  /* 圆形按钮 */
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  /* 缩放动画效果 */
+  position: absolute;
+  right: 9px;
+  /* 靠右侧显示 */
+  display: flex;
+  /* 让内容居中对齐 */
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-imageFocused {
+  background-image: url(../static/send.png) !important;
+  background-size: 100% 100%; /* 背景图片占据整个盒子 */
+  background-repeat: no-repeat; /* 防止背景图片重复 */
+  width: 20px !important;
+  height: 20px !important;
+  padding: 0; /* 去除内边距，确保背景图片充满盒子 */
+}
+
+.icon-image {
+  background-image: url(../static/tianjia.png);
+  background-size: 100% 100%; /* 背景图片占据整个盒子 */
+  background-repeat: no-repeat; /* 防止背景图片重复 */
+  width: 100%; /* 盒子宽度占父容器大小 */
+  height: 100%; /* 盒子高度占父容器大小 */
+  object-fit: cover; /* 确保图片比例显示并填满盒子 */
+}
+
+.rotate {
+  transform: rotate(45deg);
+  /* 旋转90度 */
+}
+
+/* word 导出按钮*/
+.export-btn {
+  height: 30px;
+  width: 100%;
+  margin-top: 10px;
+  /* 留出空间 */
+  padding: 5px 10px;
+  background-color: #4072ee;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  align-self: flex-start;
+  /* 对齐到左侧 */
+}
+
+.export-btn:hover {
+  background-color: #3058ba;
+}
+
+.options-container {
+  display: flex;
+  justify-content: flex-start;
+  /* 内容居中对齐 */
+  gap: 16px;
+  /* 功能块之间的间距 */
+  width: 100%;
+  max-width: 600px;
+  padding: 0 10px;
+  margin-bottom: 14px;
+  margin-top:0.8rem;
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.option-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 75px;
+  height: 75px;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.option-icon image{
+  width:40%;
+  height:25px;
+}
+
+.option-icons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 75px;
+  height: 75px;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.option-icons image{
+  width:30%;
+  height:25px;
+}
+
+.icon-image  {
+  width: 28px;
+  /* 图标宽度 */
+  height: 28px;
+  /* 图标高度 */
+  object-fit: contain;
+}
+
+.option-text {
+  font-size: 14px;
+  /* 文字大小 */
+  color: #666;
+  /* 浅灰色文字 */
+  text-align: center;
+  margin-top: 4px;
+}
+
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* 背景变暗 */
+  z-index: 999;
+  /* 层级最高 */
+}
+
+/* 弹窗内容 */
+.modal-content {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  z-index: 1000;
+  /* 高于遮罩层 */
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: slide-up 0.3s ease-in-out;
+  /* 从下往上弹出 */
+}
+
+.modal-body {
+  max-height: 300px;
+  /* 限制高度 */
+  overflow-y: auto;
+  padding: 30px 0;
+  /* 调整顶部和底部的间距 */
+}
+
+/* 弹窗选项样式 */
+.modal-item {
+  padding: 10px 0;
+  /* 调整上下内边距，使每个选项更紧凑 */
+  text-align: center;
+  font-size: 14px;
+  /* 字体调小 */
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  position: relative;
+  /* 便于边框控制 */
+}
+
+/* 默认无边框 */
+.modal-item::before,
+.modal-item::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: transparent;
+  /* 初始无边框 */
+  transition: background-color 0.2s ease;
+}
+
+/* 被选中状态：上下边框 */
+.modal-item.selected::before {
+  top: 0;
+  background-color: #ccc;
+}
+
+.modal-item.selected::after {
+  bottom: 0;
+  background-color: #ccc;
+}
+
+/* 选中状态：背景色 */
+.modal-item.selected {
+}
+
+/* 弹窗从下往上动画 */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.scroll-to-bottom-btn {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.scroll-to-bottom-btn image {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.scroll-to-bottom-btn.hidden {
+  opacity: 0;
+  pointer-events: none; /* 隐藏按钮时无法点击 */
+}
+</style>
+
+    

@@ -81,7 +81,7 @@ getWrapperClass();
 
 <style scoped>
 .height-100 {
-  min-height: 100%;
+  height: 100%;
 }
 
 .width-100 {
@@ -91,7 +91,7 @@ getWrapperClass();
 .box {
   display: flex;
   flex-direction: column;
-  /* height: 100%; */
+
   background: rgb(245, 247, 250);
   /* padding: 0 0 2rem 0; */
   /* box-sizing: border-box; */

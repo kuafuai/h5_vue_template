@@ -38,6 +38,7 @@ CREATE TABLE dify_requirement
 (
     id              INTEGER PRIMARY KEY autoincrement, -- 主键ID
     content         TEXT,                     -- 内容
+    file_url         VARCHAR(256),                     -- 内容
     conversation_id INTEGER,                           -- 对话ID
     dify_id         INTEGER,                           -- 应用ID
     type            VARCHAR(128)                       -- 类型 TEXT FILE

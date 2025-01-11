@@ -42,6 +42,7 @@ CREATE TABLE dify_requirement
 (
     id              INT AUTO_INCREMENT PRIMARY KEY, -- 主键ID
     content         TEXT         NULL,              -- 内容
+    file_url        VARCHAR(256) NULL,              -- 内容
     conversation_id INTEGER      NULL,              -- 对话ID
     dify_id         INTEGER      NULL,              -- dify_id
     type            VARCHAR(128) NULL               -- 类型：TEXT FILE

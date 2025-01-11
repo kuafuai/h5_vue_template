@@ -354,8 +354,8 @@
                       </el-descriptions-item>
                       <el-descriptions-item v-if="sub.infoValue">
                         <template #label>提交的文件</template>
-                        <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(sub.infoValue)' :href="f"
-                                 target="_blank">
+                        <el-link class="m-x-4" type="success" v-for='(f,i) in file_split(sub.infoValue)'
+                                 @click="handle_download(f)">
                           下载文件{{ i + 1 }}
                         </el-link>
                       </el-descriptions-item>

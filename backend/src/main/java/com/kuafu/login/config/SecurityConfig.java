@@ -74,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         registry
                 .antMatchers("/doc.html").permitAll()
                 .antMatchers("/login/**").permitAll()
-                .antMatchers("/chatbot/**").permitAll()
+                .antMatchers("/chatbot/**","/difyConfig/**").permitAll()
                 .antMatchers("/common/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll();

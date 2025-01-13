@@ -37,21 +37,22 @@
                   <image src="../static/littleword.png" mode="scaleToFill" />
                   <view style="color: #3273f3; font-size: 14px">导出word</view>
                 </view>
-<!--                <view class="button-container-fresh">-->
-<!--                  <image src="../static/shuaxin.png" mode="scaleToFill" />-->
-<!--                </view>-->
+
+<!--                <view class="button-container-fresh">
+                  <image src="../static/shuaxin.png" mode="scaleToFill" />
+                </view>-->
               </view>
             </view>
           </view>
           <!-- AI 聊天内容 -->
           <!-- 添加气泡按钮部分 -->
 
-          <view class="additional-buttons"  v-if="showAdditionalButtons">
+          <view class="additional-buttons" v-if="showAdditionalButtons">
             <view
                 class="additional-button"
                 v-for="(reply, replyIndex) in questions"
                 :key="replyIndex"
-                @click="sendMessage(reply)"
+                @click="sendMessage(reply, 1)"
             >
               {{ reply }}
             </view>
@@ -101,11 +102,13 @@
           <view v-if="uploadedFile" class="divider"></view>
           <view class="input-container" :class="{ 'no-border': uploadedFile }">
             <!-- 输入框 -->
-            <input
+            <uni-easyinput
+                :focus="isFocus"
                 v-model="inputText"
                 :placeholder="inputPlaceholder"
                 @focus="setPlaceholder"
-                @confirm="sendMessage"
+                @confirm="sendMessageFn('1')"
+                :confirmType="done"
                 :disabled="isSending"
                 @blur="onInputBlur"
             />
@@ -197,6 +200,10 @@ const chatbotRequest = ref({
   userId: "1",
   fileUrl: "",
 });
+
+// 输入框书否聚焦
+const isFocus = ref(false);
+
 const fileList = ref();
 const isSent = ref(false);
 const aiOptions = ref(["码上飞"]);
@@ -255,11 +262,38 @@ const onInputBlur = () => {
     iconSrc.value = "../static/tianjia.png"; // 恢复默认图标
   }
 };
-const currentClickHandler = computed(() => {
-  return uploadedFile.value || isFocused.value || isTyping.value
-      ? sendMessage
-      : toggleOptions;
-});
+
+// 有没有上传文件  uploadedFile.value
+// 输入框是否获取焦点  isFocused.value
+// 是否正在输入文字  isTyping.value
+
+// 判断是否点击回车
+const enterNum = ref("");
+
+// const currentClickHandler = computed(() => {
+// console.log(enterNum.value,"enterNum.value")
+//   return uploadedFile.value || isFocused.value || isTyping.value
+//     ? sendMessage(null, enterNum.value)
+//     : toggleOptions;
+// });
+
+const currentClickHandler = () => {
+  console.log(enterNum.value, "enterNum.value");
+  if (uploadedFile.value || isFocused.value || isTyping.value) {
+    sendMessage(null, 1);
+  } else {
+    toggleOptions();
+  }
+};
+
+// 点击回车把enterNum置为1
+
+const sendMessageFn = (e) => {
+  if (e == 1) {
+    enterNum.value = 1;
+    sendMessage(null, enterNum.value);
+  }
+};
 
 const fileInput = ref("");
 const uploadedFile = ref(null);
@@ -269,6 +303,7 @@ const sentFiles = ref([]);
 const chooseFile = () => {
   uni.chooseFile({
     count: 1, // 限制只能选择一个文件
+    extension: [".doc", ".docx"],
     success: (res) => {
       console.log("文件选择成功", res);
       const tempFilePath = res.tempFilePaths[0]; // 获取临时文件路径
@@ -308,7 +343,7 @@ const uploadFile = (filePath) => {
         fileInput.value = response.data.url;
       }
       console.log("res", res);
-
+      isFocus.value = true;
       console.log("上传成功", uploadedFile.value);
     },
     fail: (err) => {
@@ -375,20 +410,17 @@ watch(
 
 // 更新 message 内容并自动滚动到最新的消息
 const scrollToBottom = () => {
-
   uni.pageScrollTo({
-    scrollTop: document.body.scrollHeight,  // 滚动到页面的最底部
-    duration: 300,                         // 滚动持续时间
+    scrollTop: document.body.scrollHeight, // 滚动到页面的最底部
+    duration: 300, // 滚动持续时间
   });
 };
-const onScroll = () => {
-
-};
+const onScroll = () => {};
 
 const initialSentence = async () => {
-  const res = await proxy.$api.dify_config.get(1)
+  const res = await proxy.$api.dify_config.get(1);
 
-  if(res.data && res.data.initialSentence) {
+  if (res.data && res.data.initialSentence) {
     messages.value.push({
       role: "ai",
       content: res.data.initialSentence,
@@ -400,64 +432,55 @@ const initialSentence = async () => {
           "hello，我是你的新朋友小飞飞，初次见面很开心，我拥有自动生成端到端应用程序的能力，小白三分钟也能开发出一款属于自己的APP哦，还在等什么，快来体验！",
     });
   }
-  if(res.data.questions) {
-    let jsonQuestions = res.data.questions
+  if (res.data.questions) {
+    let jsonQuestions = res.data.questions;
     if (jsonQuestions.includes("'")) {
       // 替换单引号为双引号
       jsonQuestions = jsonQuestions.replace(/'/g, '"');
     }
 
-// 将字符串转换为数组
+    // 将字符串转换为数组
     let arr = JSON.parse(jsonQuestions);
-    questions.value = arr
-    console.log("questions", questions.value)
+    questions.value = arr;
+    console.log("questions", questions.value);
   }
-}
+};
 
-
-onMounted( async () => {
+onMounted(async () => {
   scrollToBottom();
   await initialSentence();
-
 });
 // 发送消息
-const sendMessage = (text) => {
-  console.log("tttt", text)
+const sendMessage = (text, isEnter) => {
+  if (isEnter == "1") {
+    if ((!inputText.value.trim() && !text) || isSending.value) return;
+    isSending.value = true; // 设置为发送中状态
+    const currentFile = uploadedFile.value ? { ...uploadedFile.value } : null;
 
-  console.log(
-      "fileInput value before sending: ",
-      inputText.value ? inputText.value : text
-  );
+    if (fileInput.value) {
+      console.log("====", fileInput.value);
+      chatbotRequest.value.fileUrl = fileInput.value;
+    }
 
-  if ((!inputText.value.trim() && !text) || isSending.value) return;
-  isSending.value = true; // 设置为发送中状态
-  const currentFile = uploadedFile.value ? { ...uploadedFile.value } : null;
+    messages.value.push({
+      role: "user",
+      content: inputText.value ? inputText.value : text,
+      file: currentFile,
+    });
+    if (currentFile) {
+      sentFiles.value.push(currentFile); // 保存已发送文件
+    }
 
-  if (fileInput.value) {
-    console.log("====", fileInput.value);
-    chatbotRequest.value.fileUrl = fileInput.value;
-    chatbotRequest.value.conversationId = conversationId.value;
+    // 开始通过 SSE 调用后端接口
+    startSseConnection(inputText.value ? inputText.value : text);
+    isSent.value = true;
+    inputText.value = "";
+    fileInput.value = "";
+    uploadedFile.value = null; // 清空文件信息
+    deleteFile();
+    showAdditionalButtons.value = false;
+    enterNum.value = 0;
   }
-
-  // let text_query = JSON.parse(JSON.stringify(inputText.value));
-
-  messages.value.push({
-    role: "user",
-    content: inputText.value ? inputText.value : text,
-    file: currentFile,
-  });
-  if (currentFile) {
-    sentFiles.value.push(currentFile); // 保存已发送文件
-  }
-
-  // 开始通过 SSE 调用后端接口
-  startSseConnection(inputText.value ? inputText.value : text);
-  isSent.value = true;
-  inputText.value = "";
-  fileInput.value = "";
-  uploadedFile.value = null; // 清空文件信息
-  deleteFile();
-  showAdditionalButtons.value = false;
 };
 const getFileName = (fileUrl) => {
   return fileUrl.split("/").pop(); // 提取路径最后一部分作为文件名
@@ -802,6 +825,9 @@ const typeWriterEffect = (content) => {
   height: 30px;
 }
 
+/deep/ .is-input-border {
+  border: none !important;
+}
 .additional-buttons {
   width: 90%;
   gap: 9px;

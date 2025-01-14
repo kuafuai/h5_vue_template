@@ -57,12 +57,12 @@
       <!-- 智能体装修 -->
 
       <view :class="isAnMation ? 'decoration-boxs decoration-box-empty' : 'decoration-box'">
-        <view v-if="!isInputFocused" @click="shareAdd">
+        <!-- <view v-if="!isInputFocused" @click="shareAdd">
           <image src="../static/fenxianglianjie.png" style="width: 1.56rem;height: 1.56rem;position: fixed;
-    right: 2px;
-    top: 8vh;
+    right: 0.31rem;
+    top: 3.63rem;
     z-index: 9999;" mode="scaleToFill" />
-        </view>
+        </view> -->
         <view class="decoration-head" v-if="!isInputFocused">
           <view class="difyTitle">
             <text class="difyCont">{{ difyTitle }}</text>
@@ -138,7 +138,7 @@
           <!-- 标题 -->
           <view class="click-box-header">不知道问点啥？看看这</view>
           <view class="click-box-content">
-            <view class="card special-card-1" v-if="questions.length > 0">
+            <view class="card special-card-1" v-if="questions[0]">
               <view class="card-text">
                 <text class="vertical" style="height: 39px;display:flex;align-items: center;justify-content: center;">
                   {{ questions[0] }}
@@ -146,8 +146,8 @@
               </view>
               <view class="card-button " style="margin: auto;" @click="sendMessage(questions[0], 1)">试一试</view>
             </view>
-            <view class="card-group" style="margin: 12px 0;" v-if="questions.length > 1">
-              <view class="card special-card-2" v-if="questions.length > 1">
+            <view class="card-group" style="margin: 12px 0;">
+              <view class="card special-card-2" v-if="questions[1]">
                 <view class="card-text">
                   <text class="vertical" style="height: 39px;display:flex;align-items: center;justify-content: center;">
                     {{ questions[1] }}
@@ -155,7 +155,7 @@
                 </view>
                 <view class="card-button" style="margin: auto;" @click="sendMessage(questions[1], 1)">试一试</view>
               </view>
-              <view class="card special-card-3" v-if="questions.length > 2">
+              <view class="card special-card-3" v-if="questions[2]">
                 <view class="card-text">
                   <text class="vertical" style="height: 39px;display:flex;align-items: center;justify-content: center;">
                     {{ questions[2] }}
@@ -164,7 +164,7 @@
                 <view class="card-button" style="margin: auto;" @click="sendMessage(questions[2], 1)">试一试</view>
               </view>
             </view>
-            <view class="bottom-default-card">
+            <view class="bottom-default-card" v-if="questions.length > 3">
               <view class=" default-card" v-for="(reply, replyIndex) in questions.slice(3)" :key="replyIndex">
                 <view class="card-cont">{{ reply }}</view>
                 <view class="card-button" @click="sendMessage(reply, 1)" style="margin-right: 8px;">试一试</view>
@@ -289,7 +289,7 @@ const enterNum = ref("");
 
 const currentClickHandler = () => {
   console.log(enterNum.value, "enterNum.value");
-  if (uploadedFile.value || isFocused.value || isTyping.value) {
+  if (uploadedFile.value || isFocused.value || isTyping.value || isTrue.value) {
     sendMessage(null, 1);
   } else {
     toggleOptions();
@@ -299,7 +299,6 @@ const currentClickHandler = () => {
 // 点击回车把enterNum置为1
 
 const sendMessageFn = (e) => {
-  isTrue.value = true
   if (e == 1) {
     enterNum.value = 1;
     sendMessage(null, enterNum.value);
@@ -419,7 +418,7 @@ watch(
         scrollToBottom(); // 如果当前在底部，则新增消息时滚动到底部
       }
     },
-    {deep: true}
+    { deep: true }
 );
 
 // 更新 message 内容并自动滚动到最新的消息
@@ -429,8 +428,7 @@ const scrollToBottom = () => {
     duration: 300, // 滚动持续时间
   });
 };
-const onScroll = () => {
-};
+const onScroll = () => { };
 
 const initialSentence = async () => {
   const res = await proxy.$api.dify_config.get(1);
@@ -469,18 +467,20 @@ const initialSentence = async () => {
 onMounted(async () => {
   scrollToBottom();
   await initialSentence();
-  isTrue.value = true
 });
 // 发送消息
 const sendMessage = (text, isEnter) => {
-  isAnMation.value = true;
-  setTimeout(() => {
-    isInputFocused.value = true;
-  }, 450)
-  if (isEnter == "1") {
+  console.log(text, isEnter);
+
+  if (isEnter == "1" && (inputText.value.trim() || text)) {
+    isAnMation.value = true;
+    setTimeout(() => {
+      isInputFocused.value = true;
+    }, 390)
+    isTrue.value = true
     if ((!inputText.value.trim() && !text) || isSending.value) return;
     isSending.value = true; // 设置为发送中状态
-    const currentFile = uploadedFile.value ? {...uploadedFile.value} : null;
+    const currentFile = uploadedFile.value ? { ...uploadedFile.value } : null;
 
     if (fileInput.value) {
       console.log("====", fileInput.value);
@@ -538,7 +538,7 @@ const startSseConnection = (query) => {
       try {
         const newMessage = JSON.parse(event.data);
         if (newMessage.event === "workflow_started") {
-          messages.value.push({role: "ai", content: ""});
+          messages.value.push({ role: "ai", content: "" });
           if (newMessage.conversation_id != null) {
             conversationId.value = newMessage.conversation_id;
           }
@@ -606,7 +606,7 @@ const shareAdd = async () => {
 }
 // 打字机效果
 const typeWriterEffect = (content) => {
-  const aiMessage = {role: "ai", content: ""};
+  const aiMessage = { role: "ai", content: "" };
   messages.value.push(aiMessage);
 
   let i = 0;
@@ -714,7 +714,9 @@ const typeWriterEffect = (content) => {
   display: flex;
   align-items: center;
   padding: 3px;
-  margin-bottom: 5px;
+  margin: 5px;
+  margin-bottom: 0px;
+  margin-top: 7px;
   border: 1px solid #ddd;
   border-radius: 5px;
   background-color: rgba(255, 255, 255, 1) !important;
@@ -896,8 +898,7 @@ const typeWriterEffect = (content) => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.additional-button:hover {
-}
+.additional-button:hover {}
 
 .message-file-name {
   font-size: 14px;
@@ -1267,8 +1268,7 @@ input {
 }
 
 /* 选中状态：背景色 */
-.modal-item.selected {
-}
+.modal-item.selected {}
 
 /* 弹窗从下往上动画 */
 @keyframes slide-up {
@@ -1398,11 +1398,11 @@ input {
   background: linear-gradient(to bottom, #f3f2f5, #FDCBF1);
   line-height: 28px;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 
 .initialSentenceContent {
-  font-size: 14px;
+  font-size: 0.88rem;
   color: rgba(16, 16, 16, 1);
   font-family: PingFangSC-regular;
   line-height: 20px;
@@ -1426,6 +1426,7 @@ input {
 }
 
 .click-box-header {
+  height: 1.25rem;
   line-height: 20px;
   color: #03182b;
   font-size: 14px;
@@ -1485,13 +1486,14 @@ input {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 0;
+  padding: 7px 0;
   box-sizing: border-box;
 }
 
 .card-button {
-  width: 70px;
-  font-size: 14px;
+  width: 4.5rem;
+  height: 1.5rem;
+  font-size: 0.75rem;
   color: #3273f3;
   background-color: #fff;
   padding: 3px 10px;
@@ -1524,7 +1526,7 @@ input {
   /* 这里是超出几行省略 */
   overflow: hidden;
   color: rgba(3, 24, 43, 1);
-  font-size: 14px;
+  font-size: 0.88rem;
   text-align: left;
   font-family: SourceHanSansSC-regular;
 }

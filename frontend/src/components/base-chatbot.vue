@@ -1,6 +1,6 @@
 
 <template>
-  <view class="chat-page" :style="{ backgroundColor: isInputFocused ? '#ffffff' : '#f3f2f5' }">
+  <view class="chat-page" :style="{ backgroundColor: isInputFocused ? '#ffffff' : '#f3f2f5', overflow: isInputFocused ? 'hidden' : 'auto' }">
     <scroll-view ref=" scrollView" :scroll-into-view="lastMessageId" class="chat-history" scroll-y
                  :scroll-with-animation="true" @scroll="onScroll" v-if="isInputFocused">
       <view v-for="(msg, index) in messages" :key="index" :id="`msg-${index}`" class="message-item">
@@ -63,6 +63,7 @@
     top: 3.63rem;
     z-index: 9999;" mode="scaleToFill" />
         </view> -->
+
         <view class="decoration-head" v-if="!isInputFocused">
           <view class="difyTitle">
             <text class="difyCont">{{ difyTitle }}</text>
@@ -140,7 +141,8 @@
           <view class="click-box-content">
             <view class="card special-card-1" v-if="questions[0]">
               <view class="card-text">
-                <text class="vertical" style="height: 39px;display:flex;align-items: center;justify-content: center;">
+                <text class="vertical"
+                      style="height: 2.625rem;display:flex;align-items: center;justify-content: center;">
                   {{ questions[0] }}
                 </text>
               </view>
@@ -149,7 +151,8 @@
             <view class="card-group" style="margin: 12px 0;">
               <view class="card special-card-2" v-if="questions[1]">
                 <view class="card-text">
-                  <text class="vertical" style="height: 39px;display:flex;align-items: center;justify-content: center;">
+                  <text class="vertical"
+                        style="height:2.625rem;display:flex;align-items: center;justify-content: center;">
                     {{ questions[1] }}
                   </text>
                 </view>
@@ -157,7 +160,8 @@
               </view>
               <view class="card special-card-3" v-if="questions[2]">
                 <view class="card-text">
-                  <text class="vertical" style="height: 39px;display:flex;align-items: center;justify-content: center;">
+                  <text class="vertical"
+                        style="height: 2.625rem;display:flex;align-items: center;justify-content: center;">
                     {{ questions[2] }}
                   </text>
                 </view>
@@ -299,7 +303,7 @@ const currentClickHandler = () => {
 // 点击回车把enterNum置为1
 
 const sendMessageFn = (e) => {
-  if (e == 1) {
+  if (e == 1 && !isTyping.value) {
     enterNum.value = 1;
     sendMessage(null, enterNum.value);
   }
@@ -471,7 +475,10 @@ onMounted(async () => {
 // 发送消息
 const sendMessage = (text, isEnter) => {
   console.log(text, isEnter);
-
+  if (isTyping.value && isEnter == "1" ) {
+    console.log("正在输入，按下回车或空格时不会发送");
+    return;
+  }
   if (isEnter == "1" && (inputText.value.trim() || text)) {
     isAnMation.value = true;
     setTimeout(() => {
@@ -1334,6 +1341,7 @@ input {
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
+
 }
 
 @keyframes slideAndFade {

@@ -1,6 +1,7 @@
 
 <template>
-  <view class="chat-page" :style="{ backgroundColor: isInputFocused ? '#ffffff' : '#f3f2f5', overflow: isInputFocused ? 'hidden' : 'auto' }">
+  <view class="chat-page"
+        :style="{ backgroundColor: isInputFocused ? '#ffffff' : '#f3f2f5', overflow: isInputFocused ? 'hidden' : 'auto' }">
     <scroll-view ref=" scrollView" :scroll-into-view="lastMessageId" class="chat-history" scroll-y
                  :scroll-with-animation="true" @scroll="onScroll" v-if="isInputFocused">
       <view v-for="(msg, index) in messages" :key="index" :id="`msg-${index}`" class="message-item">
@@ -67,6 +68,11 @@
         <view class="decoration-head" v-if="!isInputFocused">
           <view class="difyTitle">
             <text class="difyCont">{{ difyTitle }}</text>
+            <view v-if="!isInputFocused" @click="shareAdd" class="difyTitle-container">
+              <image src="../static/fenxianglianjie.png"
+                     style="width: 1rem;height: 1rem; color: #3273f3; " mode="scaleToFill" />
+              <text style="font-size: 0.88rem;">分享</text>
+            </view>
           </view>
           <view class="initialSentenceContent"> {{ initialSentenceContent }}</view>
         </view>
@@ -598,13 +604,13 @@ const shareAdd = async () => {
     data: location.href,
     success: () => {
       uni.showToast({
-        title: '链接已复制',
+        title: '         复制成功，快去分享应用吧！          ',
         icon: 'success',
       });
     },
     fail: (err) => {
       uni.showToast({
-        title: '复制失败，请手动复制',
+        title: '         链接复制失败，请重试         ',
         icon: 'none',
       });
       console.error('复制失败:', err);
@@ -649,6 +655,7 @@ const typeWriterEffect = (content) => {
   background-color: #fff;
   overflow: hidden;
   flex: 1;
+  padding-top: 1.25px;
   /* 防止溢出 */
 }
 
@@ -1389,8 +1396,8 @@ input {
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
-  width: 95%;
-  padding: 14px 20px;
+  width: 100%;
+  padding: 14px 10px 14px 20px;
   box-sizing: border-box;
 }
 
@@ -1399,7 +1406,8 @@ input {
   color: #101010;
   margin-bottom: 6px;
   display: inline-block;
-
+  display: flex;
+  justify-content: space-between;
 }
 
 .difyCont {
@@ -1437,7 +1445,7 @@ input {
   height: 1.25rem;
   line-height: 20px;
   color: #03182b;
-  font-size: 14px;
+  font-size: 0.875rem;
   text-align: left;
   font-family: PingFangSC-medium;
   font-weight: 600;
@@ -1546,6 +1554,21 @@ input {
   /* 这里是超出几行省略 */
   overflow: hidden;
 }
+.difyTitle-container{
+  width: 4.06rem;
+  height: 1.56rem;
+  background: linear-gradient(131.82deg, rgba(255, 255, 255, 1) 5.19%, rgba(253, 203, 241, 1) 100.78%);
+  border-radius: 0.31rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.15rem;
+  color:#1684fc;
+  line-height: 28px;
+  padding: 2px 0 2px 0;
+
+}
+
 </style>
 
     

@@ -1414,10 +1414,11 @@ input {
   display: inline-block;
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
 }
 
 .difyCont {
-  background: linear-gradient(to bottom, #f3f2f5, #FDCBF1);
+  background: linear-gradient(to bottom,#F3F2F5 40% , #DFE5FD 50%, #FDCBF1 100%);
   line-height: 28px;
   font-weight: 600;
   font-size: 1.25rem;

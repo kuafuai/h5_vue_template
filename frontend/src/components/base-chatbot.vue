@@ -655,10 +655,16 @@ const typeWriterEffect = (content) => {
   background-color: #fff;
   overflow: hidden;
   flex: 1;
-  padding-top: 1.25px;
   /* 防止溢出 */
 }
-
+.chat-history{
+  padding-top: 1.3125rem;
+  box-sizing: border-box;
+}
+.decoration-box{
+  padding-top: 0.4375rem;
+  box-sizing: border-box;
+}
 .navbar {
   position: fixed;
   left: 0;

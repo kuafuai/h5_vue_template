@@ -1430,7 +1430,7 @@ input {
   font-family: PingFangSC-regular;
   line-height: 20px;
   margin-bottom: 6px;
-  font-style: italic;
+  /*font-style: italic;*/
   font-weight: 500;
 }
 

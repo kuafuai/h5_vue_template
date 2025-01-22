@@ -40,9 +40,29 @@ const props = defineProps({
 
 const change = (e) => {
   // #ifdef MP-WEIXIN
-  wx.navigateTo({
-    url: "/pages" + props.navigations[e.detail.index].page + "/index"
-  })
+  console.log("eee", e)
+  let route = props.navigations[e.detail.index].page
+  if (route) {
+    // 判断是否是完整的网址
+    if (route.startsWith('http://') || route.startsWith('https://')) {
+      wx.navigateTo({
+        url: `/pages/web_view/index?url=${route}`
+      });
+    } else {
+      // 判断是否以 / 开头
+      if (!route.startsWith('/')) {
+        route = '/' + route;
+      }
+      console.log("跳转到页面:", route);
+/*      wx.navigateTo({
+        url: "/pages" + route + "/index"
+      })*/
+      proxy.$navigate("/pages" + route + '/index', false);
+
+    }
+  } else {
+    console.error("未指定页面地址");
+  }
   // #endif
 }
 
@@ -63,9 +83,11 @@ const goToPage = (route) => {
       }
       console.log("跳转到页面:", route);
 
-      wx.navigateTo({
-        url: "/pages" + route + "/index"
-      })
+      proxy.$navigate("/pages" + route + '/index', false);
+
+      /*      wx.navigateTo({
+              url: "/pages" + route + "/index"
+            })*/
     }
   } else {
     console.error("未指定页面地址");

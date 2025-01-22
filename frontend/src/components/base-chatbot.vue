@@ -9,13 +9,13 @@
         <view v-if="msg.role === 'ai'" class="message-ai">
           <view class="ai-container" :class="{ 'no-backgroundcolor': sentFiles && isSent }">
             <view class="message-content ai-content" :class="{ 'no-shadow': sentFiles && isSent }">
-              <markdown-render :markdown="msg.content" />
+              <markdown-render :markdown="msg.content"/>
             </view>
             <view v-if="index === messages.length - 1">
               <view v-if="sentFiles && isSent" class="divider"></view>
               <view class="button-container" v-if="sentFiles && isSent">
                 <view v-if="sentFiles && isSent" @click="exportToWord(msg.content)" class="button-container-word">
-                  <image src="../static/littleword.png" mode="scaleToFill" />
+                  <image src="../static/littleword.png" mode="scaleToFill"/>
                   <view style="color: #3273f3; font-size: 14px">导出word</view>
                 </view>
 
@@ -40,7 +40,7 @@
         <view v-else class="message-user">
           <view v-if="msg.file" class="message-file">
             <view class="message-file-icon">
-              <image src="../static/wenjianleixing.png" alt="" />
+              <image src="../static/wenjianleixing.png" alt=""/>
             </view>
             <view class="message-file-name">{{ msg.file.name }}</view>
           </view>
@@ -58,21 +58,21 @@
       <!-- 智能体装修 -->
 
       <view :class="isAnMation ? 'decoration-boxs decoration-box-empty' : 'decoration-box'">
-        <!-- <view v-if="!isInputFocused" @click="shareAdd">
+        <!--view v-if="!isInputFocused" @click="shareAdd">
           <image src="../static/fenxianglianjie.png" style="width: 1.56rem;height: 1.56rem;position: fixed;
     right: 0.31rem;
-    top: 3.63rem;
-    z-index: 9999;" mode="scaleToFill" />
-        </view> -->
+    top: 7%;
+    z-index: 9999;" mode="scaleToFill"/>
+        </view>-->
 
         <view class="decoration-head" v-if="!isInputFocused">
           <view class="difyTitle">
             <text class="difyCont">{{ difyTitle }}</text>
-            <view v-if="!isInputFocused" @click="shareAdd" class="difyTitle-container">
-              <image src="../static/fenxianglianjie.png"
-                     style="width: 1rem;height: 1rem; color: #3273f3; " mode="scaleToFill" />
-              <text style="font-size: 0.88rem;">分享</text>
-            </view>
+                        <view v-if="!isInputFocused" @click="shareAdd" class="difyTitle-container">
+                          <image src="../static/fenxianglianjie.png"
+                                 style="width: 1rem;height: 1rem; color: #3273f3; " mode="scaleToFill" />
+                          <text style="font-size: 0.88rem;">分享</text>
+                        </view>
           </view>
           <view class="initialSentenceContent"> {{ initialSentenceContent }}</view>
         </view>
@@ -87,15 +87,16 @@
                 <image class="file-icon" src="../static/wenjianleixing.png"></image>
                 <text class="file-name">{{ uploadedFile.name }}</text>
                 <view class="delete-icon" @click="deleteFile">
-                  <image src="../static/shanchu.png" alt="" />
+                  <image src="../static/shanchu.png" alt=""/>
                 </view>
               </view>
               <view v-if="uploadedFile" class="divider"></view>
               <view class="input-container" :class="{ 'no-border': uploadedFile }">
                 <!-- 输入框 -->
-                <uni-easyinput :focus="isFocus" v-model="inputText" :placeholder="inputPlaceholder"
-                               @focus="setPlaceholder" @confirm="sendMessageFn('1')" :confirmType="done" :disabled="isSending"
-                               @blur="onInputBlur" />
+                <uni-easyinput :focus="isFocus" v-model="inputText" :placeholder="inputPlaceholder" :inputBorder="false"
+                               @focus="setPlaceholder" @confirm="sendMessageFn('1')" :confirmType="done"
+                               :disabled="isSending"
+                               @blur="onInputBlur"/>
 
                 <!-- 发送按钮 -->
                 <view class="send-icon">
@@ -107,7 +108,7 @@
                       'icon-image': !isFocused && !isTrue && !uploadedFile /* 默认样式 */,
                       'icon-imageFocused': isFocused || isTrue || uploadedFile /* 聚焦时样式或有文件时样式 */,
                       rotate: !isFocused && !uploadedFile && showOptions /* 点击时旋转，但仅在没有文件上传的情况下 */,
-                    }" />
+                    }"/>
                   </view>
                 </view>
               </view>
@@ -116,7 +117,7 @@
             <view v-if="showOptions" class="options-container">
               <view class="option" @click="chooseFile">
                 <view class="option-icon">
-                  <image src="../static/wenjian.png" mode="widthFix" />
+                  <image src="../static/wenjian.png" mode="widthFix"/>
                 </view>
                 <view class="option-text">文件</view>
               </view>
@@ -190,14 +191,15 @@
 </template>
 
 <script setup>
-import { nextTick, ref, watch } from "vue";
-import { fetchEventSource } from "@microsoft/fetch-event-source";
+import {nextTick, ref, watch} from "vue";
+import {fetchEventSource} from "@microsoft/fetch-event-source";
 import MarkdownRender from "./MarkdownRender.vue";
-// import BaseUpload from "@/components/base-upload.vue";
-// import BaseSelect from "@/components/base-select.vue";
+
 const BASE_API = import.meta.env.VITE_APP_BASE_API;
-const { proxy } = getCurrentInstance();
+const {proxy} = getCurrentInstance();
+// #ifdef H5
 const ctrl = new AbortController();
+// #endif
 const conversationId = ref();
 const token = uni.getStorageSync("h5_token");
 const messages = ref([]);
@@ -218,12 +220,9 @@ const isTrue = ref(true)
 // 输入框书否聚焦
 const isFocus = ref(false);
 
-const fileList = ref();
 const isSent = ref(false);
 const aiOptions = ref(["码上飞"]);
-const toggleModal = () => {
-  showModal.value = !showModal.value;
-};
+
 
 // 关闭弹窗
 const closeModal = () => {
@@ -237,7 +236,6 @@ const selectOption = (index) => {
   closeModal(); // 选择后关闭弹窗
 };
 const selectedIndex = ref(0);
-const data = { text: "aaa", value: "1" };
 const inputAreaBottom = ref(12);
 // 切换功能区域的显示与隐藏
 const toggleOptions = () => {
@@ -290,12 +288,6 @@ const onInputBlur = () => {
 // 判断是否点击回车
 const enterNum = ref("");
 
-// const currentClickHandler = computed(() => {
-// console.log(enterNum.value,"enterNum.value")
-//   return uploadedFile.value || isFocused.value || isTyping.value
-//     ? sendMessage(null, enterNum.value)
-//     : toggleOptions;
-// });
 
 const currentClickHandler = () => {
   console.log(enterNum.value, "enterNum.value");
@@ -383,11 +375,10 @@ const emits = defineEmits(["send_message", "send_message"]);
 const difyTitle = ref("");
 const initialSentenceContent = ref("");
 const questions = ref([
-  "帮我写一个小作文",
-  "帮我写一个码上飞",
-  "码上飞很不错，我也想做一个码上飞",
+  "给我讲一个睡前小故事",
+  "帮我写一个工作报告",
+  "提高编程效率的办法",
 ]);
-const showContent = ref(true)
 const downLoadFileRequest = ref({
   content: "",
   conversationId: conversationId,
@@ -428,21 +419,24 @@ watch(
         scrollToBottom(); // 如果当前在底部，则新增消息时滚动到底部
       }
     },
-    { deep: true }
+    {deep: true}
 );
 
 // 更新 message 内容并自动滚动到最新的消息
 const scrollToBottom = () => {
+  // #ifdef H5
   uni.pageScrollTo({
     scrollTop: document.body.scrollHeight, // 滚动到页面的最底部
     duration: 300, // 滚动持续时间
   });
+  // #endif
 };
-const onScroll = () => { };
+const onScroll = () => {
+};
 
 const initialSentence = async () => {
   const res = await proxy.$api.dify_config.get(1);
-
+  console.log("res chatbot", res)
 
   if (res.data && res.data.initialSentence) {
     initialSentenceContent.value = res.data.initialSentence;
@@ -467,7 +461,9 @@ const initialSentence = async () => {
       jsonQuestions = jsonQuestions.replace(/'/g, '"');
     }
 
+    console.log("jssonQuestions", jsonQuestions)
     // 将字符串转换为数组
+
     let arr = JSON.parse(jsonQuestions);
     questions.value = arr;
     console.log("questions", questions.value);
@@ -481,7 +477,7 @@ onMounted(async () => {
 // 发送消息
 const sendMessage = (text, isEnter) => {
   console.log(text, isEnter);
-  if (isTyping.value && isEnter == "1" ) {
+  if (isTyping.value && isEnter == "1") {
     console.log("正在输入，按下回车或空格时不会发送");
     return;
   }
@@ -493,7 +489,7 @@ const sendMessage = (text, isEnter) => {
     isTrue.value = true
     if ((!inputText.value.trim() && !text) || isSending.value) return;
     isSending.value = true; // 设置为发送中状态
-    const currentFile = uploadedFile.value ? { ...uploadedFile.value } : null;
+    const currentFile = uploadedFile.value ? {...uploadedFile.value} : null;
 
     if (fileInput.value) {
       console.log("====", fileInput.value);
@@ -520,11 +516,9 @@ const sendMessage = (text, isEnter) => {
     enterNum.value = 0;
   }
 };
-const getFileName = (fileUrl) => {
-  return fileUrl.split("/").pop(); // 提取路径最后一部分作为文件名
-};
+
 // 使用 SSE 连接后端并处理数据
-const startSseConnection = (query) => {
+const startSseConnection = async (query) => {
   if (eventSource) {
     eventSource.close(); // 如果已有连接，则关闭之前的连接
   }
@@ -536,6 +530,16 @@ const startSseConnection = (query) => {
   }
 
   const jsonData = JSON.stringify(chatbotRequest.value);
+
+
+  // #ifdef MP-WEIXIN
+  // 如果是微信使用阻塞模式
+  const res = await proxy.$api.chatbot.callBlock(jsonData)
+  console.log("resres", res)
+  messages.value.push({role: "ai", content: res.data.answer});
+  // #endif
+
+  // #ifdef H5
   fetchEventSource(BASE_API + "/chatbot", {
     method: "POST",
     openWhenHidden: true,
@@ -551,16 +555,13 @@ const startSseConnection = (query) => {
       try {
         const newMessage = JSON.parse(event.data);
         if (newMessage.event === "workflow_started") {
-          messages.value.push({ role: "ai", content: "" });
+          messages.value.push({role: "ai", content: ""});
           if (newMessage.conversation_id != null) {
             conversationId.value = newMessage.conversation_id;
           }
         }
         if (newMessage.event === "message") {
-          messages.value[messages.value.length - 1].content +=
-              newMessage.answer;
-          // console.log('msg-' + (messages.value.length - 1), "'msg-'+messages.value.length - 1")
-          // lastMessageId.value = 'msg-' + (messages.value.length - 1)
+          messages.value[messages.value.length - 1].content += newMessage.answer;
         }
         if (newMessage.event === "message_end") {
           isSending.value = false;
@@ -588,16 +589,9 @@ const startSseConnection = (query) => {
       isSending.value = false;
     },
   });
+  // #endif
+  isSending.value = false
 };
-
-// 获取上传状态
-function select(selectedFile) {
-  fileInput.value = selectedFile;
-  // 构建请求 URL
-  console.log("selectedFile = ", selectedFile);
-  console.log("selectedFile.tempFiles[0] = ", selectedFile.tempFiles[0]);
-  console.log("选择文件：", selectedFile);
-}
 
 const shareAdd = async () => {
   uni.setClipboardData({
@@ -617,30 +611,7 @@ const shareAdd = async () => {
     },
   });
 }
-// 打字机效果
-const typeWriterEffect = (content) => {
-  const aiMessage = { role: "ai", content: "" };
-  messages.value.push(aiMessage);
 
-  let i = 0;
-  aiMessage.content = "";
-
-  const interval = setInterval(() => {
-    aiMessage.content += content[i];
-    i++;
-
-    // 更新 message 内容并自动滚动到最新的消息
-    nextTick(() => {
-      const chatHistory = document.querySelector(".chat-history");
-      chatHistory.scrollTop = chatHistory.scrollHeight;
-    });
-
-    if (i === content.length) {
-      clearInterval(interval);
-      isSending.value = false; // 回复完成后恢复发送按钮状态
-    }
-  }, 100); // 每100毫秒显示一个字符，模拟打字机效果
-};
 </script>
 
 <style scoped>
@@ -651,20 +622,23 @@ const typeWriterEffect = (content) => {
 .chat-page {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
   background-color: #fff;
   overflow: hidden;
   flex: 1;
   /* 防止溢出 */
 }
-.chat-history{
+
+.chat-history {
   padding-top: 1.3125rem;
   box-sizing: border-box;
 }
-.decoration-box{
+
+.decoration-box {
   padding-top: 0.4375rem;
   box-sizing: border-box;
 }
+
 .navbar {
   position: fixed;
   left: 0;
@@ -918,7 +892,8 @@ const typeWriterEffect = (content) => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.additional-button:hover {}
+.additional-button:hover {
+}
 
 .message-file-name {
   font-size: 14px;
@@ -1038,7 +1013,7 @@ input {
 .send-icon {
   flex: 1;
   width: 40px;
-  height: 40px;
+  height: 31px;
   background-color: #ffffff;
   /* 按钮背景色 */
   border-radius: 50%;
@@ -1288,7 +1263,8 @@ input {
 }
 
 /* 选中状态：背景色 */
-.modal-item.selected {}
+.modal-item.selected {
+}
 
 /* 弹窗从下往上动画 */
 @keyframes slide-up {
@@ -1418,7 +1394,7 @@ input {
 }
 
 .difyCont {
-  background: linear-gradient(to bottom,#F3F2F5 40% , #DFE5FD 50%, #FDCBF1 100%);
+  background: linear-gradient(to bottom, #F3F2F5 40%, #DFE5FD 50%, #FDCBF1 100%);
   line-height: 28px;
   font-weight: 600;
   font-size: 1.25rem;
@@ -1561,16 +1537,17 @@ input {
   /* 这里是超出几行省略 */
   overflow: hidden;
 }
-.difyTitle-container{
+
+.difyTitle-container {
   width: 4.06rem;
   height: 1.56rem;
   background: linear-gradient(131.82deg, rgba(255, 255, 255, 1) 5.19%, rgba(253, 203, 241, 1) 100.78%);
   border-radius: 0.31rem;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:0.15rem;
-  color:#1684fc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  color: #1684fc;
   line-height: 28px;
   padding: 2px 0 2px 0;
 

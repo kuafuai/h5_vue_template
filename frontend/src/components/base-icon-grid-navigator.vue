@@ -19,7 +19,7 @@ import {onLoad} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance()
 const emits = defineEmits(["click_item", "click_item"]);
-
+const currentPage = ref();
 
 const props = defineProps({
   navigations: {
@@ -38,8 +38,19 @@ const props = defineProps({
   }
 })
 
+const change = (e) => {
+  // #ifdef MP-WEIXIN
+  wx.navigateTo({
+    url: "/pages" + props.navigations[e.detail.index].page + "/index"
+  })
+  // #endif
+}
+
 
 const goToPage = (route) => {
+  currentPage.value = route
+  console.log("route", route)
+  // #ifdef H5
   if (route) {
     // 判断是否是完整的网址
     if (route.startsWith('http://') || route.startsWith('https://')) {
@@ -51,11 +62,15 @@ const goToPage = (route) => {
         route = '/' + route;
       }
       console.log("跳转到页面:", route);
-      proxy.$navigate("/pages" + route + '/index', false);
+
+      wx.navigateTo({
+        url: "/pages" + route + "/index"
+      })
     }
   } else {
     console.error("未指定页面地址");
   }
+  // #endif
 }
 
 // 文本截断函数，限制最大字符数

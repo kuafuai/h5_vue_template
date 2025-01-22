@@ -12,7 +12,7 @@
           <view class="swiper-item" :class="'swiper-item' + index">
             <!--                    <text style="color: #fff; font-size: 32px;">{{ item.content }}</text>-->
             <image class="swiper-image" :src="item.imageUrl" mode="aspectFill"
-                   style="width: 100%; height: 200px;" @click="clickItem(item)"></image>
+                   style="width: 100%; height: 200px;" @click="onBannerClick(item)"></image>
           </view>
         </swiper-item>
       </swiper>
@@ -26,7 +26,6 @@ import {defineProps} from "vue";
 
 const emits = defineEmits(['click_item'])
 const {proxy} = getCurrentInstance()
-
 const data = ref([])
 const current = ref(0);
 const mode = ref('dot');
@@ -58,8 +57,19 @@ onLoad(async () => {
     data.value = res.data.records
   }
 })
-const clickItem = (item) => {
+
+function onBannerClick(item) {
+  console.log("bannerItem", item)
+  // #ifdef H5
   emits('click_item', item)
+  // #endif
+
+  // #ifdef MP-WEIXIN
+  const link = item.url;
+  wx.navigateTo({
+    url: `/pages/web_view/index?url=${link}`
+  });
+  // #endif
 }
 
 </script>

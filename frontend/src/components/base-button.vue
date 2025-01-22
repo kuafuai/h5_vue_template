@@ -44,6 +44,14 @@ const props = defineProps({
   isChoose: {
     type: Array,
     default: "",
+  },
+  bt_color: {
+    type: String,
+    default: "rgba(93, 95, 239, 1)"
+  },
+  ft_color: {
+    type: String,
+    default: "white"
   }
 });
 const emits = defineEmits(["click"]);
@@ -57,8 +65,8 @@ const click = () => {
 
 <style scoped lang="scss">
 .base-buttom {
-  color: white;
-  background-color: rgba(93, 95, 239, 1);
+  color: v-bind(ft_color);
+  background-color: v-bind(bt_color);
   margin: 0.625rem;
   display: flex;
   align-items: center;

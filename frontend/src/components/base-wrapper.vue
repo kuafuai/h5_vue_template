@@ -1,5 +1,5 @@
 <template>
-  <view :class="wrapperClass+' box'">
+  <view :class="wrapperClass">
     <slot/>
   </view>
 </template>
@@ -17,7 +17,8 @@ const props = defineProps({
   y: {type: String, default: ''},
   h_full: {type: Boolean, default: false},
   w_full: {type: Boolean, default: false},
-  bg_color: {type: String, default: ''}
+  bg_color: {type: String, default: ''},
+  scroll_box: {type: Boolean ,default : false}
 });
 
 const wrapperClass = ref('');
@@ -73,6 +74,13 @@ function getWrapperClass() {
     c += ' ' + props.bg_color + ' ';
   }
 
+  if(props.scroll_box){
+    c += ' overflow-y-scroll'
+  }
+  else{
+    c+= ' box'
+  }
+
   wrapperClass.value = c;
 }
 
@@ -91,7 +99,6 @@ getWrapperClass();
 .box {
   display: flex;
   flex-direction: column;
-
   background: rgb(245, 247, 250);
   /* padding: 0 0 2rem 0; */
   /* box-sizing: border-box; */

@@ -18,7 +18,7 @@ const props = defineProps({
   h_full: {type: Boolean, default: false},
   w_full: {type: Boolean, default: false},
   bg_color: {type: String, default: ''},
-  scroll_box: {type: Boolean ,default : false}
+  scroll_box: {type: Boolean ,default : true}
 });
 
 const wrapperClass = ref('');

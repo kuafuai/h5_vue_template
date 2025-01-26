@@ -36,54 +36,45 @@ const renderedMarkdown = computed(() => {
   white-space: pre-wrap !important;
 }
 
-.marks {
-  h1,
-  h2,
-  h3,
-  p,
-  ul li,
-  ol li {
-    line-height: 38px !important;
+.marks{
+  ::v-deep h1,h2,h3,p,ul li,ol li{
+    color: #ddd;
+    line-height: 38px;
   }
-
-  h1 {
+  ::v-deep h1{
     margin-bottom: 20px;
     font-size: 26px !important;
   }
-
-  h2 {
+  ::v-deep h2{
     margin-bottom: 18px;
     font-size: 24px !important;
   }
-
-  h3 {
+  ::v-deep h3{
     font-size: 22px !important;
     margin-bottom: 16px;
   }
-
-  h4 {
+  ::v-deep h4{
     margin-bottom: 14px;
     font-size: 20px !important;
   }
-
-  h5 {
+  ::v-deep h5{
     margin-bottom: 10px;
     font-size: 18px !important;
   }
-
-  h6 {
+  ::v-deep h6{
     margin-bottom: 10px;
     font-size: 16px !important;
   }
-
-  ul {
+  ::v-deep ul{
     margin-bottom: 10px;
     padding-left: 20px;
+    li{
+      margin-left: 20px;
+      list-style-type: square;
+    }
   }
-
-  ul li {
-    margin-left: 20px;
-    list-style-type: square;
+  ::v-deep hr{
+    margin: 25rpx 0;
   }
 
 }

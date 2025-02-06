@@ -77,7 +77,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/chatbot/**","/difyConfig/**").permitAll()
                 .antMatchers("/common/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
-                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll();
+                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()
+                .antMatchers("/**/*.png","/**/*.jpg","/**/*.svg","/**/*.ico").permitAll()
+                .antMatchers("/").permitAll();
 
 
         handlerMethods.forEach((info, method) -> {

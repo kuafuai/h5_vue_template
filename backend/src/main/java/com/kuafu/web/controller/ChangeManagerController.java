@@ -14,6 +14,7 @@ import com.kuafu.common.util.*;
 import com.kuafu.flowable.domain.FlowProcDefDto;
 import com.kuafu.flowable.domain.FlowTaskVo;
 import com.kuafu.flowable.service.IFlowDefinitionService;
+import com.kuafu.qywx.service.QyWxBusinessService;
 import com.kuafu.web.entity.*;
 import com.kuafu.web.flowable.ChangeManagerBusinessService;
 import com.kuafu.web.service.*;
@@ -24,6 +25,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -54,6 +56,11 @@ public class ChangeManagerController {
     private final IChangeFollowService followService;
 
     private final IChangeFollowAllService followAllService;
+
+    private final QyWxBusinessService qyWxBusinessService;
+
+    @Value("${qywx.message.url}")
+    private String messageUrl;
 
     @PostMapping("page")
     @ApiOperation("分页")
@@ -439,15 +446,15 @@ public class ChangeManagerController {
     @GetMapping("getCode")
     public BaseResponse getChangeCode(String codeType) {
         String code = "ECR编号";
-        String type = "ECR";
+        String type = "ECR/ECN";
         String value = "";
-        if (StringUtils.equalsIgnoreCase(codeType, "ECR")) {
-            code = "ECR编号";
-            type = "ECR";
-        } else {
-            code = "ECN编号";
-            type = "ECN";
-        }
+//        if (StringUtils.equalsIgnoreCase(codeType, "ECR")) {
+//            code = "ECR编号";
+//            type = "ECR";
+//        } else {
+//            code = "ECN编号";
+//            type = "ECN";
+//        }
 
         String infoValue = changeManagerInfoService.getInfoValue(code);
         String today = DateUtils.dateTime();
@@ -492,8 +499,46 @@ public class ChangeManagerController {
 
             followService.save(changeFollow);
 
+            ChangeManager entity = this.changeManagerService.getById(changeId);
+            if (entity == null) {
+                return ResultUtils.success("数据有误");
+            }
+            UserInfo userInfo = userInfoService.getById(personId);
+            String userId = userInfo.getUserId();
+
+            // 发送企业微信消息
+            qyWxBusinessService.sendTextCardMessage(userId, "变更关注",
+                    "您收到一条：变更任务（" + entity.getChangeTitle() + "）关注邀请。",
+                    messageUrl);
+
             return ResultUtils.success("关注成功");
         }
+    }
+
+    @PostMapping("changeFollow")
+    @ApiOperation("分页")
+    public BaseResponse changeFollow(@RequestBody ChangeManagerPageVO pageVO) {
+        IPage<ChangeFollowAll> page = new Page<>(pageVO.getCurrent(), pageVO.getPageSize());
+
+        LambdaQueryWrapper<ChangeFollowAll> queryWrapper = new LambdaQueryWrapper<>();
+
+        if (StringUtils.isNotEmpty(pageVO.getChangeTitle())) {
+            queryWrapper.like(ChangeFollowAll::getChangeTitle, pageVO.getChangeTitle());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeCustomer())) {
+            queryWrapper.like(ChangeFollowAll::getChangeCustomer, pageVO.getChangeCustomer());
+        }
+        if (StringUtils.isNotEmpty(pageVO.getChangeProjectName())) {
+            queryWrapper.like(ChangeFollowAll::getChangeProjectName, pageVO.getChangeProjectName());
+        }
+
+        if (pageVO.getChangeId() != null) {
+            queryWrapper.eq(ChangeFollowAll::getChangeId, pageVO.getChangeId());
+        }
+
+        queryWrapper.orderByDesc(ChangeFollowAll::getChangeId);
+
+        return ResultUtils.success(followAllService.page(page, queryWrapper));
     }
 
     @PostMapping("myFollow")
@@ -513,6 +558,9 @@ public class ChangeManagerController {
             queryWrapper.like(ChangeFollowAll::getChangeProjectName, pageVO.getChangeProjectName());
         }
 
+        if (pageVO.getChangeId() != null) {
+            queryWrapper.eq(ChangeFollowAll::getChangeId, pageVO.getChangeId());
+        }
 
         queryWrapper.eq(ChangeFollowAll::getFollowPersonId, SecurityUtils.getUserId());
 

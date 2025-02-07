@@ -157,5 +157,12 @@ export default {
             method: "post",
             data: query
         });
+    },
+    changeFollow(query) {
+        return service({
+            url: BASE_API + "/changeFollow",
+            method: "post",
+            data: query
+        });
     }
 };

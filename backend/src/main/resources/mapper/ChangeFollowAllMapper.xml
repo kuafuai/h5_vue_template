@@ -4,17 +4,19 @@
 
 
     <select id="selectList" resultType="com.kuafu.web.entity.ChangeFollowAll">
-        select cm.*, cf.follow_person_id
+        select cm.*, cf.follow_person_id,cf.follow_time, ui.user_name
         from change_follow cf
                  left join change_manager cm on cf.follow_change_id = cm.change_id
+                left join user_info ui on cf.follow_person_id = ui.user_info_id
 
             ${ew.customSqlSegment}
     </select>
 
     <select id="selectPage" resultType="com.kuafu.web.entity.ChangeFollowAll">
-        select cm.*, cf.follow_person_id
+        select cm.*, cf.follow_person_id,cf.follow_time,ui.user_name
         from change_follow cf
                  left join change_manager cm on cf.follow_change_id = cm.change_id
+                 left join user_info ui on cf.follow_person_id = ui.user_info_id
 
             ${ew.customSqlSegment}
     </select>

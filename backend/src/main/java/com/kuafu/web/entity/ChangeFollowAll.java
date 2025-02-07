@@ -15,6 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class ChangeFollowAll {
 
+    @TableField(value="cm.change_id")
     private Integer changeId;
 
     private String changeType;
@@ -39,4 +40,7 @@ public class ChangeFollowAll {
 
     @TableField(value="cf.follow_person_id")
     private Integer followPersonId;
+
+    private Date followTime;
+    private String userName;
 }

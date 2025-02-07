@@ -595,6 +595,32 @@
     </view>
   </uni-popup>
 
+  <uni-drawer ref="showLeft" mode="right" :width="420">
+      <view class="m-t-40 m-l-10">
+        <el-button round @click="handle_follow_person_btn">
+          <uni-icons type="star" size="15"></uni-icons>
+          添加关注人
+        </el-button>
+
+        <view class="m-t-10">
+          <base-table ref="refTableUserInfo" class="m-r-20" api="change_manager.changeFollow" :params="follow_params" :columns="[
+          { prop: 'name', label: '关注人', width: '140' },
+          { prop: 'name', label: '关注时间', width: '100' }
+        ]">
+            <template #default="{ item }">
+              <uni-td align="center">
+                <fui-text :text="item.userName" type="primary"></fui-text>
+              </uni-td>
+              <uni-td align="center">
+                <fui-text :text="item.followTime" :size="28"></fui-text>
+              </uni-td>
+            </template>
+          </base-table>
+        </view>
+
+      </view>
+  </uni-drawer>
+
 </template>
 
 <script setup>
@@ -632,6 +658,9 @@ if (currentUser != null) {
   allParams.value[parse["relevanceTable"] + "Id"] = parse.userId
 }
 
+const follow_params=ref({
+  changeId: allParams.value.changeId
+})
 
 const baseInfo = ref({
   changeStartTime: '',
@@ -1065,6 +1094,11 @@ function toPrint(frameWindow) {
 const followPerson = ref();
 
 function handle_follow_person() {
+  proxy.$refs.showLeft.open();
+}
+
+function  handle_follow_person_btn(){
+  proxy.$refs.showLeft.close();
   followPerson.value = null;
   proxy.$refs.submitFollowPersonPopup.open();
 }

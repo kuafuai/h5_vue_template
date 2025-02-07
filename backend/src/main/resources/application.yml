@@ -38,6 +38,9 @@ spring:
       max-request-size: 100MB
       max-file-size: 50MB
       enabled: true
+  web:
+    resources:
+      static-locations: file:${FRONTEND_DIR:/Users/jiangfei/kuafu/tmp/frontend/test/} , classpath:/dist/
 
 # 在控制台输出sql
 mybatis-plus:

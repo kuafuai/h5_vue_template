@@ -3,6 +3,7 @@ package com.kuafu.common.config;
 import com.kuafu.common.constant.Constants;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
@@ -15,5 +16,13 @@ public class ResourcesConfig implements WebMvcConfigurer {
         registry.addResourceHandler(Constants.RESOURCE_PREFIX + "/**")
                 .addResourceLocations("file:" + AppConfig.getProfile() + "/");
 
+    }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/{spring:\\w+}")
+                .setViewName("forward:/index.html");
+        registry.addViewController("/**/{spring:\\w+}")
+                .setViewName("forward:/index.html");
     }
 }

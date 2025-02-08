@@ -91,6 +91,16 @@ export const dynamicRoutes = [
         }
     },
     {
+        path: '/pages/document/index',
+        meta: {
+            title: '产品验收单下载',
+            shownot: false,
+            adminShow: true,
+            changeShow: false,
+            icon:'icon-biangeng'
+        }
+    },
+    {
         path: '/pages/flowable/definition/index',
         meta: {
             title: '流程定义',

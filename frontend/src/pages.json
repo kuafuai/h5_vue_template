@@ -30,6 +30,13 @@
       }
     },
     {
+      "path": "pages/document/index",
+      "style": {
+        "leftWindow": true,
+        "navigationBarTitleText": "物料下载"
+      }
+    },
+    {
       "path": "pages/approve/index",
       "style": {
         "leftWindow": true,

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -31,4 +32,6 @@ public class ChangeManagerVO {
     private String deployId;
     private String procDefId;
     private Map<String, Object> variables;
+
+    private List<Integer> approveUser;
 }

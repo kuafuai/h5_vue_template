@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service("taskBusinessService")
 @Slf4j
@@ -42,16 +43,25 @@ public class TaskBusinessService {
      *
      * @return
      */
-    public List<String> getUsersByApproveNode() {
-        log.info("TaskBusinessService=====>查询审批变更用户");
-        LambdaQueryWrapper<ApproveNode> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ApproveNode::getApproveNodeName, "审批变更");
-        List<ApproveNode> list = approveNodeService.list(queryWrapper);
-        if (list != null && !list.isEmpty()) {
-            ApproveNode node = list.get(0);
-            return Arrays.asList(StringUtils.split(node.getApproveUserId(), ","));
+    public List<String> getUsersByApproveNode(DelegateExecution execution) {
+        log.info("TaskBusinessService=====>查询审批变更用户{}", execution.getVariables());
+
+        Map<String, Object> vars = execution.getVariables();
+        if (vars.containsKey("approveUser")) {
+            List<Integer> approveUser = (List<Integer>) vars.get("approveUser");
+            return approveUser.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.toList());
         } else {
-            return Lists.newArrayList("1");
+            LambdaQueryWrapper<ApproveNode> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(ApproveNode::getApproveNodeName, "审批变更");
+            List<ApproveNode> list = approveNodeService.list(queryWrapper);
+            if (list != null && !list.isEmpty()) {
+                ApproveNode node = list.get(0);
+                return Arrays.asList(StringUtils.split(node.getApproveUserId(), ","));
+            } else {
+                return Lists.newArrayList("1");
+            }
         }
     }
 

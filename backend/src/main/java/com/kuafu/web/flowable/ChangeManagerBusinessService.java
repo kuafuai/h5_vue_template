@@ -67,6 +67,9 @@ public class ChangeManagerBusinessService {
         String procDefId = changeManagerVO.getProcDefId();
         Map<String, Object> variables = Maps.newHashMap();
         variables.putAll(changeManagerVO.getVariables());
+        if (changeManagerVO.getApproveUser() != null && !changeManagerVO.getApproveUser().isEmpty()) {
+            variables.put("approveUser", changeManagerVO.getApproveUser());
+        }
 
         String procInsId = flowDefinitionService.startProcessInstanceById(procDefId, variables);
 

@@ -66,6 +66,14 @@
                                    :format="'yyyy-MM-dd'" :value-format="'yyyy-MM-dd'"/>
             </uni-forms-item>
 
+            <uni-forms-item label="指定审批人">
+              <el-select v-model="baseFormData.approveUser" multiple filterable remote :remote-method="load_site"
+                         :loading="site_loading"
+                         placeholder="通过用户名称模糊查询">
+                <el-option v-for="item in site_options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+            </uni-forms-item>
 
 
           </uni-forms>
@@ -104,6 +112,10 @@ const baseFormData = ref({
   changeEndTimeOption: [], // 初始化为空数组，以便可以存储选择的选项
   changeEndTime: ''
 });
+
+const site_loading = ref(false);
+const site_options = ref([]);
+
 const changeEndTimeOptions = ref([
   {
     text: '自然切换',
@@ -225,6 +237,32 @@ async function submitForm() {
 
   })
 
+}
+
+function load_site(query) {
+  if (query !== '') {
+    site_loading.value = true;
+    setTimeout(() => {
+
+      site_loading.value = false;
+
+      let params = {
+        userName: query
+      }
+
+      proxy.$api.userinfo.select_list(params).then(res => {
+        if (res.code === 0 && res.data.length > 0) {
+          site_options.value = res.data;
+
+        } else {
+          site_options.value = [];
+        }
+      })
+
+    }, 200);
+  } else {
+    site_options.value = [];
+  }
 }
 
 onShow(() => {

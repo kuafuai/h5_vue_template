@@ -36,7 +36,7 @@ public class StaticResource implements Serializable {
     /**
      * 关联表主键值
      */
-    private Integer relatedTableKey;
+    private Long relatedTableKey;
 
     private String relateTableColumnName;
 
@@ -82,12 +82,20 @@ public class StaticResource implements Serializable {
         this.relatedTableName = relatedTableName;
     }
 
-    public Integer getRelatedTableKey() {
+    public Long getRelatedTableKey() {
         return relatedTableKey;
     }
 
     public void setRelatedTableKey(Integer relatedTableKey) {
+        this.relatedTableKey = Long.valueOf(relatedTableKey);
+    }
+
+    public void setRelatedTableKey(Long relatedTableKey) {
         this.relatedTableKey = relatedTableKey;
+    }
+
+    public void setRelatedTableKey(String relatedTableKey) {
+        this.relatedTableKey = Long.valueOf(relatedTableKey);
     }
 
     @Override

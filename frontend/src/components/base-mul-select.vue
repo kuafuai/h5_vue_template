@@ -8,9 +8,16 @@
         <uni-tag :circle="true" :inverted="true" :text="item.text" type="primary" size="small"/>
       </uni-badge>
     </view>
-    <uni-data-select :clear="false" :placeholder="'请选择'+title" :localdata="selectData"
-                     :filter="true" @change="select_change">
-    </uni-data-select>
+<!--    <uni-data-select :clear="false" :placeholder="'请选择'+title" :localdata="selectData"-->
+<!--                     :filter="true" @change="select_change">-->
+<!--    </uni-data-select>-->
+    <el-select  filterable remote :remote-method="load_site"
+               :loading="site_loading"
+                @change="select_change"
+               placeholder="通过用户名称模糊查询">
+      <el-option v-for="item in site_options" :key="item.value" :label="item.label" :value="item.value">
+      </el-option>
+    </el-select>
   </base-wrapper>
 </template>
 <script setup>
@@ -42,7 +49,7 @@ watch(() => props.texts, val => {
 const selectData = ref([]);
 
 onLoad(() => {
-  refresh();
+  // refresh();
 });
 
 function refresh() {
@@ -58,8 +65,39 @@ function apiMethod() {
   return props.api.split('.').reduce((acc, item) => acc[item], proxy.$api)();
 }
 
+const site_loading = ref(false);
+const site_options = ref([]);
+
+function load_site(query) {
+  if (query !== '') {
+    site_loading.value = true;
+    setTimeout(() => {
+
+      site_loading.value = false;
+
+      let params = {
+        userName: query
+      }
+
+      proxy.$api.userinfo.select_list(params).then(res => {
+        if (res.code === 0 && res.data.length > 0) {
+          site_options.value = res.data;
+
+        } else {
+          site_options.value = [];
+        }
+      })
+
+    }, 200);
+  } else {
+    site_options.value = [];
+  }
+}
+
 function select_change(value) {
-  const selectedOption = selectData.value.find(option => option.value === value);
+  console.log(value);
+  console.log(site_options.value)
+  const selectedOption = site_options.value.find(option => option.value === value);
   if (selectedOption) {
     let exists = fileList.value.some(item => item.id === String(selectedOption.value));
     if (!exists) {

@@ -93,7 +93,7 @@ export const dynamicRoutes = [
     {
         path: '/pages/document/index',
         meta: {
-            title: '产品验收单下载',
+            title: '表单下载',
             shownot: false,
             adminShow: true,
             changeShow: false,

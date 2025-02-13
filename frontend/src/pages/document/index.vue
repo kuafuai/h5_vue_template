@@ -20,8 +20,8 @@
     </view>
 
     <view>
-      <el-link class="m-10" type="success"  @click="handle_download('/profile/产品验收单.xls')">
-        下载“产品验收单”
+      <el-link class="m-10" type="success"  @click="handle_download('/profile/产品验收单-库存处理表.xls')">
+        下载“产品验收单-库存处理表”
       </el-link>
     </view>
 

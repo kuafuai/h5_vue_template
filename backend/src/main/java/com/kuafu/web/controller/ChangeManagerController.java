@@ -174,6 +174,7 @@ public class ChangeManagerController {
     public BaseResponse add(@RequestBody ChangeManagerVO vo) {
         UserInfo userInfo = userInfoService.getById(SecurityUtils.getUserId());
         if (userInfo.getChangePerson() != null && userInfo.getChangePerson()) {
+            vo.setChangeType(1);
             boolean flag = changeManagerBusinessService.processAddChangeManager(vo);
             return flag ? ResultUtils.success() : ResultUtils.error("发起变更失败");
         } else {

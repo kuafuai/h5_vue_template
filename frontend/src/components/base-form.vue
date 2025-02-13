@@ -95,7 +95,6 @@ const handleSubmit = async () => {
   }
 }
 onLoad(async () => {
-  console.log(1212131313)
   //   根据查询条件搜索
   if (props.model != "add") {
     // console.log(121212)

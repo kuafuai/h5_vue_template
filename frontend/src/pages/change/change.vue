@@ -22,9 +22,6 @@
           <uni-forms class="w-full" style="max-width: 90%" ref="baseForm" :rules="baseFormRules"
                      :modelValue="baseFormData"
                      label-width="120px">
-            <uni-forms-item label="变更类型" required name="changeType">
-              <uni-data-checkbox v-model="baseFormData.changeType" :localdata="changeTypes" @change="type_change"/>
-            </uni-forms-item>
             <uni-forms-item label="变更标题" required name="changeTitle">
               <uni-easyinput v-model="baseFormData.changeTitle" placeholder="请输入变更标题"/>
             </uni-forms-item>
@@ -52,11 +49,6 @@
             <uni-forms-item label="零件编号" required name="partNumber">
               <uni-easyinput type="textarea"  v-model="baseFormData.partNumber" placeholder="请输入零件编号"/>
             </uni-forms-item>
-
-            <!-- <uni-forms-item label="断点时间" required name="changeEndTime">
-              <uni-datetime-picker type="date" v-model="baseFormData.changeEndTime"
-                                   :format="'yyyy-MM-dd'" :value-format="'yyyy-MM-dd'"/>
-            </uni-forms-item> -->
 
             <uni-forms-item label="断点时间" required name="changeEndTimeOption">
               <uni-data-checkbox v-model="baseFormData.changeEndTimeOption" :localdata="changeEndTimeOptions" />
@@ -127,12 +119,6 @@ const changeEndTimeOptions = ref([
   }
 ]);
 const baseFormRules = ref({
-  changeType: {
-    rules: [{
-      required: true,
-      errorMessage: '变更类型不能为空'
-    }]
-  },
   changeTitle: {
     rules: [{
       required: true,
@@ -178,20 +164,8 @@ const baseFormRules = ref({
 })
 
 
-const changeTypes = ref([
-  {
-    text: 'ECR',
-    value: 1
-  },
-  {
-    text: 'ECN',
-    value: 2
-  }
-])
-
-async function type_change(e) {
-
-  const params = {changeType: e.detail.value}
+async function type_change() {
+  const params = {changeType: 1}
   let res = await proxy.$api.change_manager.flowFormData(params);
   if (res.code === 0) {
     baseFormData.value.deployId = res.data.deployId;
@@ -270,6 +244,7 @@ onShow(() => {
   const currentPage = pages[pages.length - 1];
   const route = currentPage.route;
   uni.$emit('updateRoute', route);
+  type_change();
 })
 </script>
 

@@ -21,7 +21,7 @@
         <view class="flex-between-start w-full">
 
           <view class="flex-around-start m-b-20">
-            <fui-text :text='baseInfo.changeType === 1 ? "[ECR]":"[ECN] "' type="black" size="36"></fui-text>
+<!--            <fui-text :text='baseInfo.changeType === 1 ? "[ECR]":"[ECN] "' type="black" size="36"></fui-text>-->
 
             <fui-text :text='baseInfo.changeTitle' type="black" size="36"></fui-text>
 
@@ -78,11 +78,11 @@
             <fui-text v-if="baseInfo.infoMap.变更类型.infoValue ===''" text="无"></fui-text>
             <fui-text :text="baseInfo.infoMap.变更类型.infoValue"></fui-text>
           </view>
-          <view style="width: 30%">
-            <fui-text text="产品代号："></fui-text>
-            <fui-text v-if="baseInfo.infoMap.产品代号.infoValue ===''" text="无"></fui-text>
-            <fui-text :text="baseInfo.infoMap.产品代号.infoValue"></fui-text>
-          </view>
+<!--          <view style="width: 30%">-->
+<!--            <fui-text text="产品代号："></fui-text>-->
+<!--            <fui-text v-if="baseInfo.infoMap.产品代号.infoValue ===''" text="无"></fui-text>-->
+<!--            <fui-text :text="baseInfo.infoMap.产品代号.infoValue"></fui-text>-->
+<!--          </view>-->
 
           <view style="width: 30%">
             <fui-text text="开发阶段："></fui-text>

@@ -30,8 +30,8 @@ spring:
     date-format: "yyyy-MM-dd"
     time-zone: GMT+8
   redis:
-    host: 114.116.233.39
-    password: lmxderedis
+    host: xxxxxx
+    password: xxxxxxxx
     database: 3
   servlet:
     multipart:
@@ -46,6 +46,12 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    default-enum-type-handler: com.kuafu.enums.handler.ValueEnumsTypeHandler
+  global-config:
+    db-config:
+      logic-delete-field: is_deleted # 全局逻辑删除字段名
+      logic-delete-value: 1 # 逻辑已删除值
+      logic-not-delete-value: 0 # 逻辑未删除值
 
 
 login:

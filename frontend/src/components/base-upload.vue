@@ -127,7 +127,9 @@ const uploadFile = (file) => {
         if (res.statusCode === 200) {
           const response = JSON.parse(res.data);
           if (response.code === 0) {
-            fileurl.value = response.data.url;
+            fileurl.value = [{
+              "url":response.data.url
+            }]
             resolve(res);
           } else {
             reject(new Error(response.message));

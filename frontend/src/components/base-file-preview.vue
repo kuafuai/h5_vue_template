@@ -1,6 +1,9 @@
 <template>
+
   <view class="flex">
-    <view class="file-preview" :style='{width: width+"px",height:height+"px",borderRadius:radius+"px"}'
+
+    <view
+          class="file-preview" :style='{width: width+"px",height:height+"px",borderRadius:radius+"px"}'
           v-for="(item, index) in fileList">
       <!-- 如果是图片类型，则显示图片 -->
       <view class="image_list">
@@ -8,9 +11,10 @@
                @click="previewImage(index)"/>
 
         <view v-else class="file-preview-button">
+
           <view v-if="item!=null && item!=''">
             <button @click="openFile(item.url)" class="custom-button">
-              {{ item.fileName }}
+              点击打开
             </button>
           </view>
           <view v-else>
@@ -46,13 +50,17 @@ const props = defineProps({
   radius: {
     type: Number,
     default: 5
+  },
+  single:{
+    type: Boolean,
+    default: false
   }
 });
 
 
 const fileExtension = ref('');
-
 watch(
+
     () => props.url,
     val => {
       if (val) {

@@ -18,7 +18,6 @@
 import {onLoad} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance()
-const emits = defineEmits(["click_item", "click_item"]);
 const currentPage = ref();
 
 const props = defineProps({

@@ -29,7 +29,6 @@
 
 <script setup>
 import * as echarts from 'echarts';
-
 const props = defineProps({
   option: {
     type: Array,
@@ -118,7 +117,7 @@ const getChartOption = () => {
         pageIconSize: 15, // 控制分页图标的大小
         pageButtonItemGap: 5, // 分页图标与图例项之间的间距
         formatter: function (name) {
-          return name.length > 5 ? name.substr(0, 5) + '...' : name;
+          return name.length > 20 ? name.substr(0, 5) + '...' : name;
         },
       },
       series: [
@@ -177,7 +176,7 @@ const getChartOption = () => {
         pageIconSize: 15, // 控制分页图标的大小
         pageButtonItemGap: 5, // 分页图标与图例项之间的间距
         formatter: function (name) {
-          return name.length > 5 ? name.substr(0, 5) + '...' : name;
+          return name.length > 9 ? name.substr(0, 5) + '...' : name;
         },
       },
       xAxis: {
@@ -185,7 +184,7 @@ const getChartOption = () => {
         data: props.option.map(item => item.name), // 假设数据是通过 props.option 传递的，且包含 name 属性
         axisLabel: {
           interval: 0, // 显示所有 x 轴标签
-          rotate: 30,  // 标签倾斜角度
+          rotate: 0,  // 标签倾斜角度
         }
       },
       yAxis: {
@@ -236,7 +235,7 @@ const getChartOption = () => {
         data: props.option.map(item => item.name), // 假设数据是通过 props.option 传递的，包含 name 属性
         axisLabel: {
           interval: 0, // 显示所有 X 轴标签
-          rotate: 30, // 标签旋转角度
+          rotate: 0, // 标签旋转角度
         },
       },
       yAxis: {

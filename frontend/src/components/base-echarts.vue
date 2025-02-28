@@ -100,7 +100,7 @@ onBeforeUnmount(() => {
 
 
 const getChartOption = () => {
-  if (props.group_result_show_display === 'pie') {
+  if (props.group_result_show_display === 'pie' || props.group_result_show_display === 'chart') {
     return {
       tooltip: {
         trigger: 'item',

@@ -95,7 +95,7 @@
               <uni-tag v-if="item.changeStatus === 3" text="已驳回" type="error" style="cursor: default;" />
 
             </uni-td>
-            <uni-td align="center" style="display:flex;align-items: center;justify-content: center;box-sizing:border-box;">
+            <uni-td align="center" style="box-sizing:border-box;">
               <view style=""><button size="mini" type="default"
                 style="color:#ffffff;backgroundColor:#63b463;borderColor:#1AAD19;margin-top: 9px;" @click="handle_task_info(item)">详情
               </button>

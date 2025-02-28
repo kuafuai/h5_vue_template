@@ -87,6 +87,7 @@ public class ChangeManagerBusinessService {
                 .changePersonName(currentUserInfo.getUserName())
                 .changeProjectStage(changeManagerVO.getChangeProjectStage())
                 .partNumber(changeManagerVO.getPartNumber())
+                .ecrNumber(String.valueOf(variables.getOrDefault("ECR编号", "")))
                 .flowableInstanceId(procInsId)
                 .build();
 
@@ -247,6 +248,32 @@ public class ChangeManagerBusinessService {
         }
 
         return todoList;
+    }
+
+    @Transactional
+    public boolean deleteChangeManager(Integer changeId) {
+        ChangeManager entity = this.changeManagerService.getById(changeId);
+
+        LambdaQueryWrapper<ChangeManagerSub> subQueryWrapper = new LambdaQueryWrapper<>();
+        subQueryWrapper.eq(ChangeManagerSub::getParentProcInsId, entity.getFlowableInstanceId());
+
+        // 关闭子任务
+        List<ChangeManagerSub> subRecordInfo = changeManagerSubService.list(subQueryWrapper);
+        for (ChangeManagerSub sub : subRecordInfo) {
+
+            String procInsId = sub.getSubProcInsId();
+            FlowTaskVo flowTaskVo = new FlowTaskVo();
+            flowTaskVo.setInstanceId(procInsId);
+            flowTaskService.stopProcess(flowTaskVo);
+
+        }
+
+        //关闭当前任务
+        FlowTaskVo flowTaskVo = new FlowTaskVo();
+        flowTaskVo.setInstanceId(entity.getFlowableInstanceId());
+        flowTaskService.stopProcess(flowTaskVo);
+
+        return changeManagerService.removeById(changeId);
     }
 
 
@@ -469,28 +496,34 @@ public class ChangeManagerBusinessService {
                 "        <table style=\"width: 100%%;\">\n" +
                 "            <tbody>\n" +
                 "                <tr>\n" +
+                "                    <td class=\"title\">变更编号</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
+                "                    <td class=\"title\">零件编号</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
+                "                </tr>\n" +
+                "                <tr>\n" +
                 "                    <td class=\"title\">变更标题</td>\n" +
-                "                    <td>%s</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
                 "                    <td class=\"title\">发起人</td>\n" +
-                "                    <td>%s</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
                 "                </tr>\n" +
                 "                <tr>\n" +
                 "                    <td class=\"title\">客户名称</td>\n" +
-                "                    <td>%s</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
                 "                    <td class=\"title\">项目名称</td>\n" +
-                "                    <td>%s</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
                 "                </tr>\n" +
                 "                <tr>\n" +
                 "                    <td class=\"title\">产品名称</td>\n" +
-                "                    <td>%s</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
                 "                    <td class=\"title\">项目阶段</td>\n" +
-                "                    <td>%s</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
                 "                </tr>\n" +
                 "                <tr>\n" +
                 "                    <td class=\"title\">发起时间</td>\n" +
-                "                    <td>%s</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
                 "                    <td class=\"title\">断点时间</td>\n" +
-                "                    <td>%s</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
                 "                </tr>\n" +
                 "            </tbody>\n" +
                 "        </table>\n" +
@@ -501,6 +534,7 @@ public class ChangeManagerBusinessService {
         }
 
         return String.format(html,
+                entity.getEcrNumber(), entity.getPartNumber(),
                 entity.getChangeTitle(), entity.getChangePersonName(),
                 entity.getChangeCustomer(), entity.getChangeProjectName(),
                 entity.getChangeProductName(), entity.getChangeProjectStage(),
@@ -517,15 +551,15 @@ public class ChangeManagerBusinessService {
                 "            <tbody>\n" +
                 "                <tr>\n" +
                 "                    <td class=\"title\">变更类型</td>\n" +
-                "                    <td>%s</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
                 "                    <td class=\"title\">开发阶段</td>\n" +
-                "                    <td>%s</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
                 "                </tr>\n" +
                 "                <tr>\n" +
                 "                    <td class=\"title\">变更原因</td>\n" +
-                "                    <td style=\"width: 20%%;\">%s</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
                 "                    <td class=\"title\">变更原因图片</td>\n" +
-                "                    <td style=\"width: 60%%;\">" +
+                "                    <td class=\"content\">" +
                 "<div class=\"image_box\" >\n" +
                 "                            \n" +
                 "%s" +
@@ -534,9 +568,9 @@ public class ChangeManagerBusinessService {
                 "                </tr>\n" +
                 "                <tr>\n" +
                 "                    <td class=\"title\">更改前说明</td>\n" +
-                "                    <td style=\"width: 20%%;\">%s</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
                 "                    <td class=\"title\">更改前说明图片</td>\n" +
-                "                    <td style=\"width: 60%%;\"> " +
+                "                    <td class=\"content\"> " +
                 "<div class=\"image_box\" >\n" +
                 "                            \n" +
                 "%s" +
@@ -545,9 +579,9 @@ public class ChangeManagerBusinessService {
                 "                </tr>\n" +
                 "                <tr>\n" +
                 "                    <td class=\"title\">更改后说明</td>\n" +
-                "                    <td style=\"width: 20%%;\">%s</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
                 "                    <td class=\"title\">更改后说明图片</td>\n" +
-                "                    <td style=\"width: 60%%;\">\n" +
+                "                    <td class=\"content\">\n" +
                 "                        <div class=\"image_box\" >\n" +
                 "%s" +
                 "                            \n" +
@@ -668,11 +702,11 @@ public class ChangeManagerBusinessService {
 
         String trHtml = "<tr>\n" +
                 "                    <td class=\"title\">审批节点</td>\n" +
-                "                    <td>%s</td>\n" +
+                "                    <td class=\"title\">%s</td>\n" +
                 "                    <td class=\"title\">处理人</td>\n" +
-                "                    <td>%s</td>\n" +
+                "                    <td class=\"title\">%s</td>\n" +
                 "                    <td class=\"title\">处理意见</td>\n" +
-                "                    <td>%s</td>\n" +
+                "                    <td class=\"content\">%s</td>\n" +
                 "                </tr>";
 
         StringBuilder sb = new StringBuilder();
@@ -757,6 +791,10 @@ public class ChangeManagerBusinessService {
                 "        line-height: 14px;\n" +
                 "        font-weight: 600;\n" +
                 "    }\n" +
+                "   .content {\n" +
+                "        width: 600px;\n" +
+                "        text-align: center;\n" +
+                "    }" +
                 "\n" +
                 "  </style>  \n" +
                 "</html>\n";

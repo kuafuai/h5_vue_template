@@ -23,6 +23,8 @@
           <view class="flex-around-start m-b-20">
 <!--            <fui-text :text='baseInfo.changeType === 1 ? "[ECR]":"[ECN] "' type="black" size="36"></fui-text>-->
 
+            <fui-text :text='baseInfo.changeId' type="primary" fontWeight="600" style="margin-right: 10px;" size="36"></fui-text>
+
             <fui-text :text='baseInfo.changeTitle' type="black" size="36"></fui-text>
 
             <fui-text v-if="baseInfo.changeType === 1" :text='"【 "+baseInfo.infoMap.ECR编号.infoValue+" 】"' type="black"
@@ -78,11 +80,11 @@
             <fui-text v-if="baseInfo.infoMap.变更类型.infoValue ===''" text="无"></fui-text>
             <fui-text :text="baseInfo.infoMap.变更类型.infoValue"></fui-text>
           </view>
-<!--          <view style="width: 30%">-->
-<!--            <fui-text text="产品代号："></fui-text>-->
-<!--            <fui-text v-if="baseInfo.infoMap.产品代号.infoValue ===''" text="无"></fui-text>-->
-<!--            <fui-text :text="baseInfo.infoMap.产品代号.infoValue"></fui-text>-->
-<!--          </view>-->
+
+          <view style="width: 30%">
+            <fui-text text="零件编号："></fui-text>
+            <fui-text :text="baseInfo.partNumber"></fui-text>
+          </view>
 
           <view style="width: 30%">
             <fui-text text="开发阶段："></fui-text>
@@ -247,7 +249,7 @@
                 <p style="font-weight: 700">{{ item.taskName }}</p>
 
                 <el-card v-if="item.createTime" :body-style="{ padding: '10px' }">
-                  <el-descriptions class="margin-top" :column="1" size="small" border>
+                  <el-descriptions class="margin-top" :column="1" size="small" border label-width="160px">
                     <el-descriptions-item v-if="item.assigneeName" label-class-name="my-label">
                       <template #label>办理人</template>
                       {{ item.assigneeName }}
@@ -291,7 +293,7 @@
 
                       <el-card :body-style="{ padding: '10px' }">
 
-                        <el-descriptions class="margin-top" :column="1" size="small" border>
+                        <el-descriptions class="margin-top" :column="1" size="small" border label-width="160px">
                           <el-descriptions-item v-if="subItem.assigneeName" label-class-name="my-label">
                             <template #label>办理人</template>
                             {{ subItem.assigneeName }}
@@ -330,8 +332,8 @@
                   </el-timeline>
                 </view>
                 <view v-else>
-                  <el-card v-for="(sub,subIndex) in item.subTask" :key="subIndex">
-                    <el-descriptions class="margin-top" :column="1" size="small" border>
+                  <el-card v-for="(sub,subIndex) in item.subTask" :key="subIndex" :body-style="{ padding: '10px' }">
+                    <el-descriptions class="margin-top" :column="1" size="small" border label-width="160px">
                       <el-descriptions-item v-if="sub.assigneeName" label-class-name="my-label">
                         <template #label>办理人</template>
                         {{ sub.assigneeName }}

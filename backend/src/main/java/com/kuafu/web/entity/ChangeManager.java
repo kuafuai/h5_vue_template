@@ -35,6 +35,7 @@ public class ChangeManager {
 
     private Integer changeStatus;
     private String partNumber;
+    private String ecrNumber;
 
     @TableField(exist = false)
     private Map<String, Object> infoMap;

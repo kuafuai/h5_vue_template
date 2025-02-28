@@ -182,6 +182,17 @@ public class ChangeManagerController {
         }
     }
 
+
+    @DeleteMapping("delete/{id}")
+    public BaseResponse delete(@PathVariable(value = "id") Integer id) {
+        UserInfo userInfo = userInfoService.getById(SecurityUtils.getUserId());
+        if ((userInfo.getAdmin() == null || !userInfo.getAdmin()) &&
+                (userInfo.getAdminReadOnly() == null || !userInfo.getAdminReadOnly())) {
+            return ResultUtils.error("您暂无权限，请联系管理员，设置权限");
+        }
+        return changeManagerBusinessService.deleteChangeManager(id) ? ResultUtils.success() : ResultUtils.error(ErrorCode.OPERATION_ERROR);
+    }
+
     @GetMapping("get/{id}")
     @ApiOperation("根据Id查询")
     public BaseResponse get(@PathVariable(value = "id") Integer id) {

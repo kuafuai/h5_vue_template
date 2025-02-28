@@ -6,12 +6,13 @@
       <!--    不分组执行的情况-->
 
       <base-echarts v-if="questions.length > 0" :option="questions"
-                    :group_result_show_display="group_result_show_display"></base-echarts>
+                    :group_result_show_display="group_result_show_display" :chartName="title"></base-echarts>
 
       <uni-section v-else class="custom-section" :title="title" :sub-title="number"></uni-section>
     </view>
 
     <view v-if="is_group">
+
       <!--  分组执行的情况 -->
       <view v-for="(question, index) in questions" :key="index" class="question-item">
         <view class="shu">
@@ -20,7 +21,7 @@
         </view>
         <view v-if="question.children && question.children.length > 0" class="option-list">
           <base-echarts :option="question.children" :inx="index"
-                        :group_result_show_display="group_result_show_display"/>
+                        :group_result_show_display="group_result_show_display" :chartName="title"/>
           <!--                <view v-for="(option, idx) in question.children" :key="idx" class="option-item">-->
           <!--                  <text class="option-text" v-if="option.name">{{ option.name }} -</text>-->
           <!--                  <text class="option-value">{{ option.value }}</text>-->

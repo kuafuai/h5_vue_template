@@ -81,11 +81,14 @@ public class CommonController {
     public String getUrl() {
         HttpServletRequest request = ServletUtils.getRequest();
         final String backendUrl = request.getHeader("BackendAddress");
-        if (StringUtils.isNotEmpty(backendUrl)) {
-            return backendUrl;
-//            return getDomain(request).replace(ServletUtils.getRequest().getContextPath(),"") + "/" + processBackedUrl(backendUrl);
+//        if (StringUtils.isNotEmpty(backendUrl)) {
+//            return backendUrl;
+////            return getDomain(request).replace(ServletUtils.getRequest().getContextPath(),"") + "/" + processBackedUrl(backendUrl);
+//        }
+        if (StringUtils.isEmpty(backendUrl) || StringUtils.equalsIgnoreCase(backendUrl, "/")){
+            return getDomain(request);
         }
-        return getDomain(request);
+        return getDomain(request)+backendUrl;
     }
 
 

@@ -110,8 +110,9 @@ const getChartOption = () => {
       legend: {
         type: 'scroll', // 启用滚动
         orient: 'horizontal', // 水平排列
-        top: '5%',
+        bottom: '10%',
         left: 'center',
+        icon: 'circle',
         itemWidth: 40, // 图例图标的宽度
         itemGap: 10, // 图例项之间的间距
         pageIconSize: 15, // 控制分页图标的大小
@@ -125,7 +126,7 @@ const getChartOption = () => {
           name: props.chartName,
           type: 'pie',
           radius: ['40%', '60%'],
-          center: ['52%', '56%'],
+          center: ['52%', '42%'],
           avoidLabelOverlap: true,
           itemStyle: {
             borderRadius: 10,
@@ -169,7 +170,7 @@ const getChartOption = () => {
       legend: {
         type: 'scroll', // 启用滚动
         orient: 'horizontal', // 水平排列
-        top: '5%',
+        top: '2%',
         left: 'center',
         itemWidth: 40, // 图例图标的宽度
         itemGap: 50, // 图例项之间的间距

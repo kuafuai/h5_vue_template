@@ -1,11 +1,11 @@
 <template>
   <!--  九宫格-->
   <view class="white-box">
-    <uni-section :title="title" titleFontSize="16px" stype="" padding>
+    <uni-section :title="title" titleFontSize="16px" stype="">
       <uni-grid :column="column" :highlight="true" @change="change" :showBorder="false" :square="false">
         <uni-grid-item v-for="(item, index) in navigations" :index="index" :key="index" @click="goToPage(item.page)">
-          <view class="grid-item-box" style="background-color: #fff;">
-            <image :src="item.icon" mode="aspectFill" style="width: 40px; height: 40px;"></image>
+          <view class="grid-item-box" style="background-color: #fff;width:100%;">
+            <image :src="item.icon" mode="widthFix" style="width: 40%;"></image>
             <text class="text">{{ getTruncatedContent(item.title) }}</text>
           </view>
         </uni-grid-item>
@@ -18,6 +18,7 @@
 import {onLoad} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance()
+const emits = defineEmits(["click_item", "click_item"]);
 const currentPage = ref();
 
 const props = defineProps({

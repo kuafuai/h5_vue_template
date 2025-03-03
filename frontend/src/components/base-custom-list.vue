@@ -1,7 +1,7 @@
 <template>
   <view v-if="pageRes.records.length" :class="layout">
-    <view v-for="(item, index) in pageRes.records" :key="index">
-      <uni-card :is-shadow="false" is-full @click="click_ok(item)">
+    <view v-for="(item, index) in pageRes.records" :key="index" style="border-radius: 20rpx;background-color: rgba(255,255,255,1);box-sizing:border-box;margin:10rpx 20rpx;">
+      <uni-card :is-shadow="false" is-full @click="click_ok(item)" style="border-radius: 20rpx;">
         <slot name="default" :item="item" :index="index + 1">
           old {{ index }} : {{ item }}
         </slot>
@@ -125,7 +125,9 @@ function click_ok(item) {
 </script>
 
 <style lang="scss" scoped>
-
+::v-deep .uni-card__content,.uni-card{
+  padding: 0px !important;
+}
 
 .list_box {
   width: 100%;

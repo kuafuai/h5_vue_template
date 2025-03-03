@@ -1,27 +1,21 @@
 <template>
   <view class="notice-bar-container">
-    <uni-notice-bar :v-show="data.length > 0"
-                    class="custom-notice-bar"
-                    show-get-more
-                    scrollable
-                    show-icon
-                    :speed="speed"
-                    :text="data[0]?.content || '暂无通知内容' "
-                    @getmore="getMore(data[0])"
-                    color="#000" background-color="#fff"/>
+    <uni-notice-bar :v-show="data.length > 0" class="custom-notice-bar" show-get-more scrollable show-icon
+      :speed="speed" :text="data[0]?.content || '暂无通知内容'" @getmore="getMore(data[0])" color="#000"
+       style="background:rgba(0,0,0,0);" />
   </view>
 
 </template>
 
 <script setup>
-import {onLoad} from "@dcloudio/uni-app";
-import {defineProps} from "vue";
+import { onLoad } from "@dcloudio/uni-app";
+import { defineProps } from "vue";
 
 const emits = defineEmits(['click_item'])
-const {proxy} = getCurrentInstance()
+const { proxy } = getCurrentInstance()
 const data = ref([])
 const getMore = (item) => {
-  emits('click_item',item)
+  emits('click_item', item)
 }
 
 const props = defineProps({
@@ -37,7 +31,7 @@ const props = defineProps({
 
 
 onLoad(async () => {
-  const res = await props.api.split(".").reduce((acc, item) => acc[item], proxy.$api)({type: 'notification'})
+  const res = await props.api.split(".").reduce((acc, item) => acc[item], proxy.$api)({ type: 'notification' })
   if (res.data) {
     data.value = res.data.records
   }
@@ -46,18 +40,37 @@ onLoad(async () => {
 <style scoped lang="scss">
 /* 外部容器，留出两侧间距 */
 .notice-bar-container {
-  margin: 5px 10px; /* 距离两侧10px */
+  margin: 5px 10px;
+  /* 距离两侧10px */
 }
 
 ::v-deep .uni-icons {
-  color: black !important; /* 设置图标颜色为黑色 */
+  color: black !important;
+  /* 设置图标颜色为黑色 */
+}
+
+::v-deep .uni-noticebar-icon{
+  color: #527FF4 !important;
 }
 
 /* 自定义通知栏样式 */
 .custom-notice-bar {
-  border-radius: 20px !important; /* 圆角 */
-  padding: 10px !important; /* 添加内部间距 */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+  border-radius: 20px !important;
+  /* 圆角 */
+  padding: 10px !important;
+  /* 添加内部间距 */
+  // box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  /* 添加阴影 */
+}
+
+::v-deep .uni-noticebar__more{
+      /* padding-left: 5px; */
+      border-radius: 50%;
+      padding:4px;
+      text-align: center;
+    background: rgba(239,239,239,1);
+    margin-left: 5px;
+    font-size: 12px;
 }
 
 /*!* 替换的小喇叭图标样式 *!
@@ -68,6 +81,5 @@ onLoad(async () => {
   display: inline-block;
   vertical-align: middle;
 }*/
-
 
 </style>

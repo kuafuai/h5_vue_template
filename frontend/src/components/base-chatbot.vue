@@ -540,11 +540,7 @@ const startSseConnection = async (query) => {
   // #endif
 
   // #ifdef H5
-  let base_chat_url = BASE_API;
-  if(BASE_API=== '/'){
-    base_chat_url = ""
-  }
-  fetchEventSource(base_chat_url + "/chatbot", {
+  fetchEventSource(BASE_API + "/chatbot", {
     method: "POST",
     openWhenHidden: true,
     headers: {

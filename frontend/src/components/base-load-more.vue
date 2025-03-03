@@ -1,6 +1,6 @@
 <template>
-  <view class="load-more">
-    <text @click="click">{{ text }}</text>
+  <view :class="'load-more-'+horizontal">
+    <text @click="click" class="load_text">{{ text }}</text>
   </view>
 </template>
 
@@ -17,20 +17,42 @@ const props = defineProps({
   text: {
     type: String,
     default: '查看更多',
+  },
+  horizontal:{
+    type: String,
+    default: "right"
   }
 });
 </script>
 
 <style scoped>
-.load-more {
+.load-more-right {
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
  }
-.load-more text{
-  color: #5D5FEF;
+
+.load-more-center {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.load-more-left {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+ .load_text{
+  /*color: #5D5FEF;*/
+  color: rgb(154, 154, 154);
   margin-right: 4%;
+  margin-left: 4%;
 }
 </style>

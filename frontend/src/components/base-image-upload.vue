@@ -56,7 +56,7 @@ const props = defineProps({
   },
   uploadUrl: {
     type: String,
-    default: () => import.meta.env.VITE_APP_BASE_API + "/common/upload",
+    default: () =>  import.meta.env.VITE_APP_BASE_API==='/'?"/common/upload":import.meta.env.VITE_APP_BASE_API+"/common/upload"
   },
   size: {
     type: Number,
@@ -167,7 +167,8 @@ const uploadFile = (file) => {
       filePath: file.path,
       name: 'file',
       header: {
-        "BackendAddress": import.meta.env.VITE_APP_SERVICE_API,
+
+        "BackendAddress": import.meta.env.VITE_APP_BASE_API,
         "Authorization": "Bearer " + uni.getStorageSync("h5_token")
       },
       success: (res) => {

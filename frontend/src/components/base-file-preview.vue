@@ -1,6 +1,6 @@
 <template>
 
-  <view class="flex">
+  <view class="flex" style="flex-direction: column;justify-content: center;align-items: center;padding-bottom: 3vh">
 
     <view
           class="file-preview" :style='{width: width+"px",height:height+"px",borderRadius:radius+"px"}'
@@ -95,6 +95,7 @@ const isImage = (newUrl) => {
 
 const previewImage = (index) => {
   console.log('点击了图片', index)
+  console.log(fileList.value)
   uni.previewImage({
     current: index,
     urls: fileList.value.map(item => item.url)
@@ -148,10 +149,11 @@ const openFile = (url) => {
 
 .image_list {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
-  justify-content: space-around;
+ justify-content: space-around;
   align-items: center;
-  margin: 10rpx 0;
+  /*margin: 10rpx 0;*/
 }
 
 .preview-image {

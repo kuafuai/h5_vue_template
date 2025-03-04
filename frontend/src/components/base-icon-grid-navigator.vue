@@ -1,7 +1,8 @@
 <template>
   <!--  九宫格-->
   <view class="white-box">
-    <uni-section :title="title" titleFontSize="16px" stype="">
+<!--    <uni-section :title="title" titleFontSize="16px" stype="">-->
+    <uni-section stype="">
       <uni-grid :column="column" :highlight="true" @change="change" :showBorder="false" :square="false">
         <uni-grid-item v-for="(item, index) in navigations" :index="index" :key="index" @click="goToPage(item.page)">
           <view class="grid-item-box" style="background-color: #fff;width:100%;">
@@ -97,7 +98,7 @@ const goToPage = (route) => {
 
 // 文本截断函数，限制最大字符数
 const getTruncatedContent = (content) => {
-  const maxLength = 6;
+  const maxLength = 4;
   return content && content.length > maxLength ? content.slice(0, maxLength) + '...' : content;
 };
 

@@ -97,7 +97,7 @@ const goToPage = (route) => {
 
 // 文本截断函数，限制最大字符数
 const getTruncatedContent = (content) => {
-  const maxLength = 6;
+  const maxLength = 4;
   return content && content.length > maxLength ? content.slice(0, maxLength) + '...' : content;
 };
 

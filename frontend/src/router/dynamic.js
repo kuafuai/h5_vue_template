@@ -94,9 +94,10 @@ export const dynamicRoutes = [
         path: '/pages/document/index',
         meta: {
             title: '表单下载',
+            allShow: true,
             shownot: false,
             adminShow: true,
-            changeShow: false,
+            changeShow: true,
             icon:'icon-biangeng'
         }
     },

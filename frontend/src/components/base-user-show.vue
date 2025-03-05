@@ -87,8 +87,9 @@ const refreshFn=()=>{
 }
 
 .image {
-  width: 124rpx;
+  min-width: 124rpx !important;
   border-radius: 50%;
+  max-width: 124rpx;
   margin-right: 30rpx;
 }
 
@@ -118,7 +119,7 @@ const refreshFn=()=>{
 }
 
 .refresh {
-  width: 60rpx;
+  min-width: 60rpx;
   height: 60rpx;
   border-radius: 50%;
   display: flex;

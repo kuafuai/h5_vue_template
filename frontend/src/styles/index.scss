@@ -2,14 +2,11 @@
 @use './flex.scss';
 @use './margin-padding.scss';
 @use './other.scss';
-
-
 // #ifdef H5
-
 uni-page-body {
-  height:100% ;
-  //overflow: hidden;
-  //overflow-y: hidden;
+    // height:100% ;
+    //overflow: hidden;
+    //overflow-y: hidden;
 }
 
 // #endif

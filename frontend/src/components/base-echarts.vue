@@ -185,7 +185,7 @@ const getChartOption = () => {
         data: props.option.map(item => item.name), // 假设数据是通过 props.option 传递的，且包含 name 属性
         axisLabel: {
           interval: 0, // 显示所有 x 轴标签
-          rotate: 0,  // 标签倾斜角度
+          rotate: 30,  // 标签倾斜角度
         }
       },
       yAxis: {

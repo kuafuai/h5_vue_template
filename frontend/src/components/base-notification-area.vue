@@ -73,6 +73,25 @@ onLoad(async () => {
     font-size: 12px;
 }
 
+::v-deep .uni-noticebar-icon{
+  background: rgba(239,239,239,1);
+  width: 60rpx;
+  height: 60rpx;
+  background: url("../static/iconPark-volume-notice 1@3x.png") no-repeat center center;
+  background-size: 60% 60%;
+}
+::v-deep .uni-cursor-point{
+  width: 50rpx;
+  height: 50rpx;
+  background: url("../static/right.png") no-repeat center center;
+  background-size: 60% 60%;
+  background-color: rgba(239,239,239,1) !important;
+}
+
+::v-deep .uni-icons{
+  font-size: 0 !important;
+}
+
 /*!* 替换的小喇叭图标样式 *!
 .custom-icon {
   width: 20px;

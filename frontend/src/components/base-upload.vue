@@ -35,14 +35,13 @@ const props = defineProps({
   },
   uploadUrl: {
     type: String,
-    default: () => import.meta.env.VITE_APP_BASE_API==='/'?"/common/upload":import.meta.env.VITE_APP_BASE_API+"/common/upload"
+    default: () => import.meta.env.VITE_APP_BASE_API + "/common/upload",
   },
   size: {
     type: Number,
     default: 5
   }
 });
-
 
 function extractFileNameAndExtension(url) {
   const parts = url.split('/');
@@ -122,8 +121,7 @@ const uploadFile = (file) => {
       filePath: file.path,
       name: 'file',
       header: {
-        // "BackendAddress": import.meta.env.VITE_APP_SERVICE_API
-        "BackendAddress": import.meta.env.VITE_APP_BASE_API
+        "BackendAddress": import.meta.env.VITE_APP_SERVICE_API
       },
       success: (res) => {
         if (res.statusCode === 200) {

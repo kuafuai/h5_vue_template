@@ -1,5 +1,11 @@
 <template>
   <view class="all_echarts">
+    <view   style="text-align: left;color: rgba(0,0,0,1);
+font-size: 28rpx;
+text-align: left;
+font-family: SourceHanSansSC-regular;">
+      {{ chartName }}
+    </view>
     <view v-if="is_echarts">
       <div class="chart" ref="chartDom"></div> <!-- 使用 div 作为图表容器 -->
     </view>

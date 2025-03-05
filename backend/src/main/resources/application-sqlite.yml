@@ -1,7 +1,7 @@
 # 数据源配置
 spring:
   flyway:
-    enabled: false
+    enabled: true
     locations: classpath:db/sqlite
     baselineOnMigrate: true
   datasource:

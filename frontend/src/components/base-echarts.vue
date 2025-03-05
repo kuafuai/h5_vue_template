@@ -132,7 +132,7 @@ const getChartOption = () => {
           name: props.chartName,
           type: 'pie',
           radius: ['40%', '60%'],
-          center: ['50%', '40%'],
+          center: ['48%', '40%'],
           avoidLabelOverlap: true,
           itemStyle: {
             borderRadius: 10,
@@ -242,7 +242,7 @@ const getChartOption = () => {
         data: props.option.map(item => item.name), // 假设数据是通过 props.option 传递的，包含 name 属性
         axisLabel: {
           interval: 0, // 显示所有 X 轴标签
-          rotate: 0, // 标签旋转角度
+          rotate: 30, // 标签旋转角度
         },
       },
       yAxis: {

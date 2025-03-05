@@ -126,7 +126,7 @@ const getChartOption = () => {
           name: props.chartName,
           type: 'pie',
           radius: ['40%', '60%'],
-          center: ['52%', '42%'],
+          center: ['50%', '40%'],
           avoidLabelOverlap: true,
           itemStyle: {
             borderRadius: 10,

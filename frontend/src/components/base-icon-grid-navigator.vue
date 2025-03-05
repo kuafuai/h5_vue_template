@@ -185,6 +185,10 @@ onLoad(async () => {
   height: 420px;
 }
 
+::v-deep .uni-grid-item__box{
+  align-items: center !important;;
+}
+
 /* #ifdef H5 */
 @media screen and (min-width: 768px) and (max-width: 1425px) {
   .swiper {

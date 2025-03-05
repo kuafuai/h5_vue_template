@@ -1,7 +1,7 @@
 <template>
   <view class="userBox">
     <view class="user-show">
-      <image class="image" :src="avatar" mode="widthFix"></image>
+      <image class="image" :src="avatar" mode="aspectFitll"></image>
       <view class="text-user">
         <view class="username">{{ username ? username : '小飞飞' }}</view>
         <view class="appName">{{  '您好，欢迎来到'+appName }}</view>
@@ -89,6 +89,8 @@ const refreshFn=()=>{
 .image {
   min-width: 124rpx !important;
   border-radius: 50%;
+  min-height: 124rpx;
+  max-height: 124rpx;
   max-width: 124rpx;
   margin-right: 30rpx;
 }

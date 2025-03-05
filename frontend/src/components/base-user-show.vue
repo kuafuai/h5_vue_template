@@ -89,8 +89,6 @@ const refreshFn=()=>{
 .image {
   min-width: 124rpx !important;
   border-radius: 50%;
-  min-height: 124rpx;
-  max-height: 124rpx;
   max-width: 124rpx;
   margin-right: 30rpx;
 }
@@ -116,7 +114,6 @@ const refreshFn=()=>{
   font-size: 28rpx;
   text-align: left;
   font-family: PingFangSC-regular;
-  height: 40rpx;
   line-height: 40rpx;
 }
 

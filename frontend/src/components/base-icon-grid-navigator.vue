@@ -134,7 +134,7 @@ onLoad(async () => {
   background-color: #fff; /* 白色背景 */
   border-radius: 10px; /* 圆角 */
   padding: 10px; /* 内边距 */
-  margin: 5px 10px; /* 外边距，控制左右距离 */
+  margin:  10px; /* 外边距，控制左右距离 */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
 }
 
@@ -187,6 +187,9 @@ onLoad(async () => {
 
 ::v-deep .uni-grid-item__box{
   align-items: center !important;;
+}
+::v-deep .uni-section-header{
+  display: none !important;
 }
 
 /* #ifdef H5 */

@@ -1,6 +1,6 @@
 <template>
   <view class="all_echarts">
-    <view   style="text-align: left;color: rgba(0,0,0,1);
+    <view style="text-align: left;color: rgba(0,0,0,1);
 font-size: 28rpx;
 text-align: left;
 font-family: SourceHanSansSC-regular;">

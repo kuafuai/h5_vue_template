@@ -1,7 +1,7 @@
 <template>
   <view class="userBox">
     <view class="user-show">
-      <image class="image" src="../static/ai.jpeg" mode="widthFix"></image>
+      <image class="image" :src="avatar" mode="widthFix"></image>
       <view class="text-user">
         <view class="username">{{ username ? username : '小飞飞' }}</view>
         <view class="appName">{{  '您好，欢迎来到'+appName }}</view>

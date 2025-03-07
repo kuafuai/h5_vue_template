@@ -132,7 +132,11 @@ const uploadFile = (file) => {
             // fileurl.value = [{
             //   "url":response.data.url
             // }]
-            fileurl.value=response.data.url
+            fileurl.value=[
+              {
+                "url":response.data.url
+              }
+            ]
             resolve(res);
           } else {
             reject(new Error(response.message));

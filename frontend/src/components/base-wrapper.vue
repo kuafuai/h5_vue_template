@@ -1,5 +1,5 @@
 <template>
-  <view :class="wrapperClass">
+  <view :class="wrapperClass" style="background-color: rgba(249,249,249,1);">
     <slot/>
   </view>
 </template>

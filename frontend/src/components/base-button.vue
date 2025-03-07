@@ -105,7 +105,7 @@ const click = () => {
     font-size: 1.5rem;
     border-radius: 50%;
     border: none !important;
-    background: rgba(82,127,244, 1) !important;
+    background: rgba(82,127,244, 0.5) !important;
   }
 }
 </style>

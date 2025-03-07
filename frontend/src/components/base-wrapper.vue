@@ -75,7 +75,7 @@ function getWrapperClass() {
   }
 
   if(props.scroll_box){
-    c += ' overflow-y-scroll'
+    // c += ' overflow-y-scroll'
   }
   else{
     c+= ' box'

@@ -90,7 +90,7 @@ const click = () => {
   display: flex;
   width: 3.5rem;
   height: 3.5rem;
-  bottom: 22%;
+  bottom: 15%;
   //height: 44px;
 
   .btnDialog {
@@ -105,7 +105,7 @@ const click = () => {
     font-size: 1.5rem;
     border-radius: 50%;
     border: none !important;
-    background: rgba(93, 95, 239, .5) !important;
+    background: rgba(82,127,244, 1) !important;
   }
 }
 </style>

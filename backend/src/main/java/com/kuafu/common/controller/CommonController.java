@@ -1,11 +1,14 @@
 package com.kuafu.common.controller;
 
+import cn.hutool.http.HttpUtil;
 import com.google.common.collect.Maps;
 import com.kuafu.common.config.AppConfig;
+import com.kuafu.common.config.MessageConfig;
 import com.kuafu.common.domin.BaseResponse;
 import com.kuafu.common.domin.ResultUtils;
 import com.kuafu.common.file.FileUploadUtils;
 import com.kuafu.common.file.FileUtils;
+import com.kuafu.common.util.JSON;
 import com.kuafu.common.util.ServletUtils;
 import com.kuafu.common.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,16 +16,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/common")
 public class CommonController {
 
     private static final String FILE_DELIMETER = ",";
+
+
+    private static final List<String> VIDEO_EXTENSIONS = Arrays.asList(
+            "mp4", "avi", "mkv", "mov", "wmv", "flv", "webm", "mpeg", "3gp");
+
+
+    @Resource
+    private MessageConfig messageConfig;
 
     /**
      * 通用上传请求（单个）
@@ -34,6 +44,9 @@ public class CommonController {
             String filePath = AppConfig.getUploadPath();
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
+            if (messageConfig.isEnable()) {
+                sendMessage(fileName, messageConfig);
+            }
             String url = getUrl() + fileName;
             Map<String, String> data = Maps.newHashMap();
             data.put("url", url);
@@ -44,6 +57,38 @@ public class CommonController {
         } catch (Exception e) {
             return ResultUtils.error(e.getMessage());
         }
+    }
+
+    /**
+     * 发送消息
+     *
+     * @param fileName
+     * @param messageConfig
+     */
+    private void sendMessage(String fileName, MessageConfig messageConfig) {
+        final String appId = messageConfig.getAppId();
+        final String notifyUrl = messageConfig.getNotifyUrl();
+
+        // 获取文件扩展名
+        String extension = getFileExtension(fileName);
+        // 判断扩展名是否在视频格式列表中
+        if (VIDEO_EXTENSIONS.contains(extension.toLowerCase())) {
+//           如果是视频发送消息
+            final HashMap<String, Object> body = new HashMap<>();
+            body.put("msg_type", "text");
+            final HashMap<String, Object> contentMap = new HashMap<>();
+            contentMap.put("text", "appId:" + appId + ",上传了视频,url 路径为" + getUrl() + fileName);
+            body.put("content", contentMap);
+            HttpUtil.post(notifyUrl, JSON.toJSONString(body));
+        }
+    }
+
+    private static String getFileExtension(String fileName) {
+        int lastDotIndex = fileName.lastIndexOf(".");
+        if (lastDotIndex == -1 || lastDotIndex == fileName.length() - 1) {
+            return ""; // 没有扩展名或扩展名为空
+        }
+        return fileName.substring(lastDotIndex + 1);
     }
 
     /**
@@ -85,10 +130,10 @@ public class CommonController {
 //            return backendUrl;
 ////            return getDomain(request).replace(ServletUtils.getRequest().getContextPath(),"") + "/" + processBackedUrl(backendUrl);
 //        }
-        if (StringUtils.isEmpty(backendUrl) || StringUtils.equalsIgnoreCase(backendUrl, "/")){
+        if (StringUtils.isEmpty(backendUrl) || StringUtils.equalsIgnoreCase(backendUrl, "/")) {
             return getDomain(request);
         }
-        return getDomain(request)+backendUrl;
+        return getDomain(request) + backendUrl;
     }
 
 

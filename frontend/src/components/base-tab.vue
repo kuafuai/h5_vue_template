@@ -82,6 +82,9 @@ const onClickItem = (e) => {
 .uni-common-mt {
   background: rgb(245, 247, 250);
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 20rpx;
 }
 
 .content,
@@ -92,9 +95,17 @@ const onClickItem = (e) => {
   background: rgb(245, 247, 250);
 }
 
+::v-deep .segmented-control{
+  background-color: #F2F3F6 !important;
+  color: #000;
+  border-radius: 30px;
+  font-size: 14rpx !important;
+  font-weight: normal !important;
+}
+
 ::v-deep .segmented-control__text {
-  font-size: 1rem !important;
-  font-weight: 700 !important;
+  font-size: 0.9rem !important;
+  // font-weight: 700 !important;
 }
 
 ::v-deep .segmented-control__text {
@@ -104,8 +115,28 @@ const onClickItem = (e) => {
 }
 
 ::v-deep .segmented-control__item--text {
+  width: 100% !important;
+    height: 100% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: none;
+    border-radius: 30px;
   span {
+    display: inline-block;
     color: rgba(93, 95, 239, 1)
+  }
+}
+
+::v-deep .segmented-control__item{
+  width: 100% !important;
+  view{
+    width: 100% !important;
+    height: 100% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

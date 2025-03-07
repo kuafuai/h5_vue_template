@@ -5,7 +5,7 @@
       <span class="m-l-4">{{ label }}</span>
     </view>
     <view class="flex-end-start">
-      {{ displayText() }}
+      <span ref="textContainer" :class="{'truncate': !show_expand}"> {{ text }} </span>
       <img v-if="show_tab" v-show="!show_expand" :src="show_1" style="width: 16pt;height: 16pt; cursor: pointer" alt=""
            @click.stop="toggleExpand"/>
       <img v-if="show_tab" v-show="show_expand" :src="show_2" style="width: 16pt;height: 16pt; cursor: pointer" alt=""
@@ -37,33 +37,24 @@ const props = defineProps({
   text: {type: String, required: false},
 });
 
-const show_tab = ref(false)
-const show_expand = ref(false)
+onMounted(() => {
+  checkEllipsis();
+});
 
-function displayText() {
-  if (show_tab.value) {
-    if (show_expand.value) {
-      return props.text;
-    } else {
-      return props.text.slice(0, 13) + '...';
-    }
-  } else {
-    return props.text;
+function checkEllipsis() {
+  const textContainer = proxy.$refs.textContainer;
+  if (textContainer) {
+    // 比较实际高度和显示高度
+    show_tab.value = textContainer.scrollHeight > textContainer.clientHeight;
   }
 }
+
+const show_tab = ref(false)
+const show_expand = ref(false)
 
 function toggleExpand() {
   show_expand.value = !show_expand.value;
 }
-
-watch(() => props.text, (value) => {
-  if (value) {
-    if (value.length > 15) {
-      show_tab.value = true
-    }
-  }
-
-}, {immediate: true, deep: true})
 
 function getIcon() {
   if (props.type === 'text' || props.type === 'fulltext') {
@@ -101,14 +92,23 @@ function getIcon() {
   &:first-child {
     margin-bottom: 5px;
   }
-  //
+
   &:not(:first-child) {
     margin-bottom: 5px;
   }
-  //
+
   &:last-child {
     margin-bottom: 0;
   }
+}
+
+.truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
 }
 
 </style>

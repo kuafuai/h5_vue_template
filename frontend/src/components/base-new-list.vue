@@ -2,7 +2,7 @@
 
   <view v-if="pageRes.records.length" class="h-full w-full overflow-y-auto">
     <view v-for="(item, index) in pageRes.records" :key="index">
-      <uni-card :is-shadow="false" @click="click_ok(item)" style="border-radius: 20rpx;"
+      <uni-card :is-shadow="false" @click="click_ok(item)" :border="false" style="border-radius: 20rpx;"
                 :title="getTitle(item)"
                 :thumbnail="getThumbnail(item)">
         <base-layout display="flex" direction="c">

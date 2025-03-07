@@ -50,7 +50,7 @@ watch(() => props.videoUrls, (newUrls) => {
 }
 
 .video-item {
-  margin-bottom: 20px;
+  /*margin-bottom: 20px;*/
 }
 
 

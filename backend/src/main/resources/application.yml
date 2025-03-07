@@ -89,3 +89,9 @@ logging:
         boot:
           autoconfigure:
             logging: info
+
+
+message:
+  enable: ${MESSAGE_ENABLE:false}
+  notifyUrl: ${MESSAGE_BASE_URL:xxxxxxxxx}
+  appId: ${MESSAGE_APP_ID:1}

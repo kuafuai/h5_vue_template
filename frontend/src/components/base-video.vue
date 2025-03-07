@@ -66,7 +66,7 @@ const chooseVideo = () => {
   }
 
   uni.chooseVideo({
-    sourceType: ["album", "camera"], // 支持相册和拍摄
+    sourceType: ["album"], // 支持相册和拍摄
     compressed: true, // 是否压缩视频
     maxDuration: 30, // 视频最大时长（单位：秒）
     success: async (res) => {

@@ -1,20 +1,18 @@
 <template>
   <view class="container" v-if="model != 'base'">
+
     <button v-if="model == 'float'" class="btnDialog" :type="type" @click="click">
-      <image style="height:61%" src="../static/add.png" alt="" mode="widthFix" />
-      <!--      <view style="display: flex;-->
-      <!--  align-items: center;-->
-      <!--  justify-content: center;">+</view>-->
+      <image style="height:22pt; width: 22pt;" src="../static/add.png" alt="" mode="widthFix" />
     </button>
+
     <button v-if="model == 'update'" class="btnDialog" :type="type" @click="click">
-      <image style="height:41%" src="../static/update.png" alt="" mode="widthFix" />
-      <!--      <view style="display: flex;-->
-      <!--  align-items: center;-->
-      <!--  justify-content: center;">+</view>-->
+      <image style="height:22pt; width: 22pt;" src="../static/update.png" alt="" mode="widthFix" />
     </button>
+
     <button v-if="model == 'flex'" class="btnDialog" :type="type" @click="click">
       <image style="width:100%" src="../static/options.png" alt="" mode="widthFix" />
     </button>
+
     <button v-if="model == 'slot'" class="btnDialog" :type="type" @click="click"><image style="width:100%"
                                                                                         src="../static/options.png"
                                                                                         alt="" mode="widthFix" />
@@ -88,8 +86,8 @@ const click = () => {
   z-index: 99;
   border-radius: 50%;
   display: flex;
-  width: 3.5rem;
-  height: 3.5rem;
+  //width: 3.5rem;
+  //height: 3.5rem;
   bottom: 15%;
   //height: 44px;
 
@@ -97,9 +95,9 @@ const click = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 3.5rem;
+    width: 46pt;
     color: white;
-    height: 3.5rem;
+    height: 46pt;
     text-align: center;
     line-height: 2.75rem;
     font-size: 1.5rem;

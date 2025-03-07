@@ -7,7 +7,7 @@
             <view :class="currentRoute == item.url ? 'tab_box on' : 'tab_box'" v-for="(item, index) in tabLists" :key="index"
                 :style="{ width: 100 / tabList.length + '%' }">
                 <view class="tab_top" @click="tabFn(item.url)">
-                    <image class="tab_icon" :style="{ width: 100 / tabList.length + 3 + '%' }"
+                    <image class="tab_icon" :style="{ width: '48rpx' }"
                         :src="currentRoute == item.url ? item.onicon : item.icon" mode="widthFix" />
                 </view>
                 <view class="tab_bot">

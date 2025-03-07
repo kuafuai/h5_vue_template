@@ -21,7 +21,8 @@
     </view>
 
     <view v-if="isPage" class="flex-end-center m-t-10 m-r-10">
-      <fui-pagination style="width:100%" :total="pageRes.total" :pageSize="pageParams.pageSize" :current="pageParams.current"
+      <fui-pagination style="width:100%" :total="pageRes.total" :pageSize="pageParams.pageSize"
+                      :current="pageParams.current"
                       @change="handleCurrentChange" :pageType="2"></fui-pagination>
     </view>
 
@@ -171,7 +172,12 @@ function getTitle(item) {
 function getThumbnail(item) {
   const field = props.thumbnail
   if (field) {
-    return item[field]
+    let t = item[field];
+    if (Array.isArray(t)) {
+      return t[0].url;
+    } else {
+      return t;
+    }
   } else {
     return ''
   }

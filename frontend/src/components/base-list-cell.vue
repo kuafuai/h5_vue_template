@@ -42,7 +42,7 @@ function getIcon() {
     return time_icon
   } else if (props.type === 'number') {
     return number_icon
-  } else if (props.type === 'enum') {
+  } else if (props.type === 'enum' || props.type === 'quote') {
     return enum_icon
   } else if (props.type === 'user' || props.type === 'contact') {
     return contact_icon

@@ -16,7 +16,7 @@ public class AIAgentListener {
 
 
     @EventListener
-    @Async
+    @Async("aiAgentTaskExecutor")
     public void handleAIAgentEvent(AIAgentEvent event) {
         agentHandler.process(event);
     }

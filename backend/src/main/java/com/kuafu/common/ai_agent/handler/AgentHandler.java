@@ -87,8 +87,7 @@ public class AgentHandler {
         HashMap<String, Object> inputs = new HashMap<>();
         inputs.put("prompt", aiAgentConfig.getSystemPrompt());
         request.set("inputs", inputs);
-        request.set("user", UUID.randomUUID().toString()
-                .replace("-", ""));
+        request.set("user", aiAgentConfig.getUserId());
         String response = llmHttpClient.sendPostRequest(request);
 
         log.info("llm response {} ", response);

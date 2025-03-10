@@ -18,11 +18,6 @@ export default defineConfig(({ command, mode }) => {
                 ],
                 dts: false
             }),
-            new(require('@dcloudio/uni-cli-service/webpack')).UniCliPlugin({
-                plugins: [
-                    new(require('@dcloudio/uni-cli-shared/plugins/icon'))()
-                ]
-            }),
         ],
         server: {
             host: "0.0.0.0",

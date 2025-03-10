@@ -49,5 +49,4 @@ public class Constants {
     public static final String RESOURCE_PREFIX = "/profile";
 
 
-    public static final String FRONTEND_RESOURCE_PREFIX = "/frontend_resource";
 }

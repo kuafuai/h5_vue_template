@@ -28,8 +28,6 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import java.util.Map;
 
-import static com.kuafu.common.constant.Constants.FRONTEND_RESOURCE_PREFIX;
-
 
 @Slf4j
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
@@ -75,7 +73,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests();
         registry
                 .antMatchers("/doc.html").permitAll()
-                .antMatchers(FRONTEND_RESOURCE_PREFIX+"/**").permitAll()
                 .antMatchers("/login/**").permitAll()
                 .antMatchers("/chatbot/**","/difyConfig/**").permitAll()
                 .antMatchers("/common/**").permitAll()

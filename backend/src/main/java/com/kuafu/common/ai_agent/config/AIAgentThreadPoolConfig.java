@@ -13,9 +13,9 @@ public class AIAgentThreadPoolConfig {
     @Bean
     public TaskExecutor aiAgentTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(8); // 核心线程数设置为8
-        executor.setMaxPoolSize(12); // 最大线程12
-        executor.setQueueCapacity(200); // 等待队列设置为200
+        executor.setCorePoolSize(12); // 核心线程数设置为8
+        executor.setMaxPoolSize(20); // 最大线程12
+        executor.setQueueCapacity(1000); // 等待队列设置为200
         executor.setKeepAliveSeconds(3);
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.setThreadNamePrefix("agent-thread-");

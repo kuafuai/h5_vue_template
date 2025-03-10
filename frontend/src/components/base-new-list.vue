@@ -7,7 +7,7 @@
                 :thumbnail="getThumbnail(item)">
         <base-layout display="flex" direction="c">
           <slot name="default" :item="item" :index="index + 1">
-<!--            old {{ index }} : {{ item }}-->
+            <!--            old {{ index }} : {{ item }}-->
           </slot>
         </base-layout>
 
@@ -174,7 +174,11 @@ function getThumbnail(item) {
   if (field) {
     let t = item[field];
     if (Array.isArray(t)) {
-      return t[0].url;
+      if (t.length > 0) {
+        return t[0].url;
+      } else {
+        return ''
+      }
     } else {
       return t;
     }

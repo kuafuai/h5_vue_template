@@ -16,6 +16,8 @@ public class ResourcesConfig implements WebMvcConfigurer {
         registry.addResourceHandler(Constants.RESOURCE_PREFIX + "/**")
                 .addResourceLocations("file:" + AppConfig.getProfile() + "/");
 
+        registry.addResourceHandler(Constants.FRONTEND_RESOURCE_PREFIX + "/**")
+                .addResourceLocations("classpath:"+Constants.FRONTEND_RESOURCE_PREFIX+"/");
     }
 
     @Override

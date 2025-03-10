@@ -40,6 +40,10 @@ const props = defineProps({
   size: {
     type: Number,
     default: 5
+  },
+  mode:{
+    type: String,
+    default: "sig"
   }
 });
 
@@ -132,11 +136,16 @@ const uploadFile = (file) => {
             // fileurl.value = [{
             //   "url":response.data.url
             // }]
-            fileurl.value=[
-              {
-                "url":response.data.url
-              }
-            ]
+            if (props.mode==='sig'){
+              fileurl.value=response.data.url
+            }else {
+              fileurl.value=[
+                {
+                  "url":response.data.url
+                }
+              ]
+            }
+
             resolve(res);
           } else {
             reject(new Error(response.message));

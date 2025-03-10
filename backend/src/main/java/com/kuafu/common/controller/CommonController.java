@@ -49,7 +49,8 @@ public class CommonController {
             }
             String url = getUrl() + fileName;
             Map<String, String> data = Maps.newHashMap();
-            data.put("url", url);
+//            data.put("url", url);
+            data.put("url", fileName);
             data.put("fileName", fileName);
             data.put("newFileName", FileUtils.getName(fileName));
             data.put("originalFilename", file.getOriginalFilename());

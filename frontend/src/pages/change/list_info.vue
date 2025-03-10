@@ -78,21 +78,43 @@
             </uni-td>
 
             <uni-td v-if=" '零件编号' in showKeyMapColumns" align="center">
-              <fui-text :text="item.partNumber" :size="28"></fui-text>
+              <el-tooltip effect="dark" placement="left">
+                <template #content>
+                  <fui-text :text="item.partNumber" :size="28" :selectable="true" color="white"></fui-text>
+                </template>
+                <fui-text class="truncate" :text="item.partNumber" :size="28"></fui-text>
+              </el-tooltip>
             </uni-td>
 
             <uni-td v-if=" '产品名称' in showKeyMapColumns" align="center">
-              <fui-text :text="item.changeProductName" :size="28"></fui-text>
+              <el-tooltip effect="dark" placement="left">
+                <template #content>
+                  <fui-text  :text="item.changeProductName" :size="28" :selectable="true" color="white"></fui-text>
+                </template>
+                <fui-text class="truncate" :text="item.changeProductName" :size="28"></fui-text>
+              </el-tooltip>
             </uni-td>
 
             <uni-td v-if=" '变更前' in showKeyMapColumns" align="center">
-              <fui-text :text="'更改前说明' in item.infoMap ? item.infoMap['更改前说明'].infoValue : default_value"
-                        :size="28"></fui-text>
+              <el-tooltip effect="dark" placement="left">
+                <template #content>
+                  <fui-text :text="'更改前说明' in item.infoMap ? item.infoMap['更改前说明'].infoValue : default_value"
+                            :size="28" :selectable="true" color="white"></fui-text>
+                </template>
+                <fui-text class="truncate" :text="'更改前说明' in item.infoMap ? item.infoMap['更改前说明'].infoValue : default_value"
+                          :size="28"></fui-text>
+              </el-tooltip>
             </uni-td>
 
             <uni-td v-if=" '变更后' in showKeyMapColumns" align="center">
-              <fui-text :text="'更改后说明' in item.infoMap ? item.infoMap['更改后说明'].infoValue : default_value"
-                        :size="28"></fui-text>
+              <el-tooltip effect="dark" placement="left">
+                <template #content>
+                  <fui-text :text="'更改后说明' in item.infoMap ? item.infoMap['更改后说明'].infoValue : default_value"
+                            :size="28" :selectable="true" color="white"></fui-text>
+                </template>
+                <fui-text class="truncate" :text="'更改后说明' in item.infoMap ? item.infoMap['更改后说明'].infoValue : default_value"
+                          :size="28"></fui-text>
+              </el-tooltip>
             </uni-td>
 
             <uni-td v-if=" '项目负责人' in showKeyMapColumns" align="center">
@@ -203,7 +225,12 @@
             </uni-td>
 
             <uni-td v-if=" '备注' in showKeyMapColumns" align="center">
-              <fui-text :text="'备注' in item.infoMap ? item.infoMap['备注'].infoValue : default_value" :size="28"></fui-text>
+              <el-tooltip effect="dark" placement="left">
+                <template #content>
+                  <fui-text  :text="'备注' in item.infoMap ? item.infoMap['备注'].infoValue : default_value" :size="28" :selectable="true" color="white"></fui-text>
+                </template>
+                <fui-text class="truncate" :text="'备注' in item.infoMap ? item.infoMap['备注'].infoValue : default_value" :size="28"></fui-text>
+              </el-tooltip>
             </uni-td>
 
           </template>
@@ -441,5 +468,15 @@ const allTableColumns = ref([
   width: 600px;
   max-width: 80%;
 }
+
+.truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
 
 </style>

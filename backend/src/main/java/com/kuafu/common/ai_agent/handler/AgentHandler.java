@@ -4,6 +4,9 @@ import cn.hutool.core.bean.BeanUtil;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.google.common.base.CaseFormat;
+import com.googlecode.aviator.AviatorEvaluator;
+import com.googlecode.aviator.Expression;
 import com.kuafu.common.ai_agent.entity.AIAgentEvent;
 import com.kuafu.common.ai_agent.llm.LLmRequest;
 import com.kuafu.common.ai_agent.llm.LlmHttpClient;
@@ -59,9 +62,13 @@ public class AgentHandler {
     private static StringBuffer processLlmPrompt(String prompt, Object data) {
         StringBuffer llmPrompt = new StringBuffer(prompt);
         if (StringUtils.isNotEmpty(prompt) && ObjectUtils.isNotEmpty(data)) {
-//           使用
-            StringSubstitutor substitutor = new StringSubstitutor(pojoToMap(data));
-            String result = substitutor.replace(prompt);
+
+            String template = "\""+prompt+"\""; // 作为一个字符串处理
+            // 编译表达式
+            Expression expression = AviatorEvaluator.compile(template,true);
+
+            String result=(String)expression.execute(pojoToMap(data));
+
             llmPrompt = new StringBuffer(result);
         }
         return llmPrompt;
@@ -117,7 +124,17 @@ public class AgentHandler {
 
     public static Map<String, Object> pojoToMap(Object pojo) {
 
-        return BeanUtil.beanToMap(pojo);
+        final Map<String, Object> stringObjectMap = BeanUtil.beanToMap(pojo);
+
+        // 转换 key 为下划线格式
+        Map<String, Object> snakeCaseMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : stringObjectMap.entrySet()) {
+            String snakeKey = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, entry.getKey());
+            snakeCaseMap.put(snakeKey, entry.getValue());
+        }
+        stringObjectMap.putAll(snakeCaseMap);
+
+        return stringObjectMap;
     }
 
 

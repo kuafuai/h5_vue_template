@@ -221,7 +221,7 @@ function getIcon() {
   display: flex;
   flex-direction: column;
   padding-top: 30rpx;
-  max-height: 80vh; /* 至少占据 80% 视口高度 */
+  //max-height: 80vh; /* 至少占据 80% 视口高度 */
   padding-bottom: 30rpx;
   padding-left: 19rpx;
   padding-right: 19rpx;

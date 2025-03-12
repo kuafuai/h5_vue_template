@@ -7,7 +7,7 @@
                 :thumbnail="getThumbnail(item)">
         <base-layout display="flex" direction="c">
           <slot name="default" :item="item" :index="index + 1">
-            old {{ index }} : {{ item }}
+<!--            old {{ index }} : {{ item }}-->
           </slot>
         </base-layout>
 

@@ -11,11 +11,12 @@
     </view>
 
     <!-- 子标题区域 -->
-    <view class="sub-title-container">
+    <view class="sub-title-container"  @click.stop="toggleExpand">
       <span
           ref="textContainer"
           class="sub-title truncate"
           v-if="subTitle"
+
       >
         {{ subTitle }}
       </span>
@@ -28,7 +29,6 @@
           v-if="show_tab"
           class="expand-icon"
           :src="show_1"
-          @click.stop="toggleExpand"
       />
     </view>
 
@@ -36,6 +36,8 @@
     <view class="content">
       <slot name="item"></slot>
     </view>
+
+
 
     <base-dialog ref="show_dialog_ref" type="bottom" comp_type="base">
       <template #dialog>
@@ -77,9 +79,12 @@ const show_expand = ref(false); // 是否展开
 
 // 切换展开/收起状态
 const toggleExpand = () => {
+  if (show_tab.value){
+    proxy.$refs.show_dialog_ref.showDialog();
+  }
   // show_expand.value = !show_expand.value;
   // if (show_expand.value){
-    proxy.$refs.show_dialog_ref.showDialog();
+
   // }
 };
 
@@ -224,7 +229,7 @@ function getIcon() {
   background: white;
   white-space: pre-wrap;
   //text-indent: 2em;
-  overflow: auto; /* 仅在内容超过时滚动 */
+  //overflow: auto; /* 仅在内容超过时滚动 */
 
 }
 .loading{

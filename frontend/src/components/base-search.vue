@@ -32,7 +32,7 @@
             </uni-forms-item>
 
             <uni-forms-item>
-              <button class="button-botttom" size="mini" style="float: right;" @click="iconClick">
+              <button class="button-botttom" size="mini"   @click="iconClick">
                 {{ $t('search.search_text') }}
               </button>
             </uni-forms-item>
@@ -243,6 +243,7 @@ async function iconClick() {
   color: rgba(255, 255, 255, 1);
   font-size: 14px !important;
   font-weight: 500;
+  margin-left: -20%;
 }
 
 ::v-deep uni-text {

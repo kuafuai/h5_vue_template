@@ -73,7 +73,7 @@ export default {
 </script>
 <script setup>
 import {getCurrentInstance, ref} from "vue";
-import {onLoad} from "@dcloudio/uni-app";
+import {onLoad, onShow} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance();
 
@@ -114,6 +114,7 @@ const emits = defineEmits(["click","check_group_change"]);
 defineExpose({
   refresh,
 });
+
 
 onMounted(() => {
   refresh();

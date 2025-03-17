@@ -15,12 +15,12 @@
       <span
           ref="textContainer"
           class="sub-title truncate"
-          v-if="subTitle"
+          v-show="subTitle!=null"
 
       >
         {{ subTitle }}
       </span>
-      <text class="sub-title" v-else-if="itemType == 'ai' && subTitle == null">
+      <text class="sub-title" v-show="itemType == 'ai' && subTitle == null">
         正在生成中,请稍等...
       </text>
 
@@ -73,7 +73,7 @@ const props = defineProps({
   itemType: { type: String, default: "text" },
 });
 
-// const textContainer = ref(null);
+const textContainer = ref(null);
 const show_tab = ref(false); // 是否显示展开箭头
 const show_expand = ref(false); // 是否展开
 
@@ -92,11 +92,16 @@ const toggleExpand = () => {
 // 计算文本高度
 const checkEllipsis = () => {
   if (props.itemType=='ai'){
-    const textContainer = proxy.$refs.textContainer;
-    if (textContainer) {
-      console.log("文本实际高度:", textContainer.scrollHeight, textContainer.clientHeight)
-      // 比较实际高度和显示高度
-      show_tab.value = textContainer.scrollHeight > textContainer.clientHeight;
+    // console.log("监听变化 ai")
+    // const textContainer = proxy.$refs.textContainer;
+    console.log(textContainer.value)
+    if (textContainer.value) {
+      proxy.$nextTick(() => {
+        // 加载完成后执行
+        console.log("文本实际高度:", textContainer.value.scrollHeight, textContainer.value.clientHeight)
+        // 比较实际高度和显示高度
+        show_tab.value = textContainer.value.scrollHeight > textContainer.value.clientHeight;
+      })
     }
     // nextTick(() => {
     //   setTimeout(() => {

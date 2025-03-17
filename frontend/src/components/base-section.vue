@@ -41,8 +41,11 @@
 
     <base-dialog ref="show_dialog_ref" type="bottom" comp_type="base">
       <template #dialog>
+
+
         <view class="dialog-container">
-          {{subTitle}}
+<!--          {{subTitle}}-->
+          <ua-markdown :source="subTitle" :showLine="false"/>
         </view>
       </template>
     </base-dialog>

@@ -15,7 +15,7 @@
     <view v-else class="list_box">
       <view class="nodata">
         <img src="../static/noData.png" style="width:200px;height:auto" alt="">
-        <view class="noText">{{$t('description.no_text')}}</view>
+        <view class="noText">{{ $t('description.no_text') }}</view>
       </view>
     </view>
   </view>
@@ -27,7 +27,7 @@ import {getCurrentInstance} from "vue"
 
 const {proxy} = getCurrentInstance();
 import {defineProps, ref} from 'vue';
-import {onLoad,onShow} from "@dcloudio/uni-app";
+import {onLoad, onShow} from "@dcloudio/uni-app";
 
 const props = defineProps({
   api: {
@@ -38,6 +38,19 @@ const props = defineProps({
     type: Object, default: () => {
     }
   },
+
+  tableName: {
+    type: String,
+    default: null,
+  },
+  agentFieldName: {
+    type: Array,
+    default: [],
+  },
+  primaryName: {
+    type: String,
+    default: null,
+  }
 });
 const description = defineModel()
 const refresh = async () => {
@@ -46,6 +59,7 @@ const refresh = async () => {
     let response = await props.api.split('.').reduce((acc, item) => acc[item], proxy.$api)(props.params);
     console.log("详情页面描述【response】", response)
     description.value = response.data.records[0];
+    process_ai_agent()
   }
 
 }
@@ -59,8 +73,57 @@ watch(() => props.params, (value) => {
   }
 }, {immediate: true, deep: true})
 
+
+var interval = null; // 全局变量存储 interval 引用
+
+/**
+ * 开启定时器
+ */
+function startInterval() {
+  if (interval) clearInterval(interval); // 避免重复启动
+  interval = setInterval(async () => {
+    var is_end = true;
+    for (let i = 0; i < props.agentFieldName.length; i++) {
+      var agentFieldNameElement = props.agentFieldName[i];
+      var item = description.value[agentFieldNameElement];
+      if (item == null) {
+        is_end = false;
+        //  说明正在生成中,发送一次请求
+        let response = await proxy.$api.ai_agent_kuafu.isEnd({
+          tableName: props.tableName,
+          tableId: description.value[props.primaryName],
+          agentFieldName: agentFieldNameElement
+        });
+
+        if (response.code === 0 && response.data === true) {
+          refresh();
+        }
+      }
+    }
+    if (is_end) {
+      // 如果全部ai字段都是不空，则结束
+      clearInterval(interval);
+      interval = null;
+    }
+  }, 5000);
+}
+
+
+/**
+ * 处理ai类型的字段
+ */
+const process_ai_agent = () => {
+  clearInterval(interval)
+  if (props.agentFieldName != null && props.agentFieldName.length > 0 && props.tableName != null) {
+    startInterval()
+  }
+
+}
+
 onMounted(() => {
   refresh()
+
+
 })
 onShow(() => {
   refresh()
@@ -108,9 +171,11 @@ defineExpose({
 
 
   }
-  ::v-deep .uni-section .uni-section-header{
+
+  ::v-deep .uni-section .uni-section-header {
     display: block !important;
   }
+
   .tops {
     ::v-deep .uni-section:last-child {
       border-radius: 0 0 0 0 !important;
@@ -118,8 +183,8 @@ defineExpose({
   }
 
   .all {
-    height: 66rpx;
-    line-height: 66rpx;
+    height: 66 rpx;
+    line-height: 66 rpx;
     margin-bottom: 10px;
     font-size: 0.875rem !important;
     color: rgba(128, 128, 128, 1)
@@ -181,9 +246,9 @@ defineExpose({
 
   .list {
     // flex: 1;
-    margin: 30rpx 0;
+    margin: 30 rpx 0;
     box-sizing: border-box;
-    border-radius: 15rpx;
+    border-radius: 15 rpx;
     background: white;
     color: #fff !important;
 

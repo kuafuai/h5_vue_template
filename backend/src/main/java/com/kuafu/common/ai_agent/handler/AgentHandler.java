@@ -7,10 +7,16 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.google.common.base.CaseFormat;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
+import com.kuafu.common.ai_agent.contant.KeyConstant;
 import com.kuafu.common.ai_agent.entity.AIAgentEvent;
+import com.kuafu.common.ai_agent.entity.AiAgentRequest;
 import com.kuafu.common.ai_agent.llm.LLmRequest;
 import com.kuafu.common.ai_agent.llm.LlmHttpClient;
 import com.kuafu.common.ai_agent.llm.LlmRepose;
+import com.kuafu.common.cache.Cache;
+import com.kuafu.common.domin.ErrorCode;
+import com.kuafu.common.domin.ResultUtils;
+import com.kuafu.common.exception.BusinessException;
 import com.kuafu.common.util.JSON;
 import com.kuafu.common.util.StringUtils;
 import com.kuafu.common.util.UUID;
@@ -20,17 +26,17 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContext;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @Slf4j
 public class AgentHandler {
-
 
 
     @Resource
@@ -39,6 +45,10 @@ public class AgentHandler {
 
     @Resource
     private AIAgentConfig aiAgentConfig;
+
+
+    @Resource
+    private Cache cache;
 
     public void process(AIAgentEvent event) {
         String tableName = event.getTableName();
@@ -56,6 +66,9 @@ public class AgentHandler {
 
 
         updateDataById(event, tableName, agentFieldName, llmStr, primaryName, tableId);
+
+
+        removeTask(tableName, agentFieldName, tableId);
     }
 
     @NotNull
@@ -63,11 +76,11 @@ public class AgentHandler {
         StringBuffer llmPrompt = new StringBuffer(prompt);
         if (StringUtils.isNotEmpty(prompt) && ObjectUtils.isNotEmpty(data)) {
 
-            String template = "\""+prompt+"\""; // 作为一个字符串处理
+            String template = "\"" + prompt + "\""; // 作为一个字符串处理
             // 编译表达式
-            Expression expression = AviatorEvaluator.compile(template,true);
+            Expression expression = AviatorEvaluator.compile(template, true);
 
-            String result=(String)expression.execute(pojoToMap(data));
+            String result = (String) expression.execute(pojoToMap(data));
 
             llmPrompt = new StringBuffer(result);
         }
@@ -86,7 +99,7 @@ public class AgentHandler {
         }
     }
 
-    private  String callLlm(String llmPrompt) {
+    private String callLlm(String llmPrompt) {
         LlmHttpClient llmHttpClient = new LlmHttpClient
                 (aiAgentConfig.getBaseUrl());
         LLmRequest request = new LLmRequest(aiAgentConfig.getApiKey());
@@ -138,4 +151,78 @@ public class AgentHandler {
     }
 
 
+    /**
+     * 保存任务ID
+     *
+     * @param tableName
+     * @param agentFieldName
+     * @param tableId
+     */
+
+    @Retryable(value = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
+    public void saveTask(String tableName, String agentFieldName, String tableId) {
+        String key = KeyConstant.AI_AGENT_TASK_LIST + ":" + tableName + ":" + agentFieldName;
+        Set<String> set = cache.getCacheSet(key);
+        if (set == null){
+            set=new HashSet<>();
+        }
+        set.add(tableId);
+        cache.setCacheSet(key, set);
+    }
+
+
+    @Retryable(value = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
+    public void removeTask(String tableName, String agentFieldName, String tableId) {
+        String key = KeyConstant.AI_AGENT_TASK_LIST + ":" + tableName + ":" + agentFieldName;
+        Set<String> set = cache.getCacheSet(key);
+        if (set == null){
+            set=new HashSet<>();
+        }
+        set.remove(tableId);
+        cache.setCacheSet(key, set);
+    }
+
+    public Boolean taskIsEnd(AiAgentRequest aiAgentRequest) {
+
+        final String agentFieldName = aiAgentRequest.getAgentFieldName();
+        final String tableId = aiAgentRequest.getTableId();
+        final String tableName = aiAgentRequest.getTableName();
+        final List<String> tableIdList = aiAgentRequest.getTableIdList();
+
+
+//      两个不能同时为空
+        if (StringUtils.isEmpty(tableId) && ObjectUtils.isEmpty(tableIdList)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+
+        final Set<Object> cacheSet = cache.getCacheSet(KeyConstant.AI_AGENT_TASK_LIST + ":" + tableName + ":" + agentFieldName);
+
+        if (ObjectUtils.isEmpty(cacheSet)) {
+//          如果是空说明没有正在进行的任务
+            return true;
+        }
+//
+        if (StringUtils.isNotEmpty(tableId)) {
+//          如果不在列表中，说明任务已经结束
+            return !cacheSet.contains(tableId);
+
+        }
+
+
+//      如果是列表的情况，只要有一个在列表中就算任务在进行中
+        if (ObjectUtils.isNotEmpty(tableIdList)) {
+            for (String tabId : tableIdList) {
+
+                if (!cacheSet.contains(tabId)) {
+//
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
+
+

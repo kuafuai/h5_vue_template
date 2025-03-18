@@ -27,7 +27,7 @@ import {getCurrentInstance} from "vue"
 
 const {proxy} = getCurrentInstance();
 import {defineProps, ref} from 'vue';
-import {onLoad, onShow} from "@dcloudio/uni-app";
+import {onHide, onLoad, onShow} from "@dcloudio/uni-app";
 
 const props = defineProps({
   api: {
@@ -76,6 +76,12 @@ watch(() => props.params, (value) => {
 
 var interval = null; // 全局变量存储 interval 引用
 
+onHide(()=>{
+  if (interval){
+    clearInterval(interval);
+  }
+
+})
 /**
  * 开启定时器
  */
@@ -95,6 +101,11 @@ function startInterval() {
           agentFieldName: agentFieldNameElement
         });
 
+        if (response.code !== 0){
+          clearInterval(interval)
+          interval = null;
+          return
+        }
         if (response.code === 0 && response.data === true) {
           refresh();
         }

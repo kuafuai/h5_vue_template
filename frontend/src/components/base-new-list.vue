@@ -39,7 +39,7 @@
 
 <script setup>
 
-import {onShow} from "@dcloudio/uni-app";
+import {onHide, onShow} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance();
 
@@ -89,6 +89,13 @@ onShow(()=>{
   refresh();
 })
 
+onHide(()=>{
+  if (interval){
+    clearInterval(interval);
+  }
+
+})
+
 onMounted(() => {
   refresh();
 });
@@ -135,7 +142,6 @@ function startInterval() {
     var tableIdList=[]
     for (let i = 0; i < props.agentFieldName.length; i++) {
       let agentFieldNameItem = props.agentFieldName[i]
-      is_end = true;
       for (let j=0 ;j< pageRes.value.records.length; j++){
         if (pageRes.value.records[j][agentFieldNameItem] == null){
           tableIdList.push(pageRes.value.records[j][props.primaryName])

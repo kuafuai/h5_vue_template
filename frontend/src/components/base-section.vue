@@ -235,7 +235,7 @@ function getIcon() {
   padding-right: 19rpx;
   text-align: left;
   background: white;
-  white-space: pre-wrap;
+  //white-space: pre-wrap;
   //text-indent: 2em;
   //overflow: auto; /* 仅在内容超过时滚动 */
 

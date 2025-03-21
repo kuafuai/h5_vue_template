@@ -64,6 +64,7 @@
         "@types/marked": "^6.0.0",
         "axios": "^1.7.3",
         "base-64": "^1.0.0",
+        "crypto-js": "^4.2.0",
         "echarts": "^5.5.1",
         "firstui-uni": "^2.4.0",
         "marked": "^15.0.6",

@@ -45,7 +45,8 @@
 
         <view class="dialog-container">
 <!--          {{subTitle}}-->
-          <ua-markdown :source="subTitle" :showLine="false"/>
+<!--          <ua-markdown :source="subTitle" :showLine="false"/>-->
+          <MarkdownRender :markdown="subTitle" />
         </view>
       </template>
     </base-dialog>
@@ -54,6 +55,7 @@
 
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
+import MarkdownRender from "./MarkdownRender.vue";
 // import ai_icon from "../static/ai.png";
 // import location_icon from "../static/location.png";
 // import decimal_icon from "../static/decimal.png";

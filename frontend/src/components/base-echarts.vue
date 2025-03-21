@@ -52,29 +52,26 @@ font-family: SourceHanSansSC-regular;">
 </template>
 
 <script setup>
-	import * as echarts from 'echarts';
-	// import * as echarts from './l-echart/echart.min.js';
-	// const echarts = require('./l-echart/echart.min.js') ;
-	// const echarts = require('./echarts-uniapp/echarts.min.js') ;
-	// import * as echarts from './uni-ec-canvas/echarts.js'
-	const props = defineProps({
-		option: {
-			type: Array,
-			default: () => []
-		},
-		group_result_show_display: {
-			type: String,
-			default: "text"
-		},
-		chartName: {
-			type: String,
-			default: "数据来源"
-		}
-		// charType: {
-		//   type: String,
-		//   default: "pie"
-		// }
-	});
+import get_resource_url from '../config/static_config';
+import * as echarts from 'echarts';
+const props = defineProps({
+  option: {
+    type: Array,
+    default: () => []
+  },
+  group_result_show_display: {
+    type: String,
+    default: "text"
+  },
+  chartName: {
+    type: String,
+    default: "数据来源"
+  }
+  // charType: {
+  //   type: String,
+  //   default: "pie"
+  // }
+});
 
 	const is_echarts = ref(true);
 	const myChart = ref(null); // 保存图表实例

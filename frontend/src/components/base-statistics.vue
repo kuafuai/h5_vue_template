@@ -16,7 +16,7 @@
       <!--  分组执行的情况 -->
       <view v-for="(question, index) in questions" :key="index" class="question-item">
         <view class="shu">
-          <img src="../static/shu.png" style="width:5px;height:18px;margin-right:7px" alt="">
+          <img :src="get_resource_url('static/shu.png')" style="width:5px;height:18px;margin-right:7px" alt="">
           <text class="question-text">{{ question.name }}</text>
         </view>
         <view v-if="question.children && question.children.length > 0" class="option-list">
@@ -41,6 +41,7 @@ export default {
 };
 </script>
 <script setup>
+import get_resource_url from '../config/static_config';
 import {onLoad} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance();

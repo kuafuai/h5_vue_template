@@ -30,7 +30,7 @@
 
   <view v-else class="list_no_data">
     <view class="nodata">
-      <img src="../static/noData.png" style="width: 138pt;height: 93pt;" alt=""/>
+      <img :src="get_resource_url('static/noData.png')" style="width: 138pt;height: 93pt;" alt=""/>
       <view class="noText">{{ $t('list.empty_text') }}</view>
     </view>
   </view>
@@ -44,7 +44,7 @@ export default {
 };
 </script>
 <script setup>
-
+import get_resource_url from '../config/static_config';
 import {onHide, onShow} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance();

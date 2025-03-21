@@ -8,12 +8,13 @@
       </view>
     </view>
     <view class="refresh" @click="refreshFn">
-      <image src="../static/refresh.png" mode="widthFix" />
+      <image :src="get_resource_url('static/refresh.png')" mode="widthFix" />
     </view>
   </view>
 </template>
 
 <script setup>
+import get_resource_url from '../config/static_config';
 import { getCurrentInstance } from "vue"
 
 const { proxy } = getCurrentInstance();

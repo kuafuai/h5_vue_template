@@ -14,7 +14,7 @@
 
     <view v-else class="list_box">
       <view class="nodata">
-        <img src="../static/noData.png" style="width:200px;height:auto" alt="">
+        <img :src="get_resource_url('static/noData.png')" style="width:200px;height:auto" alt="">
         <view class="noText">{{ $t('description.no_text') }}</view>
       </view>
     </view>
@@ -24,7 +24,7 @@
 
 <script setup>
 import {getCurrentInstance} from "vue"
-
+import get_resource_url from '../config/static_config';
 const {proxy} = getCurrentInstance();
 import {defineProps, ref} from 'vue';
 import {onHide, onLoad, onShow} from "@dcloudio/uni-app";

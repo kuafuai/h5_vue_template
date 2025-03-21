@@ -9,6 +9,7 @@
 
 </template>
 <script>
+import STATIC_URL from '../config/static_config';
 export default {
   options: {
     styleIsolation: 'shared', // 解除样式隔离

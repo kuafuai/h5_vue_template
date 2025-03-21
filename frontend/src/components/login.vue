@@ -16,7 +16,7 @@
         <view class="icon-input-container">
           <uni-easyinput :placeholder="$t('login.enter_user_name')" v-model="form.phone" class="input-field"/>
           <view class="icon">
-            <img src="../static/peo.png" style="width:13px;height:13px;" alt="">
+            <img :src="get_resource_url('static/peo.png')" style="width:13px;height:13px;" alt="">
           </view>
         </view>
       </uni-forms-item>
@@ -24,7 +24,7 @@
         <view class="icon-input-container">
           <uni-easyinput :placeholder="$t('login.enter_pass_wd')" type="password" v-model="form.password" class="input-field"/>
           <view class="icon">
-            <img src="../static/pass.png" style="width:13px;height:13px;" alt="">
+            <img :src="get_resource_url('static/pass.png')" style="width:13px;height:13px;" alt="">
           </view>
         </view>
       </uni-forms-item>
@@ -58,7 +58,7 @@
         <view class="icon-input-container">
           <uni-easyinput v-model="form_sms.phone" :placeholder="$t('login.enter_phone')" type="number" maxlength="11"/>
           <view class="icon">
-            <img src="../static/phone.png" style="width:11px;height:16px; margin-top:3px" alt="">
+            <img :src="get_resource_url('static/phone.png')" style="width:11px;height:16px; margin-top:3px" alt="">
           </view>
         </view>
       </uni-forms-item>
@@ -69,7 +69,7 @@
         <view class="code-input-container">
           <uni-easyinput style="width:50px;" v-model="form_sms.code" :placeholder="$t('login.enter_verification_code')"/>
           <view class="icon">
-            <img src="../static/safe.png" style="width:22px;height:24px; margin-bottom:2px" alt="">
+            <img :src="get_resource_url('static/safe.png')" style="width:22px;height:24px; margin-bottom:2px" alt="">
           </view>
           <button class="send-code-button" @click="sendcode" :disabled="countdown > 0">
             {{ countdown > 0 ? `${countdown}s后重发` : '获取验证码' }}
@@ -134,6 +134,7 @@ export default {
 };
 </script>
 <script setup>
+import get_resource_url from '../config/static_config';
 import {getCurrentInstance, ref} from "vue";
 import service from "@/utils/request.js";
 const radio1 = ref(false)
@@ -361,6 +362,7 @@ const login_success = (res) => {
   });
   console.log("123456765", "登陆成功")
   // #ifdef MP-WEIXIN
+  // uni.setStorageSync('h5_token', res.data)
   uni.setStorageSync('h5_token', res.data)
   console.log("=======================", res)
   proxy.$api.login.getLoginUser().then((res) => {

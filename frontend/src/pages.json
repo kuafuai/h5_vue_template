@@ -1,30 +1,237 @@
 {
-  "easycom": {
-    "autoscan": true,
-    "custom": {
-      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
-      "fui-(.*)": "firstui-uni/firstui/fui-$1/fui-$1.vue",
-      "^base-(.*)": "@/components/base-$1.vue"
-    }
-  },
-  "pages": [
-    {
-      "path": "pages/index/index",
-      "style": {
-        "navigationBarTitleText": ""
-      }
+    "easycom": {
+        "autoscan": true,
+        "custom": {
+            "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
+"fui-(.*)": "firstui-uni/firstui/fui-$1/fui-$1.vue","^base-(.*)": "@/components/base-$1.vue"        }
     },
-    {
-      "path": "pages/one/index",
-      "style": {
-        "navigationBarTitleText": ""
-      }
+    "pages": [{
+        "path": "pages/login/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/register/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/profile/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/home/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_info/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_info_add/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_info_detail/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_details/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_details_add/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_details_detail/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/transaction_history/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/transaction_history_add/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/transaction_history_detail/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/dashboard_statistic/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_info_fund_type/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_info_risk_level/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_info_add_fund_type/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_info_add_risk_level/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_info_detail_fund_type/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_info_detail_risk_level/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_info_detail_fund_id/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_info_detail_user_id/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_info_detail_transaction_type/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_info_detail_fund_name/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_details_fund_id/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_details_add_fund_id/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/fund_details_detail_fund_id/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/transaction_history_user_id/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/transaction_history_transaction_type/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/transaction_history_fund_name/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/transaction_history_add_user_id/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/transaction_history_add_transaction_type/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/transaction_history_add_fund_name/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/transaction_history_detail_user_id/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/transaction_history_detail_transaction_type/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/transaction_history_detail_fund_name/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }, {
+        "path": "pages/web_view/index",
+        "style":  {
+                "navigationBarTitleText": "",
+                "navigationStyle": "default"
+            }
+    }] ,
+    "globalStyle": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "uni-app",
+        "navigationBarBackgroundColor": "#F8F8F8",
+        "backgroundColor": "#F8F8F8"
     }
-  ],
-  "globalStyle": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
-  }
 }

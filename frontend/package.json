@@ -67,11 +67,9 @@
         "crypto-js": "^4.2.0",
         "echarts": "^5.5.1",
         "firstui-uni": "^2.4.0",
-        "highlight.js": "^11.11.1",
         "marked": "^15.0.6",
         "uni-ui": "^1.0.0",
         "vue": "^3.4.21",
-        "vue-advanced-chat": "^2.1.0",
         "vue-echarts": "^7.0.3",
         "vue-i18n": "^9.1.9"
     },

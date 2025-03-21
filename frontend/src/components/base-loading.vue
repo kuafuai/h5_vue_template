@@ -1,11 +1,11 @@
 <template>
   <view class="image-container">
-    <image src="../static/fa5-spinner.png" alt="Rotating Image" class="rotating-image" />
+    <image :src="get_resource_url('static/fa5-spinner.png')" alt="Rotating Image" class="rotating-image" />
   </view>
 </template>
 
 <script>
-
+import get_resource_url from '../config/static_config';
 </script>
 
 <style scoped>

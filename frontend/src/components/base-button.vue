@@ -2,19 +2,21 @@
   <view class="container" v-if="model != 'base'">
 
     <button v-if="model == 'float'" class="btnDialog" :type="type" @click="click">
-      <image style="height:22pt; width: 22pt;" src="../static/add.png" alt="" mode="widthFix" />
+      <image style="height:22pt; width: 22pt;" :src="
+
+get_resource_url('static/add.png')" alt="" mode="widthFix" />
     </button>
 
     <button v-if="model == 'update'" class="btnDialog" :type="type" @click="click">
-      <image style="height:22pt; width: 22pt;" src="../static/update.png" alt="" mode="widthFix" />
+      <image style="height:22pt; width: 22pt;" :src="get_resource_url('static/update.png')" alt="" mode="widthFix" />
     </button>
 
     <button v-if="model == 'flex'" class="btnDialog" :type="type" @click="click">
-      <image style="width:100%" src="../static/options.png" alt="" mode="widthFix" />
+      <image style="width:100%" :src="get_resource_url('static/options.png')" alt="" mode="widthFix" />
     </button>
 
     <button v-if="model == 'slot'" class="btnDialog" :type="type" @click="click"><image style="width:100%"
-                                                                                        src="../static/options.png"
+                                                                                        :src="get_resource_url('static/options.png')"
                                                                                         alt="" mode="widthFix" />
     </button>
   </view>
@@ -25,7 +27,7 @@
 
 <script setup>
 import {defineProps, ref} from "vue";
-
+import get_resource_url from '../config/static_config';
 const props = defineProps({
   model: {
     type: String,

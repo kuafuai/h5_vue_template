@@ -3,12 +3,14 @@
     <view style="text-align: left;">
       {{show_value}}
     </view>
-    <image src="../static/right.png"
+    <image :src="
+STATIC_URL+'/static/right.png'"
            style="width:32rpx;position:absolute;right:24rpx;display: flex; justify-content:center; " mode="widthFix">
     </image></button>
 
 </template>
 <script>
+import STATIC_URL from '../config/static_config';
 export default {
   options: {
     styleIsolation: 'shared', // 解除样式隔离

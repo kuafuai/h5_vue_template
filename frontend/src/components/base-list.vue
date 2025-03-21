@@ -59,12 +59,13 @@
 
   <view v-else class="list_box">
     <view class="nodata">
-      <img src="../static/noData.png" style="width: 12.5rem;height: 8.5rem;" alt=""/>
+      <img :src="get_resource_url('static/noData.png')" style="width: 12.5rem;height: 8.5rem;" alt=""/>
       <view class="noText">{{ $t('list.empty_text') }}～</view>
     </view>
   </view>
 </template>
 <script>
+import get_resource_url from '../config/static_config';
 export default {
   options: {
     styleIsolation: 'shared', // 解除样式隔离

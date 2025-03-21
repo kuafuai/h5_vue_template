@@ -7,6 +7,7 @@
 import { ref, computed } from 'vue'
 	import MarkdownIt from './lib/markdown-it.min.js'
 import hljs from './lib/highlight/uni-highlight.min.js'
+// import hljs from 'highlight.js'
 import './lib/highlight/atom-one-dark.css'
 import parseHtml from './lib/html-parser.js'
 	const props = defineProps({

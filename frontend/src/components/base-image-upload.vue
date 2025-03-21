@@ -13,7 +13,7 @@
   >
     <view class="content"
           style="display:flex;flex-direction:column;justify-content:center;align-items:center;border:none">
-      <image src="../static/picture.png" style="width:80rpx;height:80rpx" alt=""></image>
+      <image :src="get_resource_url('static/picture.png')" style="width:80rpx;height:80rpx" alt=""></image>
       <view style="line-height: 17px;color: rgba(154,154,154,1);font-size: 0.75rem;margin-top:10rpx">
         {{ $t('image_upload.upload_text') }}
       </view>
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import get_resource_url from '../config/static_config';
 export default {
   options: {
     styleIsolation: 'shared', // 解除样式隔离

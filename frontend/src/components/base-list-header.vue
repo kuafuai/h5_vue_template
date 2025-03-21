@@ -10,11 +10,12 @@
         }}</view>
     </view>
     <view class="right">
-      <view class="background-image"></view>
+      <view class="background-image" :style="{background: url(get_resource_url('static/hua.png'))+' '+ 'no-repeat'}"></view>
     </view>
   </view>
 </template>
 <script>
+import get_resource_url from '../config/static_config';
 export default {
   options: {
     styleIsolation: 'shared', // 解除样式隔离
@@ -90,7 +91,7 @@ const props = defineProps({
 }
 
 .background-image {
-  background: url("../static/hua.png") no-repeat; /* 确保路径正确 */
+   /* 确保路径正确 */
   background-size: contain; /* 或 contain，根据需要选择 */
   background-position: bottom right;
   position: absolute;

@@ -15,7 +15,7 @@
               <view v-if="sentFiles && isSent" class="divider"></view>
               <view class="button-container" v-if="sentFiles && isSent">
                 <view v-if="sentFiles && isSent" @click="exportToWord(msg.content)" class="button-container-word">
-                  <image src="../static/littleword.png" mode="scaleToFill"/>
+                  <image :src="get_resource_url('static/littleword.png')" mode="scaleToFill"/>
                   <view style="color: #3273f3; font-size: 14px">导出word</view>
                 </view>
 
@@ -40,7 +40,9 @@
         <view v-else class="message-user">
           <view v-if="msg.file" class="message-file">
             <view class="message-file-icon">
-              <image src="../static/wenjianleixing.png" alt=""/>
+              <image :src="
+
+get_resource_url('static/wenjianleixing.png')" alt=""/>
             </view>
             <view class="message-file-name">{{ msg.file.name }}</view>
           </view>
@@ -69,7 +71,7 @@
           <view class="difyTitle">
             <text class="difyCont">{{ difyTitle }}</text>
                         <view v-if="!isInputFocused" @click="shareAdd" class="difyTitle-container">
-                          <image src="../static/fenxianglianjie.png"
+                          <image :src="get_resource_url('static/fenxianglianjie.png')"
                                  style="width: 1rem;height: 1rem; color: #3273f3; " mode="scaleToFill" />
                           <text style="font-size: 0.88rem;">分享</text>
                         </view>
@@ -84,10 +86,10 @@
             <view class="outer-container" :class="{ 'with-file': uploadedFile }">
               <!-- 文件显示区域 -->
               <view v-if="uploadedFile" class="file-display">
-                <image class="file-icon" src="../static/wenjianleixing.png"></image>
+                <image class="file-icon" :src="get_resource_url('/static/wenjianleixing.png')"></image>
                 <text class="file-name">{{ uploadedFile.name }}</text>
                 <view class="delete-icon" @click="deleteFile">
-                  <image src="../static/shanchu.png" alt=""/>
+                  <image :src="get_resource_url('static/shanchu.png')" alt=""/>
                 </view>
               </view>
               <view v-if="uploadedFile" class="divider"></view>
@@ -117,7 +119,7 @@
             <view v-if="showOptions" class="options-container">
               <view class="option" @click="chooseFile">
                 <view class="option-icon">
-                  <image src="../static/wenjian.png" mode="widthFix"/>
+                  <image :src="get_resource_url('static/wenjian.png')" mode="widthFix"/>
                 </view>
                 <view class="option-text">文件</view>
               </view>
@@ -191,10 +193,12 @@
 </template>
 
 <script setup>
+
 import {nextTick, ref, watch} from "vue";
 import {fetchEventSource} from "@microsoft/fetch-event-source";
 import MarkdownRender from "./MarkdownRender.vue";
 
+import get_resource_url from '../config/static_config';
 const BASE_API = import.meta.env.VITE_APP_BASE_API;
 const {proxy} = getCurrentInstance();
 // #ifdef H5

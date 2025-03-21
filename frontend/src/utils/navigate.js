@@ -1,4 +1,4 @@
-const tabBarList =[]
+const tabBarList =["home:首页","profile:个人中心"]
 function isCurrentPageTabBar(currentPage) {
     return tabBarList.includes(currentPage);
 }

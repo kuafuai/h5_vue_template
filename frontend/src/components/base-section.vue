@@ -54,21 +54,43 @@
 
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
-import ai_icon from "../static/ai.png";
-import location_icon from "../static/location.png";
-import decimal_icon from "../static/decimal.png";
-import boolean_icon from "../static/boolean.png";
-import email_icon from "../static/email.png";
-import number_icon from "../static/number.png";
-import longtext_icon from "../static/longtext.png";
-import phone_icon from "../static/phone_icon.png";
-import enum_icon from "../static/enum.png";
-import time_icon from "../static/time.png";
-import contact_icon from "../static/contact.png";
-import photo from "../static/photo.png";
-import show_1 from "../static/show_1.png"; // 右箭头（展开）
-import show_2 from "../static/show_2.png";
-import {onShow} from "@dcloudio/uni-app"; // 下箭头（收起）
+// import ai_icon from "../static/ai.png";
+// import location_icon from "../static/location.png";
+// import decimal_icon from "../static/decimal.png";
+// import boolean_icon from "../static/boolean.png";
+// import email_icon from "../static/email.png";
+// import number_icon from "../static/number.png";
+// import longtext_icon from "../static/longtext.png";
+// import phone_icon from "../static/phone_icon.png";
+// import enum_icon from "../static/enum.png";
+// import time_icon from "../static/time.png";
+// import contact_icon from "../static/contact.png";
+// import photo from "../static/photo.png";
+// import show_1 from "../static/show_1.png"; // 右箭头（展开）
+// import show_2 from "../static/show_2.png";
+
+
+
+
+
+import {onShow} from "@dcloudio/uni-app";
+import get_resource_url from "../config/static_config"; // 下箭头（收起）
+
+const photo = get_resource_url('static/photo.png');
+const ai_icon = get_resource_url('static/ai.png');
+const location_icon = get_resource_url('static/location.png');
+const decimal_icon = get_resource_url('static/decimal.png');
+const boolean_icon = get_resource_url('static/boolean.png');
+const email_icon = get_resource_url('static/email.png');
+const number_icon = get_resource_url('static/number.png');
+const longtext_icon = get_resource_url('static/longtext.png');
+const phone_icon = get_resource_url('static/phone_icon.png');
+const enum_icon = get_resource_url('static/enum.png');
+const time_icon = get_resource_url('static/time.png');
+const contact_icon = get_resource_url('static/contact.png');
+const show_1 = get_resource_url('static/show_1.png');
+const show_2 = get_resource_url('static/show_2.png');
+
 const {proxy} = getCurrentInstance();
 const props = defineProps({
   subTitle: { type: String, default: "" },

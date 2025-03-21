@@ -13,7 +13,7 @@
                     
                     <view class="w-full"> 
                         <view class="flex-start-center m-30 ">
-                            <img src="@/assets/logo/logo.png" width="32px" height="34px" />
+                            <img :src="get_resource_url('assets/logo/logo.png')" width="32px" height="34px" />
                             <span class="m-l-10" style="font-weight: bold; font-size: 24px;">CodeFlying</span>
                         </view>
 
@@ -33,7 +33,7 @@
                     
                     <view class="w-full m-b-30">
                         <view class="flex-end-center m-r-20">
-                            <image src="@/assets/logo/logo.png" style="width: 30px; height: 30px;"  mode="aspectFill">
+                            <image :src="get_resource_url('assets/logo/logo.png')" style="width: 30px; height: 30px;"  mode="aspectFill">
                             </image>
                             
                             <uni-badge :is-dot="true" :text="1" absolute="rightTop" class="item m-l-20">
@@ -50,7 +50,9 @@
 </template>
 
 <script setup>
-    import { dynamicRoutes } from '@/router/dynamic';
+
+import get_resource_url from '../config/static_config';
+import { dynamicRoutes } from '@/router/dynamic';
     const { proxy } = getCurrentInstance();
 
     let left_title = import.meta.env.VITE_APP_NAME;

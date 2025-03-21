@@ -3,7 +3,7 @@
     <!-- 自定义文件选择区域 -->
     <view class="content" @click="chooseVideo">
       <view class="VideoBox">
-        <image src="../static/picture.png" style="width:80rpx;height:80rpx" alt=""></image>
+        <image :src="get_resource_url('static/picture.png')" style="width:80rpx;height:80rpx" alt=""></image>
         <view style="line-height: 17px;color: rgba(154,154,154,1);font-size: 0.75rem;margin-top:10rpx">
           点击录制/选择
         </view>
@@ -21,6 +21,7 @@
 </template>
 
 <script setup>
+import get_resource_url from '../config/static_config';
 import { ref } from "vue";
 
 // 定义响应式数据

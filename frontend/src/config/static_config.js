@@ -6,7 +6,7 @@ const get_resource_url = (path) => {
         base_url  = 'https://kuafuai.obs.cn-east-3.myhuaweicloud.com/h5_vue_template/'
     }
     if (base_url){
-        return STATIC_URL + path
+        return base_url + path
     }
     return path
 

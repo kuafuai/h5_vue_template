@@ -357,6 +357,7 @@ const login_success = (res) => {
   console.log("123456765", "登陆成功")
   // #ifdef MP-WEIXIN
   // uni.setStorageSync('h5_token', res.data)
+  uni.setStorageSync('h5_token', res.data)
   console.log("=======================", res)
   proxy.$api.login.getLoginUser().then((res) => {
     const item = res.data;

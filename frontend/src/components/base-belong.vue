@@ -3,8 +3,7 @@
     <view style="text-align: left;">
       {{show_value}}
     </view>
-    <image :src="
-STATIC_URL+'/static/right.png'"
+    <image src="../static/right.png"
            style="width:32rpx;position:absolute;right:24rpx;display: flex; justify-content:center; " mode="widthFix">
     </image></button>
 

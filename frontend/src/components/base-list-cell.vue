@@ -13,7 +13,13 @@
     </view>
   </base-layout>
 </template>
-
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
 import ai_icon from '../static/ai.png'
 import location_icon from '../static/location.png'

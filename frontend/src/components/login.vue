@@ -126,7 +126,13 @@
     {{end_content_show}}
   </view>
 </template>
-
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
 import {getCurrentInstance, ref} from "vue";
 import service from "@/utils/request.js";
@@ -355,7 +361,7 @@ const login_success = (res) => {
   });
   console.log("123456765", "登陆成功")
   // #ifdef MP-WEIXIN
-  // uni.setStorageSync('h5_token', res.data)
+  uni.setStorageSync('h5_token', res.data)
   console.log("=======================", res)
   proxy.$api.login.getLoginUser().then((res) => {
     const item = res.data;

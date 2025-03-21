@@ -6,26 +6,8 @@ text-align: left;
 font-family: SourceHanSansSC-regular;">
 			{{ chartName }}
 		</view>
-
-		<!-- <base-ec-canvas
-		  class="uni-ec-canvas"
-		  id="line-chart"
-		  ref="canvasDom"
-		  canvas-id="lazy-load-chart"
-		  :ec="ec"
-		></base-ec-canvas> -->
-
-		<view style="width: 100%" v-if="is_echarts">
-			<!-- #ifdef H5 -->
+		<view v-if="is_echarts">
 			<div class="chart" ref="chartDom"></div>
-			<!-- #endif -->
-			<!-- #ifdef MP-WEIXIN -->
-			<base-ec-canvas 
-				class="uni-ec-canvas" 
-				id="line-chart" 
-				ref="canvasDom" canvas-id="lazy-load-chart"
-				:option="optionObj" />
-			<!-- #endif -->
 		</view>
 		<view v-else class="content">
 			<view v-for="item in option" :key="item.name">
@@ -53,10 +35,6 @@ font-family: SourceHanSansSC-regular;">
 
 <script setup>
 	import * as echarts from 'echarts';
-	// import * as echarts from './l-echart/echart.min.js';
-	// const echarts = require('./l-echart/echart.min.js') ;
-	// const echarts = require('./echarts-uniapp/echarts.min.js') ;
-	// import * as echarts from './uni-ec-canvas/echarts.js'
 	const props = defineProps({
 		option: {
 			type: Array,
@@ -79,95 +57,6 @@ font-family: SourceHanSansSC-regular;">
 	const is_echarts = ref(true);
 	const myChart = ref(null); // 保存图表实例
 	const chartDom = ref(null); // 使用 ref 直接获取 DOM 元素
-	const canvasDom = ref(null); // 使用 ref 直接获取 DOM 元素
-
-	const ec = ref({
-		lazyLoad: true,
-		options: {} //echart 配置项
-	})
-
-	const option = {
-		tooltip: {
-			trigger: 'axis',
-			axisPointer: {
-				type: 'shadow'
-			},
-			confine: true
-		},
-		legend: {
-			data: ['热度', '正面', '负面']
-		},
-		grid: {
-			left: 20,
-			right: 20,
-			bottom: 15,
-			top: 40,
-			containLabel: true
-		},
-		xAxis: [{
-			type: 'value',
-			axisLine: {
-				lineStyle: {
-					color: '#999999'
-				}
-			},
-			axisLabel: {
-				color: '#666666'
-			}
-		}],
-		yAxis: [{
-			type: 'category',
-			axisTick: {
-				show: false
-			},
-			data: ['汽车之家', '今日头条', '百度贴吧', '一点资讯', '微信', '微博', '知乎'],
-			axisLine: {
-				lineStyle: {
-					color: '#999999'
-				}
-			},
-			axisLabel: {
-				color: '#666666'
-			}
-		}],
-		series: [{
-				name: '热度',
-				type: 'bar',
-				label: {
-					normal: {
-						show: true,
-						position: 'inside'
-					}
-				},
-				data: [300, 270, 340, 344, 300, 320, 310],
-			},
-			{
-				name: '正面',
-				type: 'bar',
-				stack: '总量',
-				label: {
-					normal: {
-						show: true
-					}
-				},
-				data: [120, 102, 141, 174, 190, 250, 220]
-			},
-			{
-				name: '负面',
-				type: 'bar',
-				stack: '总量',
-				label: {
-					normal: {
-						show: true,
-						position: 'left'
-					}
-				},
-				data: [-20, -32, -21, -34, -90, -130, -110]
-			}
-		]
-	};
-
-	const optionObj = ref({})
 
 	// 判断是否展示图表还是文本
 	const is_echarts_function = () => {
@@ -175,18 +64,6 @@ font-family: SourceHanSansSC-regular;">
 	};
 
 	is_echarts_function();
-
-	const initMiniChart = (canvas, width, height, canvasDpr) => {
-		console.log(canvas, width, height, canvasDpr)
-		chart = miniEcharts.init(canvas, null, {
-			width: width,
-			height: height,
-			devicePixelRatio: canvasDpr
-		})
-		canvas.setChart(chart)
-		chart.setOption(this.option)
-		return chart
-	}
 
 	// 初始化图表
 	const initChart = () => {
@@ -202,21 +79,9 @@ font-family: SourceHanSansSC-regular;">
 
 	// 当组件挂载时初始化图表
 	onMounted(() => {
-		console.log('t888', canvasDom)
-
-		// #ifdef MP-WEIXIN
-		setTimeout(async () => {
-			if (!canvasDom.value) return
-			myChart.value = await canvasDom.value.init(echarts)
-			myChart.value.setOption(getChartOption())
-		}, 300)
-		// #endif
-
-		// #ifdef H5
 		if (is_echarts.value) {
 			initChart();
 		}
-		// #endif
 	});
 
 	// 监听 option prop 变化，重新渲染图表
@@ -265,7 +130,7 @@ font-family: SourceHanSansSC-regular;">
 					name: props.chartName,
 					type: 'pie',
 					radius: ['40%', '60%'],
-					center: ['50%', '50%'],
+					center: ['48%', '40%'],
 					avoidLabelOverlap: true,
 					itemStyle: {
 						borderRadius: 10,
@@ -407,8 +272,7 @@ font-family: SourceHanSansSC-regular;">
 </script>
 <style scoped>
 	.all_echarts {
-		/* width: 100%; */
-		width: 90vw;
+		width: 100%;
 		max-width: 100%;
 		overflow: hidden;
 	}
@@ -457,13 +321,5 @@ font-family: SourceHanSansSC-regular;">
 
 	.chart {
 		width: 90vw !important;
-	}
-
-	.uni-ec-canvas {
-		width: 90vw !important;
-		/* 确保容器宽度为百分比，支持响应式 */
-		height: 500rpx;
-		/* 容器高度 */
-		margin: 0 auto;
 	}
 </style>

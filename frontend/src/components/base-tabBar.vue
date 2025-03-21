@@ -65,8 +65,8 @@ console.log("当前页面路径：", currentRoute);
 }
 
 .cont {
-    flex: 1;
-    overflow: auto;
+	flex: 1;
+	/* overflow: auto; */
 }
 
 .tabbar {

@@ -27,7 +27,7 @@ const props = defineProps({
 
 <style scoped>
 .load-more-right {
-  width: 100%;
+  width: 100vw;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -35,7 +35,7 @@ const props = defineProps({
  }
 
 .load-more-center {
-  width: 100%;
+  width: 100vw;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -43,7 +43,7 @@ const props = defineProps({
 }
 
 .load-more-left {
-  width: 100%;
+  width: 100vw;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;

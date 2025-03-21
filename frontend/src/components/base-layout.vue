@@ -4,6 +4,13 @@
     <slot/>
   </view>
 </template>
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
 
 const {proxy} = getCurrentInstance();
@@ -75,6 +82,7 @@ get_wrapper_class();
 </script>
 
 <style scoped lang="scss">
+
 .content {
   width: 100%;
   display: flex;

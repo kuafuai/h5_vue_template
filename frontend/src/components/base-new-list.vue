@@ -7,7 +7,7 @@
                 :thumbnail="getThumbnail(item)">
         <base-layout display="flex" direction="c">
           <slot name="default" :item="item" :index="index + 1">
-            old {{ index }} : {{ item }}
+            <!--            old {{ index }} : {{ item }}-->
           </slot>
         </base-layout>
 
@@ -36,8 +36,16 @@
   </view>
 
 </template>
-
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared', // 解除样式隔离
+  }
+};
+</script>
 <script setup>
+
+import {onHide, onShow} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance();
 
@@ -57,6 +65,18 @@ const props = defineProps({
   },
   title: {type: String, required: false},
   thumbnail: {type: String, required: false},
+  tableName: {
+    type: String,
+    default: null,
+  },
+  agentFieldName: {
+    type: Array,
+    default: [],
+  },
+  primaryName: {
+    type: String,
+    default: null,
+  }
 });
 
 
@@ -71,6 +91,17 @@ defineExpose({
   refresh,
 });
 
+onShow(()=>{
+  refresh();
+})
+
+onHide(()=>{
+  if (interval){
+    clearInterval(interval);
+  }
+
+})
+
 onMounted(() => {
   refresh();
 });
@@ -78,7 +109,6 @@ onMounted(() => {
 watch(() => pageRes.value, (newVal) => {
   pageRes.value = newVal
 }, {deep: true})
-
 
 function refresh(query_param) {
   isLoading.value = true;
@@ -103,7 +133,65 @@ function refresh(query_param) {
   getApiData();
 
   isLoading.value = false;
+
+  process_ai_agent();
 }
+
+
+var interval=null
+
+function startInterval() {
+  if (interval) clearInterval(interval); // 避免重复启动
+  interval = setInterval(async () => {
+    var is_end = true;
+
+    var tableIdList=[]
+    for (let i = 0; i < props.agentFieldName.length; i++) {
+      let agentFieldNameItem = props.agentFieldName[i]
+      for (let j=0 ;j< pageRes.value.records.length; j++){
+        if (pageRes.value.records[j][agentFieldNameItem] == null){
+          tableIdList.push(pageRes.value.records[j][props.primaryName])
+          is_end=false
+        }
+      }
+
+
+      if (tableIdList.length>0){
+        //  说明正在生成中,发送一次请求
+        let response = await proxy.$api.ai_agent_kuafu.isEnd({
+          tableName: props.tableName,
+          tableIdList: tableIdList,
+          agentFieldName: agentFieldNameItem
+        });
+        if (response.code!==0){
+          clearInterval(interval)
+          return
+        }
+
+        if (response.code === 0 && response.data === true) {
+          refresh();
+        }
+      }
+    }
+    if (is_end) {
+      // 如果全部ai字段都是不空，则结束
+      clearInterval(interval);
+      interval = null;
+    }
+
+
+  }, 8000);
+
+
+}
+const process_ai_agent=()=>{
+  if (props.agentFieldName!=null && props.agentFieldName.length>0 && props.tableName!=null){
+    startInterval()
+  }
+}
+
+
+
 
 async function getApiData(pageObj) {
   if (!props.api) {
@@ -174,7 +262,11 @@ function getThumbnail(item) {
   if (field) {
     let t = item[field];
     if (Array.isArray(t)) {
-      return t[0].url;
+      if (t.length > 0) {
+        return t[0].url;
+      } else {
+        return ''
+      }
     } else {
       return t;
     }
@@ -187,7 +279,11 @@ function getThumbnail(item) {
 </script>
 
 <style scoped lang="scss">
-
+/* #ifdef MP-WEIXIN */
+::v-deep .flex-c-start-start>view:first-child {
+  width: 100% !important;
+}
+/* #endif */
 
 .list_no_data {
   width: 100%;

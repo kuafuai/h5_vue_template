@@ -87,9 +87,9 @@ export default service
 // #ifdef MP-WEIXIN
 let service = (res) => {
     console.log("加载中", res)
-    uni.showLoading({
-        title: '加载中',
-    })
+    // uni.showLoading({
+    //     title: '加载中',
+    // })
 
     let {url, data, method, token} = res
     token = uni.getStorageSync("h5_token")
@@ -137,7 +137,7 @@ let service = (res) => {
             },
 
             complete() {
-                uni.hideLoading()
+                // uni.hideLoading()
             }
         })
     })

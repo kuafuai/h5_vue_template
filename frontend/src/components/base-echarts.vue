@@ -35,13 +35,13 @@ font-family: SourceHanSansSC-regular;">
 				<view v-else>
 					<view style="display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
 						<view class="option-text" v-if="item.name">
-							<image src="../static/user.png" style="width: 0.9rem; height:0.9rem;" mode="heightFix" />
+							<image :src="get_resource_url('static/user.png')" style="width: 0.9rem; height:0.9rem;" mode="heightFix" />
 							<view style="flex:1;font-weight: 400;">
 								{{ item.name }}
 							</view>
 						</view>
 						<view class="option-value">
-							<image src="../static/cont_text.png" style="width: 0.9rem; height:0.9rem;" mode="heightFix" />
+							<image :src="get_resource_url('static/cont_text.png')" style="width: 0.9rem; height:0.9rem;" mode="heightFix" />
 							<view style="flex:1;font-weight: 400;">{{ item.value }}</view>
 						</view>
 					</view>

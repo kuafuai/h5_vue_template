@@ -66,18 +66,19 @@ const refresh = async () => {
 
 const isEmpty = (obj) => Object.keys(obj).length == 0;
 
-watch(() => props.params, (value) => {
-  console.log("watch", value)
-  if (!isEmpty(value) && (description.value == null || isEmpty(description.value))) {
-    refresh()
-  }
-}, {immediate: true, deep: true})
+// watch(() => props.params, (value) => {
+//   console.log("watch", value)
+//   if (!isEmpty(value) && (description.value == null || isEmpty(description.value))) {
+//     refresh()
+//   }
+// }, {immediate: true, deep: true,once:true})
 
 
 var interval = null; // 全局变量存储 interval 引用
 
 onHide(()=>{
   if (interval){
+    console.log("clear interval description")
     clearInterval(interval);
   }
 
@@ -132,13 +133,21 @@ const process_ai_agent = () => {
 }
 
 onMounted(() => {
-  refresh()
+  // console.log("onmounted",props.params)
+  // refresh()
 
 
 })
 onShow(() => {
-  refresh()
+  console.log("onshow",props.params)
+  // proxy.$nextTick(()=>{
+  //   refresh()
+  // })
+  setTimeout(()=>{
+    refresh()
+  },500)
 })
+
 
 defineExpose({
   refresh

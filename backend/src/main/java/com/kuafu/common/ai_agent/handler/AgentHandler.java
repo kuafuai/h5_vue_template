@@ -161,6 +161,10 @@ public class AgentHandler {
 
     @Retryable(value = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public void saveTask(String tableName, String agentFieldName, String tableId) {
+        if (agentFieldName.contains("_")){
+//          转为驼峰
+            agentFieldName=dbStrToHumpLower(agentFieldName);
+        }
         String key = KeyConstant.AI_AGENT_TASK_LIST + ":" + tableName + ":" + agentFieldName;
         Set<String> set = cache.getCacheSet(key);
         if (set == null){
@@ -169,10 +173,18 @@ public class AgentHandler {
         set.add(tableId);
         cache.setCacheSet(key, set);
     }
+    public static String dbStrToHumpLower(String dbStr) {
+        // 使用谷歌开发工具包转驼峰命名
+        return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, dbStr);
+    }
 
 
     @Retryable(value = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public void removeTask(String tableName, String agentFieldName, String tableId) {
+        if (agentFieldName.contains("_")){
+//          转为驼峰
+            agentFieldName=dbStrToHumpLower(agentFieldName);
+        }
         String key = KeyConstant.AI_AGENT_TASK_LIST + ":" + tableName + ":" + agentFieldName;
         Set<String> set = cache.getCacheSet(key);
         if (set == null){

@@ -9,7 +9,7 @@
     </button>
 
   </view>
-  <view v-else-if="model='more'">
+  <view v-else-if="model=='more'">
     <!--    {{// JSON.parse(data_value)}}-->
     <view>
 

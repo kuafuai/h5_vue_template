@@ -21,7 +21,7 @@ export default {
 };
 </script>
 <script setup>
-import {getCurrentInstance, ref} from "vue"
+import {getCurrentInstance, onMounted, ref} from "vue"
 import {defineProps, defineEmits, toRefs} from 'vue';
 import {onLoad, onReady, onShow} from "@dcloudio/uni-app";
 const {proxy} = getCurrentInstance();
@@ -95,12 +95,12 @@ const onResetForm = () => {
   // ElMessage.info('Form reset successfully!');
 };
 
-watch(() => props.params, (tal,val) => {
-  console.log("watch",tal, val);
-  if(!isEmpty(tal)){
-    getFormData();
-  }
-},{immediate: true});
+// watch(() => props.params, (tal,val) => {
+//   console.log("watch",tal, val);
+//   if(!isEmpty(tal)){
+//     getFormData();
+//   }
+// },{immediate: true});
 
 // Handle form submission
 async function handleSubmit() {
@@ -149,8 +149,11 @@ async function handleSubmit() {
   }
 }
 
-onLoad(async () => {
-  getFormData();
+onMounted(async () => {
+  setTimeout(()=>{
+    getFormData();
+  },800)
+
 })
 
 async function getFormData() {

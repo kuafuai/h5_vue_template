@@ -12,17 +12,27 @@
 
     <!-- 子标题区域 -->
     <view class="sub-title-container"  @click.stop="toggleExpand">
-      <span
+      <text
           ref="textContainer"
           class="sub-title truncate"
           v-show="subTitle!=null"
 
       >
         {{ subTitle }}
-      </span>
-      <text class="sub-title" v-show="itemType == 'ai' && subTitle == null">
-        正在生成中,请稍等...
       </text>
+<!--为了测算文本高度-->
+      <text class="real_text" style="font-size: 24rpx;;visibility: hidden; position: fixed;white-space: normal;width: 90%;text-overflow: ellipsis;">
+        {{ subTitle }}
+      </text>
+
+      <text >
+        <text   class="waiting" v-show="itemType=='ai' && subTitle==null">
+          正在生成中,请稍等...
+        </text>
+
+
+      </text>
+
 
       <!-- 超出三行时显示展开/收起箭头 -->
       <image
@@ -117,38 +127,59 @@ const toggleExpand = () => {
 
 // 计算是否超出三行
 // 计算文本高度
-const checkEllipsis = () => {
-  if (props.itemType=='ai'){
-    // console.log("监听变化 ai")
-    // const textContainer = proxy.$refs.textContainer;
-    console.log(textContainer.value)
-    if (textContainer.value) {
-      proxy.$nextTick(() => {
-        // 加载完成后执行
-        console.log("文本实际高度:", textContainer.value.scrollHeight, textContainer.value.clientHeight)
-        // 比较实际高度和显示高度
-        show_tab.value = textContainer.value.scrollHeight > textContainer.value.clientHeight;
-      })
-    }
-    // nextTick(() => {
-    //   setTimeout(() => {
-    //     uni.createSelectorQuery()
-    //         .in(this) // 确保查询在当前页面执行
-    //         .select(".sub-title")
-    //         .boundingClientRect((rect) => {
-    //           // console.log("文本实际高度:", rect);
-    //           if (rect) {
-    //             console.log("文本实际高度:", rect.height);
-    //             const lineHeight = 5; // 估算单行高度（rpx 转 px 可能有小差异）
-    //             show_tab.value = rect.height > lineHeight * 3; // 超出3行显示箭头
-    //           }
-    //         })
-    //         .exec();
-    //   }, 50); // 确保渲染完成后再执行
-    // });
-  }
+
+const getElementHeight=(selector) =>{
+  return new Promise((resolve) => {
+    uni.createSelectorQuery()
+        .in(proxy) // 确保在当前组件作用域内执行
+        .select(selector)
+        .boundingClientRect((rect) => {
+          if (rect) {
+            resolve(rect.height);
+          } else {
+            resolve(0);
+          }
+        })
+        .exec();
+  });
 
 };
+
+
+const checkEllipsis =  () => {
+  if (props.itemType=='ai'){
+
+    proxy.$nextTick(async () => {
+      // 同时获取两个元素的高度
+      const [realHeight, truncatedHeight] = await Promise.all([
+      getElementHeight(".real_text"),
+      getElementHeight(".truncate"),
+      ])
+      console.log("文本实际高度:", realHeight, "截断高度:", truncatedHeight)
+
+      show_tab.value = realHeight > truncatedHeight;
+
+
+    })
+  }
+  // nextTick(() => {
+  //   setTimeout(() => {
+  //     uni.createSelectorQuery()
+  //         .in(this) // 确保查询在当前页面执行
+  //         .select(".sub-title")
+  //         .boundingClientRect((rect) => {
+  //           // console.log("文本实际高度:", rect);
+  //           if (rect) {
+  //             console.log("文本实际高度:", rect.height);
+  //             const lineHeight = 5; // 估算单行高度（rpx 转 px 可能有小差异）
+  //             show_tab.value = rect.height > lineHeight * 3; // 超出3行显示箭头
+  //           }
+  //         })
+  //         .exec();
+  //   }, 50); // 确保渲染完成后再执行
+  // });
+}
+
 
 // 组件加载后计算文本高度
 onMounted(()=>{
@@ -232,6 +263,14 @@ function getIcon() {
   white-space: normal;
   display: -webkit-box;
   -webkit-box-orient: vertical;
+  width: 90%;
+}
+.waiting{
+  font-size: 24rpx;
+  color: #888;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
   width: 90%;
 }
 

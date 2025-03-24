@@ -4,7 +4,7 @@
   </view>
 </template>
 
-<script>
+<script setup>
 import get_resource_url from '../config/static_config';
 </script>
 

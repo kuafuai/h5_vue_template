@@ -2,17 +2,10 @@
   <!-- 文件选择区域 -->
   <!--  <view class="example-body">-->
 
-  <uni-file-picker
-      :limit="limit"
-      :return-type="'array'"
-      file-extname="jpg,jpeg,png"
-      v-model="resources"
-      @select="handleFileChange"
-      @delete="handelDelete"
-      sourceType="['album','camera']"
-  >
+  <uni-file-picker :limit="limit" :return-type="'array'" file-extname="jpg,jpeg,png" v-model="resources"
+    @select="handleFileChange" @delete="handelDelete" sourceType="['album','camera']">
     <view class="content"
-          style="display:flex;flex-direction:column;justify-content:center;align-items:center;border:none">
+      style="display:flex;flex-direction:column;justify-content:center;align-items:center;border:none">
       <image :src="get_resource_url('static/picture.png')" style="width:80rpx;height:80rpx" alt=""></image>
       <view style="line-height: 17px;color: rgba(154,154,154,1);font-size: 0.75rem;margin-top:10rpx">
         {{ $t('image_upload.upload_text') }}
@@ -32,10 +25,10 @@ export default {
 </script>
 
 <script setup>
-import {getCurrentInstance, ref, watch} from 'vue';
-import {onLoad, onShow} from "@dcloudio/uni-app";
+import { getCurrentInstance, ref, watch } from 'vue';
+import { onLoad, onShow } from "@dcloudio/uni-app";
 
-const {proxy} = getCurrentInstance()
+const { proxy } = getCurrentInstance()
 // 通过 defineModel() 传递资源数组，支持外部传入
 const resources = ref([])
 let image_model = defineModel()
@@ -46,6 +39,7 @@ onShow(() => {
 onLoad(() => {
 })
 
+// #ifdef MP-WEIXIN
 const props = defineProps({
   limit: {
     type: Number,
@@ -57,7 +51,7 @@ const props = defineProps({
   },
   uploadUrl: {
     type: String,
-    default: () =>  import.meta.env.VITE_APP_BASE_API==='/'?"/common/upload":import.meta.env.VITE_APP_BASE_API+"/common/upload"
+    default: () => import.meta.env.VITE_APP_SERVICE_API === '/' ? "/common/upload" : import.meta.env.VITE_APP_SERVICE_API + "/common/upload"
   },
   size: {
     type: Number,
@@ -68,6 +62,35 @@ const props = defineProps({
     default: 'sig',
   }
 });
+// #endif
+// #ifdef H5
+const props = defineProps({
+  limit: {
+    type: Number,
+    default: 1,
+  },
+  title: {
+    type: String,
+    default: '选择文件',
+  },
+  uploadUrl: {
+    type: String,
+    default: () => import.meta.env.VITE_APP_BASE_API === '/' ? "/common/upload" : import.meta.env.VITE_APP_BASE_API + "/common/upload"
+  },
+  size: {
+    type: Number,
+    default: 5,
+  },
+  mode: {
+    type: String,
+    default: 'sig',
+  }
+});
+// #endif
+
+
+
+
 
 // 提取文件名和扩展名的函数
 function extractFileNameAndExtension(url) {
@@ -86,7 +109,7 @@ watch(image_model, (newValue) => {
     const list = Array.isArray(newValue) ? newValue : image_model.value.split(",");
     resources.value = list.map(item => {
       if (typeof item === "string") {
-        item = {name: item, url: item};
+        item = { name: item, url: item };
       }
       return item;
     });
@@ -96,7 +119,7 @@ watch(image_model, (newValue) => {
     return [];
   }
 
-}, {deep: true, once: true});
+}, { deep: true, once: true });
 
 const handleFileChange = async (files) => {
   // 文件大小验证
@@ -180,11 +203,21 @@ const uploadFile = (file) => {
             const fileInfo = extractFileNameAndExtension(response.data.url);
             console.log("fileInfo", fileInfo)
             // 将文件上传结果存储到传入的资源数组中
+            // #ifdef MP-WEIXIN
+            resources.value.push({
+              name: fileInfo.fileName,
+              extension: fileInfo.extension,
+              url: import.meta.env.VITE_APP_SERVICE_API + response.data.url,
+            });
+            // #endif
+            // #ifdef H5
             resources.value.push({
               name: fileInfo.fileName,
               extension: fileInfo.extension,
               url: response.data.url,
             });
+            // #endif
+
 
             if (image_model.value == undefined) {
               image_model.value = []

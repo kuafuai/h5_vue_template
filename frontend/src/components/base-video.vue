@@ -39,6 +39,25 @@ watch(fromdatasValue, (newValue) => {
   console.log(resources.value)
 }, { deep: true, immediate: true });
 
+
+// #ifdef MP-WEIXIN
+// 组件属性
+const props = defineProps({
+  size: {
+    type: Number,
+    default: 50, // 文件大小限制（单位：MB）
+  },
+  uploadUrl: {
+    type: String,
+    default: () => import.meta.env.VITE_APP_SERVICE_API + "/common/upload",
+  },
+  limit:{
+    type: Number,
+    default: 3, // 支持上传多个视频，默认限制为3个
+  }
+});
+// #endif
+// #ifdef H5
 // 组件属性
 const props = defineProps({
   size: {
@@ -54,6 +73,7 @@ const props = defineProps({
     default: 3, // 支持上传多个视频，默认限制为3个
   }
 });
+// #endif
 
 // 选择视频
 const chooseVideo = () => {

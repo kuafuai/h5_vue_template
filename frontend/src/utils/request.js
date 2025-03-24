@@ -93,10 +93,8 @@ let service = (res) => {
 
     let {url, data, method, token} = res
     token = uni.getStorageSync("h5_token")
-    console.log("token", token)
 
     return new Promise((resolve, reject) => {
-        console.log("1234567654321234567", url)
         uni.request({
             url: baseurl + url,
             // url: url,
@@ -108,7 +106,6 @@ let service = (res) => {
                 "Authorization": 'Bearer ' + token
             },
             success(res) {
-                resolve(res.data)
                 if (res.data.code == 40401) {
                     uni.showToast({
                         title: "请先去绑定手机号吧～",
@@ -124,6 +121,8 @@ let service = (res) => {
                         title: res.data.message || '系统出错',
                         icon: "none"
                     })
+                } else {
+                    resolve(res.data)
                 }
             },
             fail(err) {

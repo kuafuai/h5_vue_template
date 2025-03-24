@@ -16,10 +16,39 @@
 import {ref, watch} from 'vue';
 
 const fileurl = defineModel();
-// const pre_url = import.meta.env.VITE_APP_SERVICE_API;
+// #ifdef MP-WEIXIN
+const pre_url = import.meta.env.VITE_APP_SERVICE_API;
+
+const props = defineProps({
+  limit: {
+    type: Number,
+    default: 1,
+  },
+  accept: {
+    type: String,
+    default: 'all',
+  },
+  title: {
+    type: String,
+    default: '选择文件',
+  },
+  uploadUrl: {
+    type: String,
+    default: () => import.meta.env.VITE_APP_SERVICE_API==='/'?"/common/upload":import.meta.env.VITE_APP_SERVICE_API+"/common/upload"
+  },
+  size: {
+    type: Number,
+    default: 5
+  },
+  mode:{
+    type: String,
+    default: "sig"
+  }
+});
+// #endif
+// #ifdef H5
 const pre_url = import.meta.env.VITE_APP_BASE_API;
-console.log("pre", pre_url)
-const file_extname = ref(["doc", "docx", "xls", "xlsx", "ppt", "txt", "pdf"])
+
 const props = defineProps({
   limit: {
     type: Number,
@@ -46,6 +75,11 @@ const props = defineProps({
     default: "sig"
   }
 });
+// #endif
+
+console.log("pre", pre_url)
+const file_extname = ref(["doc", "docx", "xls", "xlsx", "ppt", "txt", "pdf"])
+
 
 
 function extractFileNameAndExtension(url) {

@@ -147,10 +147,10 @@ const isTrue = ref(false)
 const {proxy} = getCurrentInstance();
 
 const services = () => {
-  proxy.$navigate( "/pages/services/index",false)
+  proxy.$navigate( "/pagesA/services/index",false)
 }
 const policy = () => {
-  proxy.$navigate( "/pages/policy/index",false)
+  proxy.$navigate( "/pagesA/policy/index",false)
 }
 const btnF1 = () => {
   uni.showToast({

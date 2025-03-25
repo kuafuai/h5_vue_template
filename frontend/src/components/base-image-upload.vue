@@ -104,22 +104,17 @@ function extractFileNameAndExtension(url) {
 }
 
 // 监听 image_model 数组变化，只触发一次
-watch(image_model, (newValue) => {
-  if (newValue) {
-    const list = Array.isArray(newValue) ? newValue : image_model.value.split(",");
+watch(image_model, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    const list = Array.isArray(newValue) ? newValue : newValue.split(",");
     resources.value = list.map(item => {
       if (typeof item === "string") {
         item = { name: item, url: item };
       }
       return item;
     });
-  } else {
-    resources.value = [];
-    selectedFiles.value = [];
-    return [];
   }
-
-}, { deep: true, once: true });
+}, { deep: true });
 
 const handleFileChange = async (files) => {
   // 文件大小验证
@@ -148,14 +143,13 @@ const handelDelete = (e) => {
   console.log(e, resources.value);
 
   resources.value.splice(e.index, 1)
-  if (props.mode === 'sig') {
+  if (props.mode == 'sig') {
     image_model.value = listToString(resources.value, ",");
   } else {
     image_model.value.splice(e.index, 1)
   }
   console.log('=====', image_model.value)
 }
-
 const uploadFiles = async () => {
   if (selectedFiles.value.length === 0) {
     uni.showToast({
@@ -166,11 +160,8 @@ const uploadFiles = async () => {
   }
 
   try {
-    for (const file of selectedFiles.value) {
-      console.log(file, "file1111");
-
-      await uploadFile(file);
-    }
+    const uploadPromises = selectedFiles.value.map(file => uploadFile(file));
+    await Promise.all(uploadPromises);
     uni.showToast({
       title: proxy.$tt('image_upload.file_upload_success'),
       icon: 'success',
@@ -191,7 +182,6 @@ const uploadFile = (file) => {
       filePath: file.path,
       name: 'file',
       header: {
-
         "BackendAddress": import.meta.env.VITE_APP_BASE_API,
         "Authorization": "Bearer " + uni.getStorageSync("h5_token")
       },
@@ -222,7 +212,7 @@ const uploadFile = (file) => {
             if (image_model.value == undefined) {
               image_model.value = []
             }
-            if (props.mode === 'sig') {
+            if (props.mode == 'sig') {
               image_model.value = listToString(resources.value, ",");
             } else {
               image_model.value = resources.value

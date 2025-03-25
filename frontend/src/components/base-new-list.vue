@@ -45,7 +45,7 @@ export default {
 </script>
 <script setup>
 import get_resource_url from '../config/static_config';
-import {onHide, onShow} from "@dcloudio/uni-app";
+import {onHide, onShow, onUnload} from "@dcloudio/uni-app";
 
 const {proxy} = getCurrentInstance();
 
@@ -95,11 +95,22 @@ onShow(()=>{
   refresh();
 })
 
+var interval=null
+
 onHide(()=>{
   if (interval){
+    console.log("clear interval new-list")
+    // 清除定时器
     clearInterval(interval);
   }
 
+})
+onUnload(()=>{
+  if (interval){
+    console.log("clear interval new-list")
+    // 清除定时器
+    clearInterval(interval);
+  }
 })
 
 onMounted(() => {
@@ -138,9 +149,15 @@ function refresh(query_param) {
 }
 
 
-var interval=null
+
 
 function startInterval() {
+  let time=8000;
+
+  // #ifdef MP-WEIXIN
+  time=15000;
+  // #endif
+
   if (interval) clearInterval(interval); // 避免重复启动
   interval = setInterval(async () => {
     var is_end = true;
@@ -180,7 +197,7 @@ function startInterval() {
     }
 
 
-  }, 8000);
+  }, time);
 
 
 }

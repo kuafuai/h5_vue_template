@@ -27,7 +27,7 @@ import {getCurrentInstance} from "vue"
 import get_resource_url from '../config/static_config';
 const {proxy} = getCurrentInstance();
 import {defineProps, ref} from 'vue';
-import {onHide, onLoad, onShow} from "@dcloudio/uni-app";
+import {onHide, onLoad, onShow, onUnload} from "@dcloudio/uni-app";
 
 const props = defineProps({
   api: {
@@ -83,10 +83,25 @@ onHide(()=>{
   }
 
 })
+
+onUnload(()=>{
+  if (interval){
+    console.log("clear interval description")
+    // 清除定时器
+    clearInterval(interval);
+  }
+})
 /**
  * 开启定时器
  */
 function startInterval() {
+  let time=5000;
+
+   // #ifdef MP-WEIXIN
+   time=10000;
+  // #endif
+
+
   if (interval) clearInterval(interval); // 避免重复启动
   interval = setInterval(async () => {
     var is_end = true;
@@ -117,7 +132,7 @@ function startInterval() {
       clearInterval(interval);
       interval = null;
     }
-  }, 5000);
+  }, time);
 }
 
 

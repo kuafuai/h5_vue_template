@@ -58,6 +58,7 @@
         "optimization":{
             "subPackages":true
         },
+        "LazyCodeLoading": true,
 
         "usingComponents" : true
     },

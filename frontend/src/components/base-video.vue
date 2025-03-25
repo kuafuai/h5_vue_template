@@ -137,7 +137,14 @@ const uploadFile = (filePath) => {
           const data = JSON.parse(res.data);
           if (data.code === 0) {
             // 将上传成功的视频添加到资源列表中
+
+// #ifdef MP-WEIXIN
+            resources.value.push( import.meta.env.VITE_APP_SERVICE_API+data.data.url );
+            // #endif
+            // #ifdef H5
             resources.value.push( data.data.url );
+            // #endif
+
             fromdatasValue.value = resources.value.map(item => item).join(',');
             resolve(data);
           } else {

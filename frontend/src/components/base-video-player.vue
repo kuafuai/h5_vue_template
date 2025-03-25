@@ -14,7 +14,6 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-
 // 接收传入的参数
 const props = defineProps({
   videoUrls: {

@@ -170,6 +170,18 @@ const uploadFile = (file) => {
             // fileurl.value = [{
             //   "url":response.data.url
             // }]
+            // #ifdef MP-WEIXIN
+            if (props.mode==='sig'){
+              fileurl.value=import.meta.env.VITE_APP_SERVICE_API+response.data.url
+            }else {
+              fileurl.value=[
+                {
+                  "url":import.meta.env.VITE_APP_SERVICE_API+response.data.url
+                }
+              ]
+            }
+            // #endif
+            // #ifdef H5
             if (props.mode==='sig'){
               fileurl.value=response.data.url
             }else {
@@ -179,6 +191,8 @@ const uploadFile = (file) => {
                 }
               ]
             }
+            // #endif
+
 
             resolve(res);
           } else {

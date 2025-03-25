@@ -53,7 +53,7 @@ const change = (e) => {
     // 判断是否是完整的网址
     if (route.startsWith('http://') || route.startsWith('https://')) {
       wx.navigateTo({
-        url: `/pages/web_view/index?url=${route}`
+        url: `/pagesA/web_view/index?url=${route}`
       });
     } else {
       // 判断是否以 / 开头
@@ -64,7 +64,7 @@ const change = (e) => {
 /*      wx.navigateTo({
         url: "/pages" + route + "/index"
       })*/
-      proxy.$navigate("/pages" + route + '/index', false);
+      proxy.$navigate("/pagesA" + route + '/index', false);
 
     }
   } else {
@@ -90,7 +90,7 @@ const goToPage = (route) => {
       }
       console.log("跳转到页面:", route);
 
-      proxy.$navigate("/pages" + route + '/index', false);
+      proxy.$navigate("/pagesA" + route + '/index', false);
 
       /*      wx.navigateTo({
               url: "/pages" + route + "/index"

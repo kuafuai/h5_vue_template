@@ -67,7 +67,7 @@ function onBannerClick(item) {
   // #ifdef MP-WEIXIN
   const link = item.url;
   wx.navigateTo({
-    url: `/pages/web_view/index?url=${link}`
+    url: `/pagesA/web_view/index?url=${link}`
   });
   // #endif
 }

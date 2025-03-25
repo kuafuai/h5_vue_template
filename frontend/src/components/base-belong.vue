@@ -57,7 +57,7 @@ onShow(() => {
 
 // 点击跳转页面
 const handleClick = () => {
-  proxy.$navigate("/pages/" + props.page_name + "/index", false)
+  proxy.$navigate("/pagesA/" + props.page_name + "/index", false)
 }
 </script>
 

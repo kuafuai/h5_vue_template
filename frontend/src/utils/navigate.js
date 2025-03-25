@@ -1,4 +1,5 @@
-const tabBarList =["home:首页","profile:个人中心"]
+const tabBarList =['home:首页', 'profile:个人中心']
+const homePageName='login'
 function isCurrentPageTabBar(currentPage) {
     return tabBarList.includes(currentPage);
 }
@@ -7,6 +8,12 @@ function isCurrentPageTabBar(currentPage) {
 function navigate(path,is_redirect) {
     let basePath = path;
     let params = null;
+
+    if (path.startsWith('/'+homePageName)){
+        path="/pages"+path;
+    }else if(!path.startsWith("/pages") && !path.startsWith("/pageA")){
+        path="/pagesA"+path;
+    }
 
     // 检查是否包含 '?'
     if (path.includes('?')) {

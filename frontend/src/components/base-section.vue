@@ -25,13 +25,11 @@
         {{ subTitle }}
       </text>
 
-      <text >
-        <text   class="waiting" v-show="itemType=='ai' && subTitle==null">
+      <view v-show="itemType=='ai' && subTitle==null" style="width: 100%">
+        <text class="waiting">
           正在生成中,请稍等...
         </text>
-
-
-      </text>
+      </view>
 
 
       <!-- 超出三行时显示展开/收起箭头 -->
@@ -239,6 +237,8 @@ function getIcon() {
 .title-content {
   display: flex;
   flex-direction: row;
+  //justify-content: center;
+  align-items: center;
 }
 
 /* 标题文本 */
@@ -270,8 +270,10 @@ function getIcon() {
   color: #888;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: left;
   white-space: normal;
-  width: 90%;
+  display: inline-block;
+  width: 90vw;
 }
 
 /* 省略号模式 */

@@ -54,6 +54,12 @@
         "setting" : {
             "urlCheck" : false
         },
+        /** 分包配置**/
+        "optimization":{
+            "subPackages":true
+        },
+        "LazyCodeLoading": true,
+
         "usingComponents" : true
     },
     "mp-alipay" : {

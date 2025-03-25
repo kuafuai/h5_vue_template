@@ -57,7 +57,7 @@ if (currentUser != null) {
 const loginSuccess_9102 = (
     item
 ) => {
-  proxy.$navigate("/pages/one/index?userId=" + item.userId, false)
+  proxy.$navigate("/pagesA/one/index?userId=" + item.userId, false)
 
 }
 const loginFail_9102 = () => {
